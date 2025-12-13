@@ -15,7 +15,6 @@
         /* --- Base Styles --- */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        /* UPDATED: Body fills screen, removed black background */
         body { 
             background-color: #031b38; 
             height: 100vh; 
@@ -23,7 +22,6 @@
             overflow: hidden; 
         }
 
-        /* UPDATED: App Container fills the window */
         .app-container { 
             width: 100%; 
             height: 100%; 
@@ -34,7 +32,6 @@
         }
 
         /* --- AUTH SCREEN STYLES --- */
-        /* UPDATED: Center auth screen properly on large screens */
         .auth-screen { 
             position: absolute; 
             top: 0; left: 0; 
@@ -45,17 +42,12 @@
             display: flex; 
             flex-direction: column; 
             justify-content: center; 
-            align-items: center; /* Center horizontally */
+            align-items: center; 
             overflow-y: auto; 
             transition: transform 0.3s ease; 
         }
         
-        /* Container for Auth Forms to limit width on Desktop */
-        .auth-content-box {
-            width: 100%;
-            max-width: 400px; /* Limits width on PC */
-        }
-
+        .auth-content-box { width: 100%; max-width: 400px; }
         .auth-hidden { transform: translateY(100%); pointer-events: none; }
         .auth-logo { text-align: center; margin-bottom: 30px; }
         .auth-logo i { font-size: 60px; color: #e91e63; text-shadow: 0 0 15px rgba(233, 30, 99, 0.5); }
@@ -80,6 +72,33 @@
         .spinner { border: 4px solid rgba(255,255,255,0.3); border-radius: 50%; border-top: 4px solid #e91e63; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
+        /* --- TASK AD TIMER OVERLAY --- */
+        #taskTimerOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.95); z-index: 4000; 
+            display: none; 
+            justify-content: center; align-items: center; flex-direction: column;
+            color: white;
+        }
+        .timer-circle-container {
+            position: relative; width: 150px; height: 150px;
+        }
+        .timer-svg { width: 150px; height: 150px; transform: rotate(-90deg); }
+        .timer-circle-bg { fill: none; stroke: #333; stroke-width: 10; }
+        .timer-circle-progress { 
+            fill: none; stroke: #e91e63; stroke-width: 10; 
+            stroke-dasharray: 440; stroke-dashoffset: 440; 
+            transition: stroke-dashoffset 1s linear;
+        }
+        .timer-text {
+            position: absolute; top: 50%; left: 50%; 
+            transform: translate(-50%, -50%); 
+            font-size: 30px; font-weight: bold;
+        }
+        .ad-label { margin-top: 20px; font-size: 18px; color: #aaa; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+
         /* --- APP STYLES --- */
         header { background: linear-gradient(180deg, #c21558 0%, #750d37 100%); padding: 0 20px; display: flex; justify-content: space-between; align-items: center; height: 60px; flex-shrink: 0; z-index: 100; width: 100%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         .header-left { display: flex; align-items: center; gap: 10px; }
@@ -92,7 +111,6 @@
         .page-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; padding-bottom: 80px; transition: transform 0.3s ease; background-color: #031b38; scrollbar-width: none; }
         .page-container::-webkit-scrollbar { display: none; }
         
-        /* Center content max-width for very large screens so it doesn't stretch too much */
         .page-content { padding: 20px; color: white; max-width: 1000px; margin: 0 auto; width: 100%; }
 
         .banner-container { padding: 20px; background: linear-gradient(180deg, #750d37 0%, #031b38 30%); display: flex; justify-content: center; }
@@ -103,31 +121,19 @@
         .marquee span { display: inline-block; animation: scroll 10s linear infinite; }
         @keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-        /* UPDATED: Responsive Action Grid */
         .action-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* Responsive columns */
-            gap: 15px; 
-            padding: 20px; 
-            background-color: #1a222c; 
-            margin: 20px auto; 
-            border-radius: 15px; 
-            max-width: 800px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 15px; 
+            padding: 20px; background-color: #1a222c; margin: 20px auto; 
+            border-radius: 15px; max-width: 800px;
         }
         .action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.2s; }
         .action-item:hover { transform: translateY(-5px); }
         .icon-box { width: 50px; height: 50px; border-radius: 12px; background: linear-gradient(135deg, #e91e63, #880e4f); display: flex; justify-content: center; align-items: center; color: white; font-size: 20px; margin-bottom: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.4); }
         .action-text { color: white; font-size: 12px; font-weight: 500; }
 
-        /* UPDATED: Responsive Feature Grid */
         .feature-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsive */
-            gap: 15px; 
-            padding: 0 20px; 
-            margin-bottom: 20px; 
-            max-width: 800px;
-            margin-left: auto; margin-right: auto;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; 
+            padding: 0 20px; margin-bottom: 20px; max-width: 800px; margin-left: auto; margin-right: auto;
         }
         .feature-card { background-color: #1a222c; border-radius: 10px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 120px; cursor: pointer; transition: transform 0.2s; }
         .feature-card:active { transform: scale(0.95); }
@@ -157,13 +163,7 @@
         .payment-method.active { border-color: #e91e63; background-color: rgba(233, 30, 99, 0.1); }
         .payment-icon { font-size: 30px; margin-bottom: 10px; color: #4caf50; }
 
-        /* UPDATED: Responsive Plan Grid */
-        .plan-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); /* Fits more on PC */
-            gap: 15px; 
-            margin-bottom: 20px; 
-        }
+        .plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .plan-card { background: linear-gradient(135deg, #1a237e, #283593); border-radius: 10px; padding: 15px; cursor: pointer; transition: transform 0.3s; display: flex; flex-direction: column; justify-content: space-between; min-height: 150px; }
         .plan-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .plan-amount { font-size: 24px; font-weight: bold; color: #ffca28; margin-bottom: 5px; }
@@ -188,28 +188,13 @@
         .status-completed { background-color: #4caf50; color: white; }
         .status-rejected { background-color: #f44336; color: white; }
 
-        /* UPDATED: Fixed Bottom Nav */
         .bottom-nav { 
-            background-color: #1a222c; 
-            height: 70px; 
-            width: 100%; 
-            display: flex; 
-            justify-content: center; /* Center the nav items */
-            align-items: center; 
-            border-top: 1px solid #333; 
-            z-index: 500; 
-            position: fixed; 
-            bottom: 0; 
-            left: 0;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+            background-color: #1a222c; height: 70px; width: 100%; 
+            display: flex; justify-content: center; align-items: center; 
+            border-top: 1px solid #333; z-index: 500; 
+            position: fixed; bottom: 0; left: 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
         }
-        .nav-wrapper {
-            display: flex;
-            justify-content: space-around;
-            width: 100%;
-            max-width: 600px; /* Limits nav spread on desktop */
-            position: relative;
-        }
+        .nav-wrapper { display: flex; justify-content: space-around; width: 100%; max-width: 600px; position: relative; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: #888; font-size: 10px; cursor: pointer; width: 20%; padding-top: 10px; transition: color 0.3s; }
         .nav-item:hover { color: #ccc; }
         .nav-item i { font-size: 20px; margin-bottom: 4px; }
@@ -264,6 +249,18 @@
         <div>Loading...</div>
     </div>
 
+    <!-- Task Visual Timer Overlay -->
+    <div id="taskTimerOverlay">
+        <div class="timer-circle-container">
+            <svg class="timer-svg">
+                <circle class="timer-circle-bg" cx="75" cy="75" r="70"></circle>
+                <circle class="timer-circle-progress" cx="75" cy="75" r="70" id="timerProgress"></circle>
+            </svg>
+            <div class="timer-text" id="timerCount">20</div>
+        </div>
+        <div class="ad-label">Viewing Ad...</div>
+    </div>
+
     <!-- Alert Message -->
     <div class="alert" id="alert">Operation Successful!</div>
 
@@ -274,93 +271,43 @@
         <!-- Login Screen -->
         <div class="auth-screen" id="loginScreen">
             <div class="auth-content-box">
-                <div class="auth-logo">
-                    <i class="fa-solid fa-gem"></i>
-                </div>
+                <div class="auth-logo"><i class="fa-solid fa-gem"></i></div>
                 <div class="auth-title">Welcome Back</div>
                 <div class="auth-subtitle">Login to your account to continue earning</div>
-
-                <div class="auth-form-group">
-                    <i class="fa-solid fa-envelope auth-icon"></i>
-                    <input type="email" id="loginEmail" class="auth-input" placeholder="Enter your email">
-                </div>
-                
-                <div class="auth-form-group">
-                    <i class="fa-solid fa-lock auth-icon"></i>
-                    <input type="password" id="loginPassword" class="auth-input" placeholder="Password">
-                </div>
-
-                <div class="forgot-password">
-                    <span onclick="showForgotPassword()">Forgot Password?</span>
-                </div>
-
+                <div class="auth-form-group"><i class="fa-solid fa-envelope auth-icon"></i><input type="email" id="loginEmail" class="auth-input" placeholder="Enter your email"></div>
+                <div class="auth-form-group"><i class="fa-solid fa-lock auth-icon"></i><input type="password" id="loginPassword" class="auth-input" placeholder="Password"></div>
+                <div class="forgot-password"><span onclick="showForgotPassword()">Forgot Password?</span></div>
                 <button class="auth-btn" onclick="handleLogin()">LOGIN</button>
-
-                <div class="auth-link">
-                    Don't have an account? <span onclick="showRegister()">Register Now</span>
-                </div>
+                <div class="auth-link">Don't have an account? <span onclick="showRegister()">Register Now</span></div>
             </div>
         </div>
 
         <!-- Register Screen -->
         <div class="auth-screen auth-hidden" id="registerScreen">
             <div class="auth-content-box">
-                <div class="auth-logo" style="margin-bottom: 20px;">
-                    <i class="fa-solid fa-user-plus"></i>
-                </div>
+                <div class="auth-logo" style="margin-bottom: 20px;"><i class="fa-solid fa-user-plus"></i></div>
                 <div class="auth-title">Create Account</div>
                 <div class="auth-subtitle">Join us and start earning today</div>
-
-                <div class="auth-form-group">
-                    <i class="fa-solid fa-envelope auth-icon"></i>
-                    <input type="email" id="regEmail" class="auth-input" placeholder="Gmail Address">
-                </div>
-
+                <div class="auth-form-group"><i class="fa-solid fa-envelope auth-icon"></i><input type="email" id="regEmail" class="auth-input" placeholder="Gmail Address"></div>
                 <div class="auth-form-group country-group">
-                    <select id="countryCode" class="country-select">
-                        <option value="+92">+92 (PK)</option>
-                        <option value="+91">+91 (IN)</option>
-                    </select>
+                    <select id="countryCode" class="country-select"><option value="+92">+92 (PK)</option><option value="+91">+91 (IN)</option></select>
                     <input type="number" id="regPhone" class="auth-input" style="padding-left: 15px;" placeholder="Phone Number">
                 </div>
-                
-                <div class="auth-form-group">
-                    <i class="fa-solid fa-lock auth-icon"></i>
-                    <input type="password" id="regPassword" class="auth-input" placeholder="Strong Password">
-                </div>
-
-                <div class="auth-form-group">
-                    <i class="fa-solid fa-lock auth-icon"></i>
-                    <input type="password" id="regConfirmPassword" class="auth-input" placeholder="Repeat Password">
-                </div>
-
-                <div class="auth-form-group">
-                    <i class="fa-solid fa-ticket auth-icon"></i>
-                    <input type="text" id="regInviteCode" class="auth-input" placeholder="Invitation Code">
-                </div>
-
+                <div class="auth-form-group"><i class="fa-solid fa-lock auth-icon"></i><input type="password" id="regPassword" class="auth-input" placeholder="Strong Password"></div>
+                <div class="auth-form-group"><i class="fa-solid fa-lock auth-icon"></i><input type="password" id="regConfirmPassword" class="auth-input" placeholder="Repeat Password"></div>
+                <div class="auth-form-group"><i class="fa-solid fa-ticket auth-icon"></i><input type="text" id="regInviteCode" class="auth-input" placeholder="Invitation Code"></div>
                 <button class="auth-btn" onclick="handleRegister()">REGISTER</button>
-
-                <div class="auth-link">
-                    Already have an account? <span onclick="showLogin()">Login Here</span>
-                </div>
+                <div class="auth-link">Already have an account? <span onclick="showLogin()">Login Here</span></div>
             </div>
         </div>
 
         <!-- Forgot Password Screen -->
         <div class="auth-screen auth-hidden" id="forgotScreen">
             <div class="auth-content-box">
-                <div class="auth-logo">
-                    <i class="fa-solid fa-key"></i>
-                </div>
+                <div class="auth-logo"><i class="fa-solid fa-key"></i></div>
                 <div class="auth-title">Reset Password</div>
                 <div class="auth-subtitle">Enter your email to receive reset link</div>
-
-                <div class="auth-form-group">
-                    <i class="fa-solid fa-envelope auth-icon"></i>
-                    <input type="email" id="resetEmail" class="auth-input" placeholder="Enter your registered email">
-                </div>
-
+                <div class="auth-form-group"><i class="fa-solid fa-envelope auth-icon"></i><input type="email" id="resetEmail" class="auth-input" placeholder="Enter your registered email"></div>
                 <button class="auth-btn" onclick="handleResetPassword()">SEND LINK</button>
                 <button class="auth-btn btn-secondary" onclick="showLogin()">BACK TO LOGIN</button>
             </div>
@@ -373,12 +320,8 @@
             <!-- Header -->
             <header>
                 <div class="header-left">
-                    <div class="back-btn" id="backBtn" onclick="goBack()">
-                        <i class="fas fa-arrow-left"></i>
-                    </div>
-                    <div class="header-logo">
-                        <i class="fa-solid fa-money-bill-wave"></i>
-                    </div>
+                    <div class="back-btn" id="backBtn" onclick="goBack()"><i class="fas fa-arrow-left"></i></div>
+                    <div class="header-logo"><i class="fa-solid fa-money-bill-wave"></i></div>
                     <div class="header-title" id="pageTitle">Earning App</div>
                 </div>
                 <div class="header-icon">
@@ -399,102 +342,57 @@
                     </div>
                     <div class="ticker-container">
                         <i class="fa-solid fa-volume-high ticker-icon"></i>
-                        <div class="marquee">
-                            <span>Don't create multiple accounts! Join now for rewards. Withdrawals approved within 1 hour.</span>
-                        </div>
+                        <div class="marquee"><span>Don't create multiple accounts! Join now for rewards. Withdrawals approved within 1 hour.</span></div>
                     </div>
                     <div class="action-grid">
-                        <div class="action-item" onclick="showPage('depositPage')">
-                            <div class="icon-box"><i class="fa-solid fa-arrow-up"></i></div>
-                            <span class="action-text">Deposit</span>
-                        </div>
-                        <div class="action-item" onclick="showPage('withdrawPage')">
-                            <div class="icon-box"><i class="fa-solid fa-arrow-down"></i></div>
-                            <span class="action-text">Withdraw</span>
-                        </div>
-                        <div class="action-item" onclick="showPage('invitePage')">
-                            <div class="icon-box"><i class="fa-solid fa-user-plus"></i></div>
-                            <span class="action-text">Invite</span>
-                        </div>
-                        <div class="action-item" onclick="showPage('supportPage')">
-                            <div class="icon-box"><i class="fa-solid fa-headset"></i></div>
-                            <span class="action-text">Support</span>
-                        </div>
+                        <div class="action-item" onclick="showPage('depositPage')"><div class="icon-box"><i class="fa-solid fa-arrow-up"></i></div><span class="action-text">Deposit</span></div>
+                        <div class="action-item" onclick="showPage('withdrawPage')"><div class="icon-box"><i class="fa-solid fa-arrow-down"></i></div><span class="action-text">Withdraw</span></div>
+                        <div class="action-item" onclick="showPage('invitePage')"><div class="icon-box"><i class="fa-solid fa-user-plus"></i></div><span class="action-text">Invite</span></div>
+                        <div class="action-item" onclick="showPage('supportPage')"><div class="icon-box"><i class="fa-solid fa-headset"></i></div><span class="action-text">Support</span></div>
                     </div>
                     <div class="feature-grid">
-                        <div class="feature-card" onclick="showPage('plansPage')">
-                            <span class="feature-title">VIP Plans</span>
-                            <div style="position: relative;">
-                                <i class="fa-solid fa-shield-halved" style="color: #7c4dff; font-size: 40px;"></i>
-                                <i class="fa-solid fa-coins" style="color: #ffca28; position: absolute; bottom: -5px; right: -10px; font-size: 20px;"></i>
-                            </div>
-                        </div>
-                        <div class="feature-card" onclick="showPage('tasksPage')">
-                            <span class="feature-title">Tasks</span>
-                            <i class="fa-solid fa-envelope-open-text" style="color: #7c4dff; font-size: 40px;"></i>
-                        </div>
+                        <div class="feature-card" onclick="showPage('plansPage')"><span class="feature-title">VIP Plans</span><div style="position: relative;"><i class="fa-solid fa-shield-halved" style="color: #7c4dff; font-size: 40px;"></i><i class="fa-solid fa-coins" style="color: #ffca28; position: absolute; bottom: -5px; right: -10px; font-size: 20px;"></i></div></div>
+                        <div class="feature-card" onclick="showPage('tasksPage')"><span class="feature-title">Tasks</span><i class="fa-solid fa-envelope-open-text" style="color: #7c4dff; font-size: 40px;"></i></div>
                     </div>
                 </div>
 
-                <!-- Support / Contact Page -->
+                <!-- Support Page -->
                 <div class="page-container page-inactive" id="supportPage">
                     <div class="page-content">
                         <h2 class="page-title">Contact Admin</h2>
                         <div class="card">
                             <h3 class="card-title">Send a Message</h3>
-                            <p style="color:#aaa; font-size:12px; margin-bottom:15px;">Have questions? Fill out the form below to email us directly.</p>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Subject</label>
-                                <input type="text" class="form-input" id="supportSubject" placeholder="Brief topic of your issue">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Message</label>
-                                <textarea class="form-input" id="supportMessage" placeholder="Describe your issue or question in detail..."></textarea>
-                            </div>
+                            <div class="form-group"><label class="form-label">Subject</label><input type="text" class="form-input" id="supportSubject" placeholder="Brief topic of your issue"></div>
+                            <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" id="supportMessage" placeholder="Describe your issue or question in detail..."></textarea></div>
                             <button class="btn" onclick="sendEmailToAdmin()">Send Message via Email</button>
-                        </div>
-                        
-                        <div class="card">
-                            <h3 class="card-title">Direct Contact</h3>
-                            <div class="menu-group" style="margin-bottom:0;">
-                                <div class="menu-item" onclick="redirectToGmail()">
-                                    <div class="menu-left">
-                                        <div class="menu-icon-circle"><i class="fa-solid fa-envelope"></i></div>
-                                        <span class="menu-text">Email Admin directly</span>
-                                    </div>
-                                    <i class="fa-solid fa-chevron-right" style="color: #555;"></i>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Deposit Page (User View) -->
+                <!-- Deposit Page -->
                 <div class="page-container page-inactive" id="depositPage">
                     <div class="page-content">
                         <h2 class="page-title">Deposit Funds</h2>
                         <div class="card">
                             <h3 class="card-title">Payment Details</h3>
-                            <!-- These details are now fetched from Firebase -->
                             <div class="info-row"><span class="info-label">Bank Name:</span><span class="info-value" id="depBankName">Loading...</span></div>
                             <div class="info-row"><span class="info-label">Account Number:</span><span class="info-value" id="depAccNum">Loading...</span></div>
                             <div class="info-row"><span class="info-label">Account Holder:</span><span class="info-value" id="depAccTitle">Loading...</span></div>
                         </div>
                         <div class="card">
                             <h3 class="card-title">Submit Proof</h3>
-                            <div class="form-group">
-                                <label class="form-label">TRX ID</label>
-                                <input type="text" class="form-input" id="depositTrxId" placeholder="Enter TRX ID">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Amount (Rs)</label>
-                                <input type="number" class="form-input" id="depositAmount" placeholder="Amount">
-                            </div>
+                            <div class="form-group"><label class="form-label">TRX ID</label><input type="text" class="form-input" id="depositTrxId" placeholder="Enter TRX ID"></div>
+                            <div class="form-group"><label class="form-label">Amount (Rs)</label><input type="number" class="form-input" id="depositAmount" placeholder="Amount"></div>
                             <button class="btn" onclick="submitDeposit()">Submit Deposit</button>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Deposit History Page -->
+                <div class="page-container page-inactive" id="depositHistoryPage">
+                    <div class="page-content">
+                        <h2 class="page-title">Deposit History</h2>
                         <div class="card">
-                            <h3 class="card-title">History</h3>
                             <table class="history-table">
                                 <thead><tr><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
                                 <tbody id="depositHistory"></tbody>
@@ -521,8 +419,14 @@
                             <div class="form-group"><label class="form-label">Amount</label><input type="number" class="form-input" id="withdrawAmount"></div>
                             <button class="btn" onclick="submitWithdraw()">Submit Withdrawal</button>
                         </div>
+                    </div>
+                </div>
+
+                 <!-- Withdraw History Page -->
+                 <div class="page-container page-inactive" id="withdrawHistoryPage">
+                    <div class="page-content">
+                        <h2 class="page-title">Withdrawal History</h2>
                         <div class="card">
-                            <h3 class="card-title">History</h3>
                             <table class="history-table">
                                 <thead><tr><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
                                 <tbody id="withdrawHistory"></tbody>
@@ -557,26 +461,13 @@
                 <div class="page-container page-inactive" id="adminPanelPage">
                     <div class="page-content">
                         <h2 class="page-title">ADMIN PANEL</h2>
-                        
                         <div class="card">
                             <h3 class="card-title">Update Bank Details</h3>
-                            <p style="color:#aaa; font-size:12px; margin-bottom:10px;">Change the bank info shown to users in the Deposit section.</p>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Bank Name / Method</label>
-                                <input type="text" class="form-input" id="adminBankName" placeholder="e.g. Easypaisa / Jazzcash">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Account Number</label>
-                                <input type="text" class="form-input" id="adminAccNum" placeholder="e.g. 03001234567">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Account Title</label>
-                                <input type="text" class="form-input" id="adminAccTitle" placeholder="e.g. John Doe">
-                            </div>
+                            <div class="form-group"><label class="form-label">Bank Name / Method</label><input type="text" class="form-input" id="adminBankName"></div>
+                            <div class="form-group"><label class="form-label">Account Number</label><input type="text" class="form-input" id="adminAccNum"></div>
+                            <div class="form-group"><label class="form-label">Account Title</label><input type="text" class="form-input" id="adminAccTitle"></div>
                             <button class="btn" onclick="saveBankDetails()">Update Bank Details</button>
                         </div>
-
                     </div>
                 </div>
 
@@ -586,8 +477,12 @@
                         <h2 class="page-title">Daily Tasks</h2>
                         <div class="card" id="noPlanWarning" style="display: none;">
                             <h3 class="card-title" style="color: #f44336;"><i class="fas fa-exclamation-triangle"></i> No Active Plan</h3>
-                            <p style="color: #aaa;">Activate a plan to earn.</p>
+                            <p style="color: #aaa;">Activate a plan to start earning.</p>
                             <button class="btn" onclick="showPage('plansPage')">View Plans</button>
+                        </div>
+                        <div class="card" id="taskLimitWarning" style="display: none;">
+                            <h3 class="card-title" style="color: #4caf50;"><i class="fas fa-check-circle"></i> Tasks Completed</h3>
+                            <p style="color: #aaa;">You have completed your daily tasks. Come back tomorrow for more!</p>
                         </div>
                         <div id="tasksList"></div>
                     </div>
@@ -653,20 +548,17 @@
                             <div id="currentPlanInfo"><p style="color: #aaa; text-align: center;">No active plan</p></div>
                         </div>
                         <div class="menu-group">
-                            <div class="menu-item" onclick="showPage('depositPage')"><div class="menu-left"><div class="menu-icon-circle"><i class="fa-regular fa-credit-card"></i></div><span class="menu-text">Deposit History</span></div><i class="fa-solid fa-chevron-right" style="color: #555;"></i></div>
-                            <div class="menu-item" onclick="showPage('withdrawPage')"><div class="menu-left"><div class="menu-icon-circle"><i class="fa-solid fa-money-bill-transfer"></i></div><span class="menu-text">Withdraw History</span></div><i class="fa-solid fa-chevron-right" style="color: #555;"></i></div>
+                            <div class="menu-item" onclick="showPage('depositHistoryPage')"><div class="menu-left"><div class="menu-icon-circle"><i class="fa-regular fa-credit-card"></i></div><span class="menu-text">Deposit History</span></div><i class="fa-solid fa-chevron-right" style="color: #555;"></i></div>
+                            <div class="menu-item" onclick="showPage('withdrawHistoryPage')"><div class="menu-left"><div class="menu-icon-circle"><i class="fa-solid fa-money-bill-transfer"></i></div><span class="menu-text">Withdraw History</span></div><i class="fa-solid fa-chevron-right" style="color: #555;"></i></div>
                         </div>
                         <div class="menu-group">
                             <div class="menu-item" onclick="logout()"><div class="menu-left"><div class="menu-icon-circle"><i class="fa-solid fa-right-from-bracket"></i></div><span class="menu-text">Logout</span></div><i class="fa-solid fa-chevron-right" style="color: #555;"></i></div>
                         </div>
-
-                        <!-- HIDDEN ADMIN BUTTON: Only visible to specific email -->
                         <button id="adminAccessBtn" class="btn btn-admin" onclick="showPage('adminPanelPage')">ADMIN PANEL</button>
-                    
                     </div>
                 </div>
 
-            </div> <!-- End Page Wrapper -->
+            </div>
 
             <!-- Bottom Nav -->
             <nav class="bottom-nav">
@@ -679,18 +571,28 @@
                 </div>
             </nav>
 
-        </div> <!-- End Main App Content -->
-
-        <!-- Float Whatsapp (Redirects to Gmail now) -->
-        <div class="whatsapp-float" id="whatsappFloat" onclick="handleClickWhatsapp()">
-            <i class="fa-brands fa-whatsapp"></i>
         </div>
 
+        <!-- Float Whatsapp -->
+        <div class="whatsapp-float" id="whatsappFloat" onclick="handleClickWhatsapp()"><i class="fa-brands fa-whatsapp"></i></div>
     </div>
 
     <script>
         // --- ADMIN CONFIGURATION ---
         const ADMIN_EMAIL = "mrk443901@gmail.com"; 
+
+        // --- PLAN CONFIGURATION (Updated Logic) ---
+        // Each plan has a daily limit of tasks and earning per task
+        // Total Daily Earning = dailyLimit * earningPerTask
+        const PLAN_CONFIG = {
+            300:   { dailyLimit: 1, earningPerTask: 30 },  // Total 30/day
+            600:   { dailyLimit: 2, earningPerTask: 30 },  // Total 60/day
+            1200:  { dailyLimit: 4, earningPerTask: 30 },  // Total 120/day
+            2500:  { dailyLimit: 5, earningPerTask: 50 },  // Total 250/day
+            5000:  { dailyLimit: 10, earningPerTask: 50 }, // Total 500/day
+            7500:  { dailyLimit: 10, earningPerTask: 75 }, // Total 750/day
+            10000: { dailyLimit: 10, earningPerTask: 100 } // Total 1000/day
+        };
 
         // --- FIREBASE CONFIGURATION ---
         const firebaseConfig = {
@@ -717,11 +619,10 @@
             inviteCode: '',
             deposits: [],
             withdrawals: [],
-            tasks: [],
+            tasksCompletedToday: 0,
+            lastTaskDate: '',
             invites: { total: 0, active: 0, earnings: 0 }
         };
-
-        // --- AUTH & NAVIGATION ---
 
         document.addEventListener('DOMContentLoaded', function() {
             checkUrlInviteCode();
@@ -731,7 +632,6 @@
                     currentUser = user;
                     showLoading(true);
                     
-                    // Check if User is Admin
                     if (user.email === ADMIN_EMAIL) {
                         document.getElementById('adminAccessBtn').style.display = 'block';
                         loadAdminData();
@@ -739,7 +639,6 @@
                         document.getElementById('adminAccessBtn').style.display = 'none';
                     }
 
-                    // Load Bank Details for everyone
                     loadBankDetailsForUser();
 
                     db.ref('users/' + user.uid).on('value', (snapshot) => {
@@ -750,6 +649,10 @@
                             if (!userData.withdrawals) userData.withdrawals = [];
                             if (!userData.invites) userData.invites = { total: 0, active: 0, earnings: 0 };
                             
+                            // Initialize new task tracking fields if missing
+                            if (typeof userData.tasksCompletedToday === 'undefined') userData.tasksCompletedToday = 0;
+                            if (typeof userData.lastTaskDate === 'undefined') userData.lastTaskDate = '';
+
                             updateUI();
                             loadTasks();
                             updateHistoryTables();
@@ -762,7 +665,7 @@
                             showLoading(false);
                         } else {
                             showLoading(false);
-                            alert('User data missing. Please contact support.');
+                            alert('User data missing.');
                         }
                     });
                 } else {
@@ -779,9 +682,7 @@
         });
 
         // --- ADMIN FUNCTIONS ---
-
         function loadAdminData() {
-            // Load current settings into admin inputs
             db.ref('admin/settings/bank').once('value', (snap) => {
                 const bank = snap.val();
                 if (bank) {
@@ -794,32 +695,20 @@
 
         function saveBankDetails() {
             if (currentUser.email !== ADMIN_EMAIL) return;
-            
             const bankName = document.getElementById('adminBankName').value;
             const accNum = document.getElementById('adminAccNum').value;
             const accTitle = document.getElementById('adminAccTitle').value;
-
-            if(!bankName || !accNum || !accTitle) {
-                showAlert('Fill all bank details', 'error');
-                return;
-            }
+            if(!bankName || !accNum || !accTitle) { showAlert('Fill all details', 'error'); return; }
 
             showLoading(true);
             db.ref('admin/settings/bank').set({
-                bankName: bankName,
-                accountNumber: accNum,
-                accountTitle: accTitle,
-                updatedAt: Date.now()
+                bankName: bankName, accountNumber: accNum, accountTitle: accTitle
             }).then(() => {
-                showLoading(false);
-                showAlert('Bank Details Updated!', 'success');
+                showLoading(false); showAlert('Bank Details Updated!', 'success');
             }).catch(err => {
-                showLoading(false);
-                showAlert(err.message, 'error');
+                showLoading(false); showAlert(err.message, 'error');
             });
         }
-
-        // --- USER FUNCTIONS TO LOAD ADMIN DATA ---
 
         function loadBankDetailsForUser() {
             db.ref('admin/settings/bank').on('value', (snap) => {
@@ -828,152 +717,85 @@
                     document.getElementById('depBankName').textContent = bank.bankName;
                     document.getElementById('depAccNum').textContent = bank.accountNumber;
                     document.getElementById('depAccTitle').textContent = bank.accountTitle;
-                } else {
-                    document.getElementById('depBankName').textContent = "Not Set";
-                    document.getElementById('depAccNum').textContent = "Contact Admin";
-                    document.getElementById('depAccTitle').textContent = "-";
                 }
             });
         }
 
-        // --- AUTH ACTIONS ---
+        // --- AUTH ---
         function handleRegister() {
             const email = document.getElementById('regEmail').value;
             const password = document.getElementById('regPassword').value;
             const confirmPass = document.getElementById('regConfirmPassword').value;
-            const countryCode = document.getElementById('countryCode').value;
             const phone = document.getElementById('regPhone').value;
             const inviteCode = document.getElementById('regInviteCode').value;
 
-            if (!email || !password || !phone) { showAlert('Please fill all fields', 'error'); return; }
-            if (password.length < 6) { showAlert('Password must be at least 6 characters', 'error'); return; }
-            if (password !== confirmPass) { showAlert('Passwords do not match', 'error'); return; }
-
-            const fullPhone = countryCode + phone;
-            const myInviteCode = 'USER' + Math.floor(10000 + Math.random() * 90000);
+            if (!email || !password || !phone) { showAlert('Fill all fields', 'error'); return; }
+            if (password.length < 6) { showAlert('Min password 6 chars', 'error'); return; }
+            if (password !== confirmPass) { showAlert('Password mismatch', 'error'); return; }
 
             showLoading(true);
-
             auth.createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    const user = userCredential.user;
+                .then((cred) => {
                     const newUserData = {
-                        email: email,
-                        phone: fullPhone,
-                        uid: user.uid,
+                        email: email, phone: phone, uid: cred.user.uid,
                         joinedDate: new Date().toLocaleDateString(),
                         usedInviteCode: inviteCode || 'NONE',
-                        myInviteCode: myInviteCode,
-                        walletBalance: 0.00,
-                        totalDeposit: 0,
-                        totalWithdraw: 0,
-                        activePlan: null,
-                        profilePic: 'https://iili.io/f75iDuI.jpg',
-                        invites: { total: 0, active: 0, earnings: 0 }
+                        myInviteCode: 'USER' + Math.floor(10000 + Math.random() * 90000),
+                        walletBalance: 0, totalDeposit: 0, totalWithdraw: 0, activePlan: null,
+                        tasksCompletedToday: 0, lastTaskDate: '',
+                        profilePic: 'https://iili.io/f75iDuI.jpg'
                     };
-                    return db.ref('users/' + user.uid).set(newUserData);
+                    return db.ref('users/' + cred.user.uid).set(newUserData);
                 })
-                .then(() => {
-                    showAlert('Registration Successful!', 'success');
-                })
-                .catch((error) => {
-                    showLoading(false);
-                    showAlert(error.message, 'error');
-                });
+                .then(() => showAlert('Registered!', 'success'))
+                .catch((e) => { showLoading(false); showAlert(e.message, 'error'); });
         }
 
         function handleLogin() {
             const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            if (!email || !password) { showAlert('Please enter email and password', 'error'); return; }
+            const pass = document.getElementById('loginPassword').value;
+            if (!email || !pass) return showAlert('Enter credentials', 'error');
             showLoading(true);
-            auth.signInWithEmailAndPassword(email, password)
-                .catch((error) => {
-                    showLoading(false);
-                    showAlert(error.message, 'error');
-                });
+            auth.signInWithEmailAndPassword(email, pass).catch(e => { showLoading(false); showAlert(e.message, 'error'); });
         }
 
-        function logout() {
-            showLoading(true);
-            auth.signOut().then(() => {
-                window.location.reload();
-            });
-        }
+        function logout() { showLoading(true); auth.signOut().then(() => window.location.reload()); }
 
         function handleResetPassword() {
             const email = document.getElementById('resetEmail').value;
-            if(!email) { showAlert('Enter email address', 'error'); return; }
-            showLoading(true);
-            auth.sendPasswordResetEmail(email)
-                .then(() => {
-                    showLoading(false);
-                    showAlert('Password reset link sent to email!', 'success');
-                    showLogin();
-                })
-                .catch((error) => {
-                    showLoading(false);
-                    showAlert(error.message, 'error');
-                });
+            if(!email) return showAlert('Enter email', 'error');
+            auth.sendPasswordResetEmail(email).then(() => { showAlert('Link sent', 'success'); showLogin(); });
         }
 
-        function showRegister() {
-            document.getElementById('loginScreen').classList.add('auth-hidden');
-            document.getElementById('registerScreen').classList.remove('auth-hidden');
-        }
-        function showLogin() {
-            document.getElementById('registerScreen').classList.add('auth-hidden');
-            document.getElementById('forgotScreen').classList.add('auth-hidden');
-            document.getElementById('loginScreen').classList.remove('auth-hidden');
-        }
-        function showForgotPassword() {
-            document.getElementById('loginScreen').classList.add('auth-hidden');
-            document.getElementById('forgotScreen').classList.remove('auth-hidden');
-        }
-
+        function showRegister() { document.getElementById('loginScreen').classList.add('auth-hidden'); document.getElementById('registerScreen').classList.remove('auth-hidden'); }
+        function showLogin() { document.getElementById('registerScreen').classList.add('auth-hidden'); document.getElementById('forgotScreen').classList.add('auth-hidden'); document.getElementById('loginScreen').classList.remove('auth-hidden'); }
+        function showForgotPassword() { document.getElementById('loginScreen').classList.add('auth-hidden'); document.getElementById('forgotScreen').classList.remove('auth-hidden'); }
         function checkUrlInviteCode() {
             const urlParams = new URLSearchParams(window.location.search);
             const inviteCode = urlParams.get('invite');
-            if (inviteCode) {
-                document.getElementById('regInviteCode').value = inviteCode;
-                showRegister();
-            }
+            if (inviteCode) { document.getElementById('regInviteCode').value = inviteCode; showRegister(); }
         }
 
-        // --- APP LOGIC ---
-
+        // --- NAVIGATION ---
         let pageHistory = ['homePage'];
         let currentPage = 'homePage';
 
-        function saveUserData() {
-            if (currentUser) {
-                db.ref('users/' + currentUser.uid).update(userData);
-            }
-        }
+        function saveUserData() { if (currentUser) db.ref('users/' + currentUser.uid).update(userData); }
 
         function showPage(pageId) {
-            // Check Access Control for Admin Page
-            if (pageId === 'adminPanelPage' && (!currentUser || currentUser.email !== ADMIN_EMAIL)) {
-                showAlert('Access Denied', 'error');
-                return;
-            }
-
-            // Don't do anything if we are already on the page
+            if (pageId === 'adminPanelPage' && (!currentUser || currentUser.email !== ADMIN_EMAIL)) return showAlert('Access Denied', 'error');
             if (currentPage === pageId) return;
 
-            // Add current page to history before moving
             pageHistory.push(currentPage);
             currentPage = pageId;
 
-            // UI Transitions
             document.querySelectorAll('.page-container').forEach(page => {
                 page.classList.remove('page-active');
                 page.classList.add('page-inactive');
             });
-            const targetPage = document.getElementById(pageId);
-            targetPage.classList.remove('page-inactive');
-            targetPage.classList.add('page-active');
-            targetPage.scrollTop = 0;
+            document.getElementById(pageId).classList.remove('page-inactive');
+            document.getElementById(pageId).classList.add('page-active');
+            document.getElementById(pageId).scrollTop = 0;
 
             const backBtn = document.getElementById('backBtn');
             if (pageId === 'homePage') {
@@ -986,7 +808,8 @@
                     'invitePage': 'Invite & Earn', 'adminPanelPage': 'Admin Control',
                     'tasksPage': 'Daily Tasks', 'plansPage': 'VIP Plans',
                     'planDetailsPage': 'Plan Details', 'appPage': 'Download App',
-                    'profilePage': 'My Profile', 'supportPage': 'Contact Admin'
+                    'profilePage': 'My Profile', 'supportPage': 'Contact Admin',
+                    'depositHistoryPage': 'Deposit History', 'withdrawHistoryPage': 'Withdrawal History'
                 };
                 document.getElementById('pageTitle').textContent = titles[pageId] || 'Earning App';
             }
@@ -995,34 +818,20 @@
 
         function goBack() {
             if (pageHistory.length > 0) {
-                // Get the last page from history
                 const previousPage = pageHistory.pop();
-                
-                // Hide current page
                 document.getElementById(currentPage).classList.remove('page-active');
                 document.getElementById(currentPage).classList.add('page-inactive');
-                
-                // Show previous page
                 currentPage = previousPage;
                 document.getElementById(currentPage).classList.remove('page-inactive');
                 document.getElementById(currentPage).classList.add('page-active');
                 
-                // Reset header if we are back home
                 if (currentPage === 'homePage') {
                     document.getElementById('backBtn').style.display = 'none';
                     document.getElementById('pageTitle').textContent = 'Earning App';
-                    // Ensure history is clean if we hit home
                     pageHistory = [];
                 } else {
                     document.getElementById('backBtn').style.display = 'block';
-                    const titles = {
-                        'depositPage': 'Deposit Funds', 'withdrawPage': 'Withdraw Funds',
-                        'invitePage': 'Invite & Earn', 'adminPanelPage': 'Admin Control',
-                        'tasksPage': 'Daily Tasks', 'plansPage': 'VIP Plans',
-                        'planDetailsPage': 'Plan Details', 'appPage': 'Download App',
-                        'profilePage': 'My Profile', 'supportPage': 'Contact Admin'
-                    };
-                    document.getElementById('pageTitle').textContent = titles[currentPage] || 'Earning App';
+                    document.getElementById('pageTitle').textContent = 'Back';
                 }
                 updateNavActiveState(currentPage);
             }
@@ -1036,18 +845,13 @@
             }
         }
 
+        // --- TRANSACTIONS ---
         function submitDeposit() {
             const trxId = document.getElementById('depositTrxId').value;
             const amount = parseFloat(document.getElementById('depositAmount').value);
-            if (!trxId || !amount || amount < 300) { showAlert('Min deposit Rs 300 & TRX ID required', 'error'); return; }
+            if (!trxId || !amount || amount < 300) return showAlert('Min Rs 300 & TRX ID required', 'error');
 
-            const deposit = {
-                id: Date.now(),
-                date: new Date().toLocaleDateString(),
-                amount: amount,
-                trxId: trxId,
-                status: 'pending'
-            };
+            const deposit = { id: Date.now(), date: new Date().toLocaleDateString(), amount: amount, trxId: trxId, status: 'pending' };
             userData.deposits.push(deposit);
             userData.totalDeposit += amount;
             saveUserData();
@@ -1060,19 +864,11 @@
             const account = document.getElementById('withdrawAccount').value;
             const name = document.getElementById('withdrawName').value;
             const amount = parseFloat(document.getElementById('withdrawAmount').value);
-            if (!account || !name || !amount) { showAlert('Fill all fields', 'error'); return; }
-            if (amount < 100) { showAlert('Min withdrawal Rs 100', 'error'); return; }
-            if (amount > userData.walletBalance) { showAlert('Insufficient balance', 'error'); return; }
+            if (!account || !name || !amount) return showAlert('Fill all fields', 'error');
+            if (amount < 100) return showAlert('Min withdrawal Rs 100', 'error');
+            if (amount > userData.walletBalance) return showAlert('Insufficient balance', 'error');
 
-            const withdrawal = {
-                id: Date.now(),
-                date: new Date().toLocaleDateString(),
-                amount: amount,
-                account: account,
-                name: name,
-                method: 'jazcash',
-                status: 'pending'
-            };
+            const withdrawal = { id: Date.now(), date: new Date().toLocaleDateString(), amount: amount, account: account, name: name, status: 'pending' };
             userData.withdrawals.push(withdrawal);
             userData.totalWithdraw += amount;
             userData.walletBalance -= amount;
@@ -1083,21 +879,47 @@
             document.getElementById('withdrawAmount').value = '';
         }
 
-        function redirectToGmail() {
-            window.location.href = `mailto:${ADMIN_EMAIL}`;
+        // --- PLANS ---
+        function generatePlans() {
+            const planGrid = document.querySelector('.plan-grid');
+            planGrid.innerHTML = '';
+            // Generate cards based on PLAN_CONFIG
+            Object.keys(PLAN_CONFIG).forEach(key => {
+                const amount = parseInt(key);
+                const config = PLAN_CONFIG[key];
+                const dailyTotal = config.dailyLimit * config.earningPerTask;
+                const totalReturn = dailyTotal * 45;
+                
+                planGrid.innerHTML += `
+                    <div class="plan-card" onclick="showPlanDetails(${amount})">
+                        <div class="plan-amount">Rs ${amount}</div>
+                        <div class="plan-details">
+                            Daily Earning: Rs ${dailyTotal}<br>
+                            Daily Tasks: ${config.dailyLimit}<br>
+                            Total Return: Rs ${totalReturn}
+                        </div>
+                        <button class="btn" style="margin-top: auto; padding: 10px; font-size: 12px;">Buy Now</button>
+                    </div>`;
+            });
         }
-
-        function sendEmailToAdmin() {
-            const subject = document.getElementById('supportSubject').value;
-            const body = document.getElementById('supportMessage').value;
+        
+        function showPlanDetails(amount) {
+            const config = PLAN_CONFIG[amount];
+            const dailyTotal = config.dailyLimit * config.earningPerTask;
+            const totalReturn = dailyTotal * 45;
             
-            if(!subject || !body) {
-                showAlert('Please fill in Subject and Message', 'error');
-                return;
-            }
-            
-            const mailtoLink = `mailto:${ADMIN_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-            window.location.href = mailtoLink;
+            document.getElementById('planDetailsPage').innerHTML = `
+                <h2 class="page-title">Plan Details</h2>
+                <div class="card">
+                    <h3 class="card-title">VIP Plan: Rs ${amount}</h3>
+                    <div class="info-row"><span class="info-label">Daily Tasks:</span><span class="info-value">${config.dailyLimit}</span></div>
+                    <div class="info-row"><span class="info-label">Per Task:</span><span class="info-value">Rs ${config.earningPerTask}</span></div>
+                    <div class="info-row"><span class="info-label">Daily Total:</span><span class="info-value">Rs ${dailyTotal}</span></div>
+                    <div class="info-row"><span class="info-label">Duration:</span><span class="info-value">45 Days</span></div>
+                    <div class="info-row"><span class="info-label">Total Revenue:</span><span class="info-value">Rs ${totalReturn}</span></div>
+                    <button class="btn" onclick="buyPlan(${amount})">Confirm Purchase</button>
+                </div>`;
+            showPage('planDetailsPage');
         }
 
         function buyPlan(amount) {
@@ -1107,31 +929,135 @@
                 return;
             }
             userData.walletBalance -= amount;
+            
+            // Get config for this plan
+            const config = PLAN_CONFIG[amount];
+            
             userData.activePlan = {
                 amount: amount,
                 purchasedDate: new Date().toLocaleDateString(),
-                dailyEarning: amount * 0.10,
-                totalDays: 45,
-                daysCompleted: 0
+                dailyEarning: config.dailyLimit * config.earningPerTask,
+                // Store limits in active plan for easy access
+                dailyLimit: config.dailyLimit,
+                earningPerTask: config.earningPerTask
             };
+            
+            // Reset task counters on new plan purchase
+            userData.tasksCompletedToday = 0;
+            userData.lastTaskDate = new Date().toDateString();
+
             saveUserData();
-            showAlert(`Plan purchased!`, 'success');
+            showAlert(`Plan Rs ${amount} activated!`, 'success');
             showPage('profilePage');
         }
 
-        function completeTask(taskId) {
-            const task = userData.tasks.find(t => t.id === taskId);
-            if (!task) return;
-            showAlert(`Task started! Please wait ${task.duration}s...`, 'info');
-            setTimeout(() => {
-                const reward = userData.activePlan ? task.reward * (userData.activePlan.amount / 1000) : task.reward;
-                const finalReward = reward < 1 ? 1 : reward;
-                userData.walletBalance += finalReward;
-                saveUserData();
-                showAlert(`Earned Rs ${finalReward.toFixed(2)}`, 'success');
-            }, task.duration * 1000);
+        // --- TASKS (UPDATED LOGIC) ---
+        function loadTasks() {
+            const tasksList = document.getElementById('tasksList');
+            const noPlan = document.getElementById('noPlanWarning');
+            const limitWarning = document.getElementById('taskLimitWarning');
+            
+            // 1. Check if user has a plan
+            if (!userData.activePlan) {
+                tasksList.innerHTML = ''; 
+                noPlan.style.display = 'block'; 
+                limitWarning.style.display = 'none';
+                return;
+            }
+            noPlan.style.display = 'none';
+
+            // 2. Check 24-hour cycle (Reset if date changed)
+            const todayStr = new Date().toDateString();
+            if (userData.lastTaskDate !== todayStr) {
+                userData.tasksCompletedToday = 0;
+                userData.lastTaskDate = todayStr;
+                saveUserData(); // Update reset in DB immediately
+            }
+
+            // 3. Check Daily Limit
+            const maxTasks = userData.activePlan.dailyLimit;
+            if (userData.tasksCompletedToday >= maxTasks) {
+                tasksList.innerHTML = '';
+                limitWarning.style.display = 'block';
+                return;
+            }
+            limitWarning.style.display = 'none';
+
+            // 4. Generate Tasks needed to fill the limit
+            // E.g., if limit is 5 and done 2, show 3 available tasks or just show one "Next Task"
+            // For simplicity and "Next Task" logic, we show available slots.
+            
+            const remaining = maxTasks - userData.tasksCompletedToday;
+            const reward = userData.activePlan.earningPerTask;
+
+            let html = `<div class="card"><h3 class="card-title">Tasks Available (${remaining}/${maxTasks})</h3>`;
+            
+            // Show only one actionable task to enforce sequential viewing or list all
+            // Listing all remaining tasks:
+            for(let i=0; i<remaining; i++) {
+                html += `
+                    <div class="task-item">
+                        <div>
+                            <div style="font-weight: bold; font-size: 14px;">Sponsored Ad Task ${userData.tasksCompletedToday + i + 1}</div>
+                            <div style="font-size: 11px; color: #aaa;">Duration: 20s</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="task-reward">+Rs ${reward}</div>
+                            <button class="btn" style="padding: 5px 12px; font-size: 11px; margin-top: 5px; width: auto;" onclick="startVisualTask(${reward})">Start</button>
+                        </div>
+                    </div>`;
+            }
+            html += '</div>';
+            tasksList.innerHTML = html;
         }
 
+        // --- VISUAL TASK TIMER LOGIC ---
+        let taskTimerInterval = null;
+
+        function startVisualTask(rewardAmount) {
+            const overlay = document.getElementById('taskTimerOverlay');
+            const circle = document.getElementById('timerProgress');
+            const countText = document.getElementById('timerCount');
+            
+            overlay.style.display = 'flex';
+            
+            let timeLeft = 20;
+            countText.textContent = timeLeft;
+            
+            // Reset Animation
+            circle.style.transition = 'none';
+            circle.style.strokeDashoffset = '0'; // Full circle
+            
+            // Trigger reflow to apply reset
+            circle.getBoundingClientRect();
+            
+            // Start Animation
+            circle.style.transition = 'stroke-dashoffset 20s linear';
+            circle.style.strokeDashoffset = '440'; // Empty circle (approx 2 * PI * 70)
+
+            taskTimerInterval = setInterval(() => {
+                timeLeft--;
+                countText.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(taskTimerInterval);
+                    finishTask(rewardAmount);
+                }
+            }, 1000);
+        }
+
+        function finishTask(amount) {
+            document.getElementById('taskTimerOverlay').style.display = 'none';
+            
+            // Update User Data
+            userData.walletBalance += amount;
+            userData.tasksCompletedToday++;
+            saveUserData();
+            
+            showAlert(`Task Complete! Rs ${amount} added.`, 'success');
+            loadTasks(); // Refresh list to show updated count or limit warning
+        }
+
+        // --- UTILS & UI UPDATES ---
         function updateUI() {
             document.getElementById('walletBalance').textContent = userData.walletBalance.toFixed(2);
             document.getElementById('totalDeposit').textContent = `Rs ${userData.totalDeposit.toFixed(2)}`;
@@ -1144,7 +1070,7 @@
                 currentPlanInfo.innerHTML = `
                     <div style="text-align: center;">
                         <div style="font-size: 24px; color: #4caf50;">Rs ${userData.activePlan.amount}</div>
-                        <div style="font-size: 12px; color: #aaa;">Daily: Rs ${userData.activePlan.dailyEarning.toFixed(2)}<br>Purchased: ${userData.activePlan.purchasedDate}</div>
+                        <div style="font-size: 12px; color: #aaa;">Daily: Rs ${userData.activePlan.dailyEarning}<br>Purchased: ${userData.activePlan.purchasedDate}</div>
                     </div>`;
             } else {
                 currentPlanInfo.innerHTML = '<p style="color: #aaa; text-align: center;">No active plan</p>';
@@ -1173,66 +1099,15 @@
             document.getElementById('inviteEarnings').textContent = `Rs ${userData.invites.earnings.toFixed(2)}`;
         }
 
-        function generatePlans() {
-            const plans = [300, 600, 1200, 2500, 5000, 7500, 10000];
-            const planGrid = document.querySelector('.plan-grid');
-            planGrid.innerHTML = '';
-            plans.forEach(amount => {
-                const daily = amount * 0.10;
-                planGrid.innerHTML += `
-                    <div class="plan-card" onclick="showPlanDetails(${amount})">
-                        <div class="plan-amount">Rs ${amount}</div>
-                        <div class="plan-details">Daily: Rs ${daily.toFixed(0)}<br>Total: Rs ${(daily*45).toFixed(0)}</div>
-                        <button class="btn" style="margin-top: auto; padding: 10px; font-size: 12px;">Buy Now</button>
-                    </div>`;
-            });
-        }
-        
-        function showPlanDetails(amount) {
-            const daily = amount * 0.10;
-            document.getElementById('planDetailsPage').innerHTML = `
-                <h2 class="page-title">Plan Details</h2>
-                <div class="card">
-                    <h3 class="card-title">VIP Plan: Rs ${amount}</h3>
-                    <div class="info-row"><span class="info-label">Daily (10%):</span><span class="info-value">Rs ${daily.toFixed(2)}</span></div>
-                    <div class="info-row"><span class="info-label">Duration:</span><span class="info-value">45 Days</span></div>
-                    <div class="info-row"><span class="info-label">Total:</span><span class="info-value">Rs ${(daily*45).toFixed(2)}</span></div>
-                    <button class="btn" onclick="buyPlan(${amount})">Confirm Purchase</button>
-                </div>`;
-            showPage('planDetailsPage');
-        }
-
-        function loadTasks() {
-            userData.tasks = [
-                { id: 1, title: 'Watch Ad', duration: 15, reward: 5 },
-                { id: 2, title: 'Check Website', duration: 10, reward: 8 }
-            ];
-            const tasksList = document.getElementById('tasksList');
-            const noPlan = document.getElementById('noPlanWarning');
-            if (!userData.activePlan) {
-                tasksList.innerHTML = ''; noPlan.style.display = 'block';
-            } else {
-                noPlan.style.display = 'none';
-                tasksList.innerHTML = '<div class="card"><h3 class="card-title">Available Tasks</h3>' + 
-                userData.tasks.map(t => `
-                    <div class="task-item">
-                        <div><div style="font-weight: bold; font-size: 14px;">${t.title}</div><div style="font-size: 11px; color: #aaa;">${t.duration}s</div></div>
-                        <div style="text-align: right;"><div class="task-reward">+Rs ${t.reward}</div><button class="btn" style="padding: 5px 12px; font-size: 11px; margin-top: 5px; width: auto;" onclick="completeTask(${t.id})">Start</button></div>
-                    </div>`).join('') + '</div>';
-            }
-        }
-
         function copyInviteCode() {
-            const txt = document.createElement("textarea");
-            txt.value = userData.myInviteCode;
+            const txt = document.createElement("textarea"); txt.value = userData.myInviteCode;
             document.body.appendChild(txt); txt.select(); document.execCommand("Copy"); txt.remove();
             showAlert('Code copied!', 'success');
         }
         
         function shareInviteLink() {
             const link = document.getElementById('inviteLink').value;
-            const txt = document.createElement("textarea");
-            txt.value = link;
+            const txt = document.createElement("textarea"); txt.value = link;
             document.body.appendChild(txt); txt.select(); document.execCommand("Copy"); txt.remove();
             showAlert('Link copied!', 'success');
         }
@@ -1246,21 +1121,24 @@
             setTimeout(() => { a.style.display = 'none'; }, 3000);
         }
 
-        function showLoading(show) {
-            document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
-        }
-
+        function showLoading(show) { document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none'; }
+        
         function selectWithdrawMethod(m) {
             document.querySelectorAll('#withdrawPage .payment-method').forEach(i => i.classList.remove('active'));
             event.target.closest('.payment-method').classList.add('active');
         }
 
-        let isDragging = false, dragStartTime = 0;
-        function handleClickWhatsapp() { 
-            if (Date.now() - dragStartTime < 200 && !isDragging) {
-                redirectToGmail();
-            } 
+        function sendEmailToAdmin() {
+            const subject = document.getElementById('supportSubject').value;
+            const body = document.getElementById('supportMessage').value;
+            if(!subject || !body) return showAlert('Fill Subject and Message', 'error');
+            window.location.href = `mailto:${ADMIN_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         }
+
+        function redirectToGmail() { window.location.href = `mailto:${ADMIN_EMAIL}`; }
+
+        let isDragging = false, dragStartTime = 0;
+        function handleClickWhatsapp() { if (Date.now() - dragStartTime < 200 && !isDragging) redirectToGmail(); }
         function initDraggableWhatsapp() {
             const btn = document.getElementById('whatsappFloat');
             let offset = {x:0, y:0};
