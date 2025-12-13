@@ -2,14 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport-fit=cover ensures full screen on notched phones -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Earning App - Secure Login</title>
-    
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Firebase SDKs (Version 8 - Compatible with your code structure) -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -20,9 +17,8 @@
         body { background-color: #000; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; touch-action: none; }
 
         /* --- App Container --- */
-        /* Changed to 100dvh for better mobile chrome support */
-        .app-container { width: 100%; max-width: 412px; background-color: #031b38; height: 100vh; height: 100dvh; max-height: 900px; position: relative; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
-        @media screen and (max-width: 480px) { .app-container { max-width: 100%; max-height: 100dvh; border-radius: 0; box-shadow: none; } }
+        .app-container { width: 100%; max-width: 412px; background-color: #031b38; height: 100vh; max-height: 900px; position: relative; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
+        @media screen and (max-width: 480px) { .app-container { max-width: 100%; max-height: 100vh; border-radius: 0; box-shadow: none; } }
 
         /* --- AUTH SCREEN STYLES --- */
         .auth-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #031b38 0%, #000000 100%); z-index: 2000; padding: 30px; display: flex; flex-direction: column; justify-content: center; overflow-y: auto; transition: transform 0.3s ease; }
@@ -46,7 +42,7 @@
         .forgot-password span { color: #aaa; cursor: pointer; }
 
         /* --- Loading Overlay --- */
-        #loadingOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; display: none; justify-content: center; align-items: center; flex-direction: column; color: white; }
+        #loadingOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; display: flex; justify-content: center; align-items: center; flex-direction: column; color: white; display: none; }
         .spinner { border: 4px solid rgba(255,255,255,0.3); border-radius: 50%; border-top: 4px solid #e91e63; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
@@ -91,12 +87,12 @@
         .form-group { margin-bottom: 20px; }
         .form-label { display: block; margin-bottom: 8px; color: #aaa; }
         .form-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #2c3542; background-color: #0d1520; color: white; font-size: 14px; }
-        .form-input:focus { outline: none; border-color: #e91e63; }
-        
+        textarea.form-input { height: 100px; resize: none; }
+
         .btn { width: 100%; padding: 15px; background: linear-gradient(135deg, #e91e63, #880e4f); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: transform 0.2s; }
         .btn:active { transform: scale(0.98); }
         .btn-secondary { background: linear-gradient(135deg, #2196f3, #0d47a1); }
-        .btn-admin { background: linear-gradient(135deg, #d32f2f, #b71c1c); display: none; }
+        .btn-admin { background: linear-gradient(135deg, #d32f2f, #b71c1c); display: none; } /* Hidden by default */
 
         .payment-methods { display: flex; gap: 10px; margin-bottom: 20px; }
         .payment-method { flex: 1; text-align: center; padding: 15px; border: 2px solid #2c3542; border-radius: 10px; cursor: pointer; transition: all 0.3s; }
@@ -112,7 +108,7 @@
         .task-reward { color: #4caf50; font-weight: bold; }
         
         .invite-code-box { background: linear-gradient(135deg, #ff9800, #f57c00); padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
-        .invite-code { font-size: 32px; font-weight: bold; letter-spacing: 5px; color: white; margin: 10px 0; user-select: text; }
+        .invite-code { font-size: 32px; font-weight: bold; letter-spacing: 5px; color: white; margin: 10px 0; }
         
         .stats-box { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
         .stat-card { background-color: #0d1520; padding: 15px; border-radius: 10px; text-align: center; }
@@ -135,7 +131,6 @@
         .center-btn-container { position: relative; top: -20px; }
         .center-btn { width: 60px; height: 60px; background: linear-gradient(135deg, #ff4081, #c51162); border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 5px solid #1a222c; color: white; font-size: 28px; box-shadow: 0 -5px 10px rgba(0,0,0,0.3); cursor: pointer; }
 
-        /* Added touch-action: none to prevent scrolling while dragging */
         .whatsapp-float { position: absolute; bottom: 85px; right: 20px; width: 55px; height: 55px; background-color: #25D366; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border: 2px solid white; z-index: 999; cursor: grab; transition: transform 0.1s; touch-action: none; }
         .whatsapp-float:active { transform: scale(0.95); cursor: grabbing; }
 
@@ -325,7 +320,7 @@
                             <div class="icon-box"><i class="fa-solid fa-user-plus"></i></div>
                             <span class="action-text">Invite</span>
                         </div>
-                        <div class="action-item" onclick="contactAdmin()">
+                        <div class="action-item" onclick="showPage('supportPage')">
                             <div class="icon-box"><i class="fa-solid fa-headset"></i></div>
                             <span class="action-text">Support</span>
                         </div>
@@ -345,12 +340,47 @@
                     </div>
                 </div>
 
+                <!-- Support / Contact Page -->
+                <div class="page-container page-inactive" id="supportPage">
+                    <div class="page-content">
+                        <h2 class="page-title">Contact Admin</h2>
+                        <div class="card">
+                            <h3 class="card-title">Send a Message</h3>
+                            <p style="color:#aaa; font-size:12px; margin-bottom:15px;">Have questions? Fill out the form below to email us directly.</p>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Subject</label>
+                                <input type="text" class="form-input" id="supportSubject" placeholder="Brief topic of your issue">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Message</label>
+                                <textarea class="form-input" id="supportMessage" placeholder="Describe your issue or question in detail..."></textarea>
+                            </div>
+                            <button class="btn" onclick="sendEmailToAdmin()">Send Message via Email</button>
+                        </div>
+                        
+                        <div class="card">
+                            <h3 class="card-title">Direct Contact</h3>
+                            <div class="menu-group" style="margin-bottom:0;">
+                                <div class="menu-item" onclick="redirectToGmail()">
+                                    <div class="menu-left">
+                                        <div class="menu-icon-circle"><i class="fa-solid fa-envelope"></i></div>
+                                        <span class="menu-text">Email Admin directly</span>
+                                    </div>
+                                    <i class="fa-solid fa-chevron-right" style="color: #555;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Deposit Page (User View) -->
                 <div class="page-container page-inactive" id="depositPage">
                     <div class="page-content">
                         <h2 class="page-title">Deposit Funds</h2>
                         <div class="card">
                             <h3 class="card-title">Payment Details</h3>
+                            <!-- These details are now fetched from Firebase -->
                             <div class="info-row"><span class="info-label">Bank Name:</span><span class="info-value" id="depBankName">Loading...</span></div>
                             <div class="info-row"><span class="info-label">Account Number:</span><span class="info-value" id="depAccNum">Loading...</span></div>
                             <div class="info-row"><span class="info-label">Account Holder:</span><span class="info-value" id="depAccTitle">Loading...</span></div>
@@ -553,7 +583,7 @@
 
         </div> <!-- End Main App Content -->
 
-        <!-- Float Whatsapp -->
+        <!-- Float Whatsapp (Redirects to Gmail now) -->
         <div class="whatsapp-float" id="whatsappFloat" onclick="handleClickWhatsapp()">
             <i class="fa-brands fa-whatsapp"></i>
         </div>
@@ -562,10 +592,9 @@
 
     <script>
         // --- ADMIN CONFIGURATION ---
-        const ADMIN_EMAIL = "admin@gmail.com"; // CHANGE THIS TO YOUR EMAIL
+        const ADMIN_EMAIL = "mrk443901@gmail.com"; 
 
         // --- FIREBASE CONFIGURATION ---
-        // Ensure these keys are correct. If the app shows "Loading..." forever, these keys are invalid.
         const firebaseConfig = {
             apiKey: "AIzaSyBAQIolFYwc0_QfaR3LC1VOwjZD0zFbYWc",
             databaseURL: "https://zone-b2e27-default-rtdb.asia-southeast1.firebasedatabase.app/",
@@ -574,14 +603,8 @@
         };
 
         if (!firebase.apps.length) {
-            try {
-                firebase.initializeApp(firebaseConfig);
-            } catch (error) {
-                console.error("Firebase Init Error:", error);
-                alert("Database connection failed. Please check your configuration.");
-            }
+            firebase.initializeApp(firebaseConfig);
         }
-        
         const auth = firebase.auth();
         const db = firebase.database();
 
@@ -625,7 +648,6 @@
                         const data = snapshot.val();
                         if (data) {
                             userData = data;
-                            // Ensure arrays/objects exist to prevent errors
                             if (!userData.deposits) userData.deposits = [];
                             if (!userData.withdrawals) userData.withdrawals = [];
                             if (!userData.invites) userData.invites = { total: 0, active: 0, earnings: 0 };
@@ -641,13 +663,9 @@
                             document.getElementById('mainAppContent').style.display = 'flex';
                             showLoading(false);
                         } else {
-                            // Handle case where user auth exists but no db entry
-                            console.warn("No data found for user, likely new account or error.");
                             showLoading(false);
+                            alert('User data missing. Please contact support.');
                         }
-                    }, (error) => {
-                        console.error("Data Load Error", error);
-                        showLoading(false);
                     });
                 } else {
                     currentUser = null;
@@ -842,10 +860,14 @@
                 return;
             }
 
-            if (currentPage !== pageId) {
-                pageHistory.push(currentPage);
-                currentPage = pageId;
-            }
+            // Don't do anything if we are already on the page
+            if (currentPage === pageId) return;
+
+            // Add current page to history before moving
+            pageHistory.push(currentPage);
+            currentPage = pageId;
+
+            // UI Transitions
             document.querySelectorAll('.page-container').forEach(page => {
                 page.classList.remove('page-active');
                 page.classList.add('page-inactive');
@@ -866,7 +888,7 @@
                     'invitePage': 'Invite & Earn', 'adminPanelPage': 'Admin Control',
                     'tasksPage': 'Daily Tasks', 'plansPage': 'VIP Plans',
                     'planDetailsPage': 'Plan Details', 'appPage': 'Download App',
-                    'profilePage': 'My Profile'
+                    'profilePage': 'My Profile', 'supportPage': 'Contact Admin'
                 };
                 document.getElementById('pageTitle').textContent = titles[pageId] || 'Earning App';
             }
@@ -874,18 +896,35 @@
         }
 
         function goBack() {
-            if (pageHistory.length > 1) {
-                pageHistory.pop();
-                const previousPage = pageHistory[pageHistory.length - 1];
+            if (pageHistory.length > 0) {
+                // Get the last page from history
+                const previousPage = pageHistory.pop();
+                
+                // Hide current page
                 document.getElementById(currentPage).classList.remove('page-active');
                 document.getElementById(currentPage).classList.add('page-inactive');
+                
+                // Show previous page
                 currentPage = previousPage;
                 document.getElementById(currentPage).classList.remove('page-inactive');
                 document.getElementById(currentPage).classList.add('page-active');
                 
+                // Reset header if we are back home
                 if (currentPage === 'homePage') {
                     document.getElementById('backBtn').style.display = 'none';
                     document.getElementById('pageTitle').textContent = 'Earning App';
+                    // Ensure history is clean if we hit home
+                    pageHistory = [];
+                } else {
+                    document.getElementById('backBtn').style.display = 'block';
+                    const titles = {
+                        'depositPage': 'Deposit Funds', 'withdrawPage': 'Withdraw Funds',
+                        'invitePage': 'Invite & Earn', 'adminPanelPage': 'Admin Control',
+                        'tasksPage': 'Daily Tasks', 'plansPage': 'VIP Plans',
+                        'planDetailsPage': 'Plan Details', 'appPage': 'Download App',
+                        'profilePage': 'My Profile', 'supportPage': 'Contact Admin'
+                    };
+                    document.getElementById('pageTitle').textContent = titles[currentPage] || 'Earning App';
                 }
                 updateNavActiveState(currentPage);
             }
@@ -946,10 +985,21 @@
             document.getElementById('withdrawAmount').value = '';
         }
 
-        function contactAdmin() {
-            const message = encodeURIComponent('Hello, I need support with Earning App.');
-            // This now acts as support contact
-            window.open(`https://wa.me/923199242314?text=${message}`, '_blank');
+        function redirectToGmail() {
+            window.location.href = `mailto:${ADMIN_EMAIL}`;
+        }
+
+        function sendEmailToAdmin() {
+            const subject = document.getElementById('supportSubject').value;
+            const body = document.getElementById('supportMessage').value;
+            
+            if(!subject || !body) {
+                showAlert('Please fill in Subject and Message', 'error');
+                return;
+            }
+            
+            const mailtoLink = `mailto:${ADMIN_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = mailtoLink;
         }
 
         function buyPlan(amount) {
@@ -1074,42 +1124,19 @@
             }
         }
 
-        // Updated Copy Function for Modern Browsers
-        function copyText(text) {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(text).then(() => {
-                    showAlert('Copied to clipboard!', 'success');
-                }).catch(err => {
-                    console.error('Failed to copy: ', err);
-                    fallbackCopyText(text);
-                });
-            } else {
-                fallbackCopyText(text);
-            }
-        }
-
-        function fallbackCopyText(text) {
-            const txt = document.createElement("textarea");
-            txt.value = text;
-            txt.style.position = "fixed"; 
-            document.body.appendChild(txt); 
-            txt.select(); 
-            try {
-                document.execCommand("Copy"); 
-                showAlert('Copied!', 'success');
-            } catch (err) {
-                showAlert('Copy failed', 'error');
-            }
-            document.body.removeChild(txt);
-        }
-
         function copyInviteCode() {
-            copyText(userData.myInviteCode);
+            const txt = document.createElement("textarea");
+            txt.value = userData.myInviteCode;
+            document.body.appendChild(txt); txt.select(); document.execCommand("Copy"); txt.remove();
+            showAlert('Code copied!', 'success');
         }
         
         function shareInviteLink() {
             const link = document.getElementById('inviteLink').value;
-            copyText(link);
+            const txt = document.createElement("textarea");
+            txt.value = link;
+            document.body.appendChild(txt); txt.select(); document.execCommand("Copy"); txt.remove();
+            showAlert('Link copied!', 'success');
         }
 
         function showAlert(msg, type) {
@@ -1117,8 +1144,6 @@
             a.textContent = msg;
             a.style.backgroundColor = type === 'error' ? '#f44336' : '#4caf50';
             a.style.display = 'block';
-            a.style.animation = 'none';
-            a.offsetHeight; /* trigger reflow */
             a.style.animation = 'slideDown 0.3s ease forwards';
             setTimeout(() => { a.style.display = 'none'; }, 3000);
         }
@@ -1134,32 +1159,26 @@
 
         let isDragging = false, dragStartTime = 0;
         function handleClickWhatsapp() { 
-            // Only trigger click if it was a quick tap, not a drag
-            if (Date.now() - dragStartTime < 200 && !isDragging) contactAdmin(); 
+            if (Date.now() - dragStartTime < 200 && !isDragging) {
+                redirectToGmail();
+            } 
         }
-
         function initDraggableWhatsapp() {
             const btn = document.getElementById('whatsappFloat');
             let offset = {x:0, y:0};
-
             btn.addEventListener('touchstart', (e) => {
                 isDragging=false; dragStartTime=Date.now();
                 const touch=e.touches[0], rect=btn.getBoundingClientRect();
                 offset.x=touch.clientX-rect.left; offset.y=touch.clientY-rect.top;
-            }, {passive: false});
-
+            });
             btn.addEventListener('touchmove', (e) => {
-                e.preventDefault(); // Prevents page scroll
-                isDragging=true;
+                e.preventDefault(); isDragging=true;
                 const touch=e.touches[0], app=document.querySelector('.app-container'), rect=app.getBoundingClientRect();
                 let l=touch.clientX-rect.left-offset.x, t=touch.clientY-rect.top-offset.y;
-                
-                // Boundaries
                 if(l<0)l=0; if(l>rect.width-btn.offsetWidth)l=rect.width-btn.offsetWidth;
                 if(t<0)t=0; if(t>rect.height-btn.offsetHeight)t=rect.height-btn.offsetHeight;
-                
                 btn.style.right='auto'; btn.style.bottom='auto'; btn.style.left=l+'px'; btn.style.top=t+'px';
-            }, {passive: false});
+            });
         }
     </script>
 </body>
