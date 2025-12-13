@@ -2,11 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Viewport-fit=cover ensures full screen on notched phones -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Earning App - Secure Login</title>
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDKs (Version 8 - Compatible with your code structure) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -17,8 +20,9 @@
         body { background-color: #000; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; touch-action: none; }
 
         /* --- App Container --- */
-        .app-container { width: 100%; max-width: 412px; background-color: #031b38; height: 100vh; max-height: 900px; position: relative; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
-        @media screen and (max-width: 480px) { .app-container { max-width: 100%; max-height: 100vh; border-radius: 0; box-shadow: none; } }
+        /* Changed to 100dvh for better mobile chrome support */
+        .app-container { width: 100%; max-width: 412px; background-color: #031b38; height: 100vh; height: 100dvh; max-height: 900px; position: relative; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
+        @media screen and (max-width: 480px) { .app-container { max-width: 100%; max-height: 100dvh; border-radius: 0; box-shadow: none; } }
 
         /* --- AUTH SCREEN STYLES --- */
         .auth-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #031b38 0%, #000000 100%); z-index: 2000; padding: 30px; display: flex; flex-direction: column; justify-content: center; overflow-y: auto; transition: transform 0.3s ease; }
@@ -42,7 +46,7 @@
         .forgot-password span { color: #aaa; cursor: pointer; }
 
         /* --- Loading Overlay --- */
-        #loadingOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; display: flex; justify-content: center; align-items: center; flex-direction: column; color: white; display: none; }
+        #loadingOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; display: none; justify-content: center; align-items: center; flex-direction: column; color: white; }
         .spinner { border: 4px solid rgba(255,255,255,0.3); border-radius: 50%; border-top: 4px solid #e91e63; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
@@ -87,11 +91,12 @@
         .form-group { margin-bottom: 20px; }
         .form-label { display: block; margin-bottom: 8px; color: #aaa; }
         .form-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #2c3542; background-color: #0d1520; color: white; font-size: 14px; }
+        .form-input:focus { outline: none; border-color: #e91e63; }
         
         .btn { width: 100%; padding: 15px; background: linear-gradient(135deg, #e91e63, #880e4f); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: transform 0.2s; }
         .btn:active { transform: scale(0.98); }
         .btn-secondary { background: linear-gradient(135deg, #2196f3, #0d47a1); }
-        .btn-admin { background: linear-gradient(135deg, #d32f2f, #b71c1c); display: none; } /* Hidden by default */
+        .btn-admin { background: linear-gradient(135deg, #d32f2f, #b71c1c); display: none; }
 
         .payment-methods { display: flex; gap: 10px; margin-bottom: 20px; }
         .payment-method { flex: 1; text-align: center; padding: 15px; border: 2px solid #2c3542; border-radius: 10px; cursor: pointer; transition: all 0.3s; }
@@ -107,7 +112,7 @@
         .task-reward { color: #4caf50; font-weight: bold; }
         
         .invite-code-box { background: linear-gradient(135deg, #ff9800, #f57c00); padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
-        .invite-code { font-size: 32px; font-weight: bold; letter-spacing: 5px; color: white; margin: 10px 0; }
+        .invite-code { font-size: 32px; font-weight: bold; letter-spacing: 5px; color: white; margin: 10px 0; user-select: text; }
         
         .stats-box { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
         .stat-card { background-color: #0d1520; padding: 15px; border-radius: 10px; text-align: center; }
@@ -130,6 +135,7 @@
         .center-btn-container { position: relative; top: -20px; }
         .center-btn { width: 60px; height: 60px; background: linear-gradient(135deg, #ff4081, #c51162); border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 5px solid #1a222c; color: white; font-size: 28px; box-shadow: 0 -5px 10px rgba(0,0,0,0.3); cursor: pointer; }
 
+        /* Added touch-action: none to prevent scrolling while dragging */
         .whatsapp-float { position: absolute; bottom: 85px; right: 20px; width: 55px; height: 55px; background-color: #25D366; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border: 2px solid white; z-index: 999; cursor: grab; transition: transform 0.1s; touch-action: none; }
         .whatsapp-float:active { transform: scale(0.95); cursor: grabbing; }
 
@@ -345,7 +351,6 @@
                         <h2 class="page-title">Deposit Funds</h2>
                         <div class="card">
                             <h3 class="card-title">Payment Details</h3>
-                            <!-- These details are now fetched from Firebase -->
                             <div class="info-row"><span class="info-label">Bank Name:</span><span class="info-value" id="depBankName">Loading...</span></div>
                             <div class="info-row"><span class="info-label">Account Number:</span><span class="info-value" id="depAccNum">Loading...</span></div>
                             <div class="info-row"><span class="info-label">Account Holder:</span><span class="info-value" id="depAccTitle">Loading...</span></div>
@@ -560,6 +565,7 @@
         const ADMIN_EMAIL = "admin@gmail.com"; // CHANGE THIS TO YOUR EMAIL
 
         // --- FIREBASE CONFIGURATION ---
+        // Ensure these keys are correct. If the app shows "Loading..." forever, these keys are invalid.
         const firebaseConfig = {
             apiKey: "AIzaSyBAQIolFYwc0_QfaR3LC1VOwjZD0zFbYWc",
             databaseURL: "https://zone-b2e27-default-rtdb.asia-southeast1.firebasedatabase.app/",
@@ -568,8 +574,14 @@
         };
 
         if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
+            try {
+                firebase.initializeApp(firebaseConfig);
+            } catch (error) {
+                console.error("Firebase Init Error:", error);
+                alert("Database connection failed. Please check your configuration.");
+            }
         }
+        
         const auth = firebase.auth();
         const db = firebase.database();
 
@@ -613,6 +625,7 @@
                         const data = snapshot.val();
                         if (data) {
                             userData = data;
+                            // Ensure arrays/objects exist to prevent errors
                             if (!userData.deposits) userData.deposits = [];
                             if (!userData.withdrawals) userData.withdrawals = [];
                             if (!userData.invites) userData.invites = { total: 0, active: 0, earnings: 0 };
@@ -628,9 +641,13 @@
                             document.getElementById('mainAppContent').style.display = 'flex';
                             showLoading(false);
                         } else {
+                            // Handle case where user auth exists but no db entry
+                            console.warn("No data found for user, likely new account or error.");
                             showLoading(false);
-                            alert('User data missing. Please contact support.');
                         }
+                    }, (error) => {
+                        console.error("Data Load Error", error);
+                        showLoading(false);
                     });
                 } else {
                     currentUser = null;
@@ -1057,19 +1074,42 @@
             }
         }
 
-        function copyInviteCode() {
+        // Updated Copy Function for Modern Browsers
+        function copyText(text) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showAlert('Copied to clipboard!', 'success');
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                    fallbackCopyText(text);
+                });
+            } else {
+                fallbackCopyText(text);
+            }
+        }
+
+        function fallbackCopyText(text) {
             const txt = document.createElement("textarea");
-            txt.value = userData.myInviteCode;
-            document.body.appendChild(txt); txt.select(); document.execCommand("Copy"); txt.remove();
-            showAlert('Code copied!', 'success');
+            txt.value = text;
+            txt.style.position = "fixed"; 
+            document.body.appendChild(txt); 
+            txt.select(); 
+            try {
+                document.execCommand("Copy"); 
+                showAlert('Copied!', 'success');
+            } catch (err) {
+                showAlert('Copy failed', 'error');
+            }
+            document.body.removeChild(txt);
+        }
+
+        function copyInviteCode() {
+            copyText(userData.myInviteCode);
         }
         
         function shareInviteLink() {
             const link = document.getElementById('inviteLink').value;
-            const txt = document.createElement("textarea");
-            txt.value = link;
-            document.body.appendChild(txt); txt.select(); document.execCommand("Copy"); txt.remove();
-            showAlert('Link copied!', 'success');
+            copyText(link);
         }
 
         function showAlert(msg, type) {
@@ -1077,6 +1117,8 @@
             a.textContent = msg;
             a.style.backgroundColor = type === 'error' ? '#f44336' : '#4caf50';
             a.style.display = 'block';
+            a.style.animation = 'none';
+            a.offsetHeight; /* trigger reflow */
             a.style.animation = 'slideDown 0.3s ease forwards';
             setTimeout(() => { a.style.display = 'none'; }, 3000);
         }
@@ -1091,24 +1133,34 @@
         }
 
         let isDragging = false, dragStartTime = 0;
-        function handleClickWhatsapp() { if (Date.now() - dragStartTime < 200 && !isDragging) contactAdmin(); }
+        function handleClickWhatsapp() { 
+            // Only trigger click if it was a quick tap, not a drag
+            if (Date.now() - dragStartTime < 200 && !isDragging) contactAdmin(); 
+        }
+
         function initDraggableWhatsapp() {
             const btn = document.getElementById('whatsappFloat');
             let offset = {x:0, y:0};
+
             btn.addEventListener('touchstart', (e) => {
                 isDragging=false; dragStartTime=Date.now();
                 const touch=e.touches[0], rect=btn.getBoundingClientRect();
                 offset.x=touch.clientX-rect.left; offset.y=touch.clientY-rect.top;
-            });
+            }, {passive: false});
+
             btn.addEventListener('touchmove', (e) => {
-                e.preventDefault(); isDragging=true;
+                e.preventDefault(); // Prevents page scroll
+                isDragging=true;
                 const touch=e.touches[0], app=document.querySelector('.app-container'), rect=app.getBoundingClientRect();
                 let l=touch.clientX-rect.left-offset.x, t=touch.clientY-rect.top-offset.y;
+                
+                // Boundaries
                 if(l<0)l=0; if(l>rect.width-btn.offsetWidth)l=rect.width-btn.offsetWidth;
                 if(t<0)t=0; if(t>rect.height-btn.offsetHeight)t=rect.height-btn.offsetHeight;
+                
                 btn.style.right='auto'; btn.style.bottom='auto'; btn.style.left=l+'px'; btn.style.top=t+'px';
-            });
+            }, {passive: false});
         }
     </script>
 </body>
-</html>
+    </html>
