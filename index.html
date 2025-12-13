@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Earning App - Secure Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <style>
+        /* --- Base Styles --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #000; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; touch-action: none; }
+
+        /* --- App Container --- */
+        .app-container { width: 100%; max-width: 412px; background-color: #031b38; height: 100vh; max-height: 900px; position: relative; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
+        @media screen and (max-width: 480px) { .app-container { max-width: 100%; max-height: 100vh; border-radius: 0; box-shadow: none; } }
+
+        /* --- AUTH SCREEN STYLES --- */
+        .auth-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #031b38 0%, #000000 100%); z-index: 2000; padding: 30px; display: flex; flex-direction: column; justify-content: center; overflow-y: auto; transition: transform 0.3s ease; }
+        .auth-hidden { transform: translateY(100%); pointer-events: none; }
+        .auth-logo { text-align: center; margin-bottom: 30px; }
+        .auth-logo i { font-size: 60px; color: #e91e63; text-shadow: 0 0 15px rgba(233, 30, 99, 0.5); }
+        .auth-title { color: white; font-size: 28px; font-weight: bold; text-align: center; margin-bottom: 10px; }
+        .auth-subtitle { color: #aaa; text-align: center; margin-bottom: 30px; font-size: 14px; }
+        .auth-form-group { margin-bottom: 15px; position: relative; }
+        .auth-input { width: 100%; padding: 15px 15px 15px 45px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font-size: 14px; transition: border-color 0.3s; }
+        .auth-input:focus { border-color: #e91e63; outline: none; background: rgba(255, 255, 255, 0.1); }
+        .auth-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #e91e63; }
+        .country-group { display: flex; gap: 10px; }
+        .country-select { width: 100px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; padding: 0 10px; }
+        .country-select option { background-color: #031b38; }
+        .auth-btn { width: 100%; padding: 15px; background: linear-gradient(90deg, #e91e63, #ff4081); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 5px 15px rgba(233, 30, 99, 0.3); transition: transform 0.2s; }
+        .auth-btn:active { transform: scale(0.98); }
+        .auth-link { text-align: center; margin-top: 20px; color: #aaa; font-size: 14px; }
+        .auth-link span { color: #e91e63; cursor: pointer; font-weight: bold; }
+        .forgot-password { text-align: right; margin-bottom: 20px; font-size: 12px; }
+        .forgot-password span { color: #aaa; cursor: pointer; }
+
+        /* --- Loading Overlay --- */
+        #loadingOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; display: flex; justify-content: center; align-items: center; flex-direction: column; color: white; display: none; }
+        .spinner { border: 4px solid rgba(255,255,255,0.3); border-radius: 50%; border-top: 4px solid #e91e63; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 10px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- APP STYLES --- */
+        header { background: linear-gradient(180deg, #c21558 0%, #750d37 100%); padding: 0 20px; display: flex; justify-content: space-between; align-items: center; height: 60px; flex-shrink: 0; z-index: 100; width: 100%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .header-left { display: flex; align-items: center; gap: 10px; }
+        .header-logo { background: white; padding: 5px; border-radius: 4px; font-size: 12px; color: #28a745; font-weight: bold; }
+        .header-title { color: white; font-size: 16px; font-weight: bold; }
+        .header-icon { color: white; font-size: 24px; }
+        .back-btn { color: white; font-size: 18px; cursor: pointer; display: none; padding: 5px; }
+
+        .page-wrapper { position: relative; flex-grow: 1; width: 100%; overflow: hidden; }
+        .page-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; padding-bottom: 20px; transition: transform 0.3s ease; background-color: #031b38; scrollbar-width: none; }
+        .page-container::-webkit-scrollbar { display: none; }
+
+        .banner-container { padding: 20px; background: linear-gradient(180deg, #750d37 0%, #031b38 30%); }
+        .banner { background-color: white; border-radius: 15px; height: 150px; display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .ticker-container { margin: 0 20px; background: linear-gradient(90deg, #c21558, #5a0a29); border-radius: 20px; padding: 10px 15px; display: flex; align-items: center; color: white; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .marquee { overflow: hidden; white-space: nowrap; width: 100%; margin-left: 10px; }
+        .marquee span { display: inline-block; animation: scroll 10s linear infinite; }
+        @keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        .action-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 20px; background-color: #1a222c; margin: 20px; border-radius: 15px; }
+        .action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .icon-box { width: 50px; height: 50px; border-radius: 12px; background: linear-gradient(135deg, #e91e63, #880e4f); display: flex; justify-content: center; align-items: center; color: white; font-size: 20px; margin-bottom: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.4); }
+        .action-text { color: white; font-size: 12px; font-weight: 500; }
+
+        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; margin-bottom: 20px; }
+        .feature-card { background-color: #1a222c; border-radius: 10px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 120px; cursor: pointer; transition: transform 0.2s; }
+        .feature-card:active { transform: scale(0.95); }
+        .feature-title { color: white; font-size: 14px; font-weight: bold; margin-bottom: 10px; }
+
+        .page-content { padding: 20px; color: white; padding-bottom: 40px; }
+        .page-title { font-size: 22px; margin-bottom: 20px; color: #e91e63; text-align: center; }
+        .card { background-color: #1a222c; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        .card-title { font-size: 16px; margin-bottom: 15px; color: #ffca28; }
+        
+        .info-row { display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #2c3542; }
+        .info-label { color: #aaa; }
+        .info-value { color: white; font-weight: bold; }
+
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; margin-bottom: 8px; color: #aaa; }
+        .form-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #2c3542; background-color: #0d1520; color: white; font-size: 14px; }
+        
+        .btn { width: 100%; padding: 15px; background: linear-gradient(135deg, #e91e63, #880e4f); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: transform 0.2s; }
+        .btn:active { transform: scale(0.98); }
+        .btn-secondary { background: linear-gradient(135deg, #2196f3, #0d47a1); }
+        .btn-admin { background: linear-gradient(135deg, #d32f2f, #b71c1c); display: none; } /* Hidden by default */
+
+        .payment-methods { display: flex; gap: 10px; margin-bottom: 20px; }
+        .payment-method { flex: 1; text-align: center; padding: 15px; border: 2px solid #2c3542; border-radius: 10px; cursor: pointer; transition: all 0.3s; }
+        .payment-method.active { border-color: #e91e63; background-color: rgba(233, 30, 99, 0.1); }
+        .payment-icon { font-size: 30px; margin-bottom: 10px; color: #4caf50; }
+
+        .plan-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px; }
+        .plan-card { background: linear-gradient(135deg, #1a237e, #283593); border-radius: 10px; padding: 15px; cursor: pointer; transition: transform 0.3s; display: flex; flex-direction: column; justify-content: space-between; }
+        .plan-amount { font-size: 24px; font-weight: bold; color: #ffca28; margin-bottom: 5px; }
+        .plan-details { font-size: 12px; color: #aaa; margin-bottom: 10px; }
+
+        .task-item { background-color: #0d1520; border-radius: 10px; padding: 15px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+        .task-reward { color: #4caf50; font-weight: bold; }
+        
+        .invite-code-box { background: linear-gradient(135deg, #ff9800, #f57c00); padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
+        .invite-code { font-size: 32px; font-weight: bold; letter-spacing: 5px; color: white; margin: 10px 0; }
+        
+        .stats-box { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .stat-card { background-color: #0d1520; padding: 15px; border-radius: 10px; text-align: center; }
+        .stat-value { font-size: 20px; color: #4caf50; margin-bottom: 5px; }
+        .stat-label { font-size: 10px; color: #aaa; }
+
+        .history-table { width: 100%; border-collapse: collapse; }
+        .history-table th { background-color: #0d1520; padding: 10px; text-align: left; color: #aaa; font-size: 12px; }
+        .history-table td { padding: 12px; border-bottom: 1px solid #2c3542; color: #ddd; font-size: 13px; }
+        .status { padding: 5px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        .status-pending { background-color: #ff9800; color: black; }
+        .status-completed { background-color: #4caf50; color: white; }
+        .status-rejected { background-color: #f44336; color: white; }
+
+        .bottom-nav { background-color: #1a222c; height: 70px; width: 100%; display: flex; justify-content: space-around; align-items: center; border-top-left-radius: 20px; border-top-right-radius: 20px; border-top: 1px solid #333; z-index: 100; flex-shrink: 0; padding-bottom: 5px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #888; font-size: 10px; cursor: pointer; width: 20%; padding-top: 10px; }
+        .nav-item i { font-size: 20px; margin-bottom: 4px; }
+        .nav-item.active { color: #fff; }
+        
+        .center-btn-container { position: relative; top: -20px; }
+        .center-btn { width: 60px; height: 60px; background: linear-gradient(135deg, #ff4081, #c51162); border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 5px solid #1a222c; color: white; font-size: 28px; box-shadow: 0 -5px 10px rgba(0,0,0,0.3); cursor: pointer; }
+
+        .whatsapp-float { position: absolute; bottom: 85px; right: 20px; width: 55px; height: 55px; background-color: #25D366; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border: 2px solid white; z-index: 999; cursor: grab; transition: transform 0.1s; touch-action: none; }
+        .whatsapp-float:active { transform: scale(0.95); cursor: grabbing; }
+
+        .profile-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+        .profile-left { display: flex; align-items: center; gap: 10px; }
+        .profile-right { text-align: right; }
+        .avatar-circle { width: 70px; height: 70px; border-radius: 50%; background: #1a222c; border: 2px solid #e91e63; overflow: hidden; flex-shrink: 0; }
+        .avatar-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .user-name { font-size: 16px; font-weight: 600; color: white; }
+        .balance-label { font-size: 10px; color: #ccc; margin-top: 5px; }
+        .balance-amount { color: #fdd835; font-size: 18px; font-weight: bold; }
+        
+        .stats-row { border-top: 1px solid #333; padding-top: 15px; display: flex; justify-content: space-around; align-items: center; margin-top: 10px; }
+        .stat-item { text-align: center; width: 45%; }
+        .vertical-divider { width: 1px; height: 30px; background-color: #333; }
+
+        .action-row { display: flex; justify-content: space-around; margin: 20px 0; padding: 0; }
+        .action-btn { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .btn-icon { width: 45px; height: 45px; background-color: #1a222c; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 5px; color: #e91e63; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .btn-text { font-size: 12px; color: #ccc; }
+
+        .menu-group { background-color: #1a222c; border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
+        .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #2c3542; cursor: pointer; }
+        .menu-left { display: flex; align-items: center; gap: 10px; }
+        .menu-icon-circle { width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; background-color: rgba(233, 30, 99, 0.1); color: #e91e63; }
+        .menu-text { color: white; font-size: 14px; }
+        .menu-item:last-child { border-bottom: none; }
+
+        .page-active { transform: translateX(0); }
+        .page-inactive { transform: translateX(100%); }
+        
+        .alert { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background-color: #4caf50; color: white; padding: 15px 30px; border-radius: 10px; z-index: 5000; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.3); white-space: nowrap; }
+        @keyframes slideDown { from { top: -100px; } to { top: 20px; } }
+    </style>
+</head>
+<body>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay">
+        <div class="spinner"></div>
+        <div>Loading...</div>
+    </div>
+
+    <!-- Alert Message -->
+    <div class="alert" id="alert">Operation Successful!</div>
+
+    <div class="app-container">
+
+        <!-- ================= AUTHENTICATION SECTION ================= -->
+        
+        <!-- Login Screen -->
+        <div class="auth-screen" id="loginScreen">
+            <div class="auth-logo">
+                <i class="fa-solid fa-gem"></i>
+            </div>
+            <div class="auth-title">Welcome Back</div>
+            <div class="auth-subtitle">Login to your account to continue earning</div>
+
+            <div class="auth-form-group">
+                <i class="fa-solid fa-envelope auth-icon"></i>
+                <input type="email" id="loginEmail" class="auth-input" placeholder="Enter your email">
+            </div>
+            
+            <div class="auth-form-group">
+                <i class="fa-solid fa-lock auth-icon"></i>
+                <input type="password" id="loginPassword" class="auth-input" placeholder="Password">
+            </div>
+
+            <div class="forgot-password">
+                <span onclick="showForgotPassword()">Forgot Password?</span>
+            </div>
+
+            <button class="auth-btn" onclick="handleLogin()">LOGIN</button>
+
+            <div class="auth-link">
+                Don't have an account? <span onclick="showRegister()">Register Now</span>
+            </div>
+        </div>
+
+        <!-- Register Screen -->
+        <div class="auth-screen auth-hidden" id="registerScreen">
+            <div class="auth-logo" style="margin-bottom: 20px;">
+                <i class="fa-solid fa-user-plus"></i>
+            </div>
+            <div class="auth-title">Create Account</div>
+            <div class="auth-subtitle">Join us and start earning today</div>
+
+            <div class="auth-form-group">
+                <i class="fa-solid fa-envelope auth-icon"></i>
+                <input type="email" id="regEmail" class="auth-input" placeholder="Gmail Address">
+            </div>
+
+            <div class="auth-form-group country-group">
+                <select id="countryCode" class="country-select">
+                    <option value="+92">+92 (PK)</option>
+                    <option value="+91">+91 (IN)</option>
+                </select>
+                <input type="number" id="regPhone" class="auth-input" style="padding-left: 15px;" placeholder="Phone Number">
+            </div>
+            
+            <div class="auth-form-group">
+                <i class="fa-solid fa-lock auth-icon"></i>
+                <input type="password" id="regPassword" class="auth-input" placeholder="Strong Password">
+            </div>
+
+            <div class="auth-form-group">
+                <i class="fa-solid fa-lock auth-icon"></i>
+                <input type="password" id="regConfirmPassword" class="auth-input" placeholder="Repeat Password">
+            </div>
+
+            <div class="auth-form-group">
+                <i class="fa-solid fa-ticket auth-icon"></i>
+                <input type="text" id="regInviteCode" class="auth-input" placeholder="Invitation Code">
+            </div>
+
+            <button class="auth-btn" onclick="handleRegister()">REGISTER</button>
+
+            <div class="auth-link">
+                Already have an account? <span onclick="showLogin()">Login Here</span>
+            </div>
+        </div>
+
+        <!-- Forgot Password Screen -->
+        <div class="auth-screen auth-hidden" id="forgotScreen">
+            <div class="auth-logo">
+                <i class="fa-solid fa-key"></i>
+            </div>
+            <div class="auth-title">Reset Password</div>
+            <div class="auth-subtitle">Enter your email to receive reset link</div>
+
+            <div class="auth-form-group">
+                <i class="fa-solid fa-envelope auth-icon"></i>
+                <input type="email" id="resetEmail" class="auth-input" placeholder="Enter your registered email">
+            </div>
+
+            <button class="auth-btn" onclick="handleResetPassword()">SEND LINK</button>
+            <button class="auth-btn btn-secondary" onclick="showLogin()">BACK TO LOGIN</button>
+        </div>
+
+
+        <!-- ================= MAIN APP CONTENT (Hidden until login) ================= -->
+        <div id="mainAppContent" style="display: none; height: 100%; flex-direction: column;">
+            
+            <!-- Header -->
+            <header>
+                <div class="header-left">
+                    <div class="back-btn" id="backBtn" onclick="goBack()">
+                        <i class="fas fa-arrow-left"></i>
+                    </div>
+                    <div class="header-logo">
+                        <i class="fa-solid fa-money-bill-wave"></i>
+                    </div>
+                    <div class="header-title" id="pageTitle">Earning App</div>
+                </div>
+                <div class="header-icon">
+                    <i class="fa-solid fa-power-off" onclick="logout()" style="font-size: 18px; cursor: pointer;"></i>
+                </div>
+            </header>
+
+            <!-- Page Wrapper -->
+            <div class="page-wrapper">
+                
+                <!-- Home Page -->
+                <div class="page-container page-active" id="homePage">
+                    <div class="banner-container">
+                        <div class="banner">
+                            <i class="fa-solid fa-sack-dollar" style="color: #8bc34a; font-size: 80px; text-shadow: 2px 2px 0px #33691e;"></i>
+                            <i class="fa-solid fa-coins" style="color: #ffca28; font-size: 60px; margin-left: -20px; margin-top: 40px; text-shadow: 2px 2px 0px #ff6f00;"></i>
+                        </div>
+                    </div>
+                    <div class="ticker-container">
+                        <i class="fa-solid fa-volume-high ticker-icon"></i>
+                        <div class="marquee">
+                            <span>Don't create multiple accounts! Join now for rewards. Withdrawals approved within 1 hour.</span>
+                        </div>
+                    </div>
+                    <div class="action-grid">
+                        <div class="action-item" onclick="showPage('depositPage')">
+                            <div class="icon-box"><i class="fa-solid fa-arrow-up"></i></div>
+                            <span class="action-text">Deposit</span>
+                        </div>
+                        <div class="action-item" onclick="showPage('withdrawPage')">
+                            <div class="icon-box"><i class="fa-solid fa-arrow-down"></i></div>
+                            <span class="action-text">Withdraw</span>
+                        </div>
+                        <div class="action-item" onclick="showPage('invitePage')">
+                            <div class="icon-box"><i class="fa-solid fa-user-plus"></i></div>
+                            <span class="action-text">Invite</span>
+                        </div>
+                        <div class="action-item" onclick="contactAdmin()">
+                            <div class="icon-box"><i class="fa-solid fa-headset"></i></div>
+                            <span class="action-text">Support</span>
+                        </div>
+                    </div>
+                    <div class="feature-grid">
+                        <div class="feature-card" onclick="showPage('plansPage')">
+                            <span class="feature-title">VIP Plans</span>
+                            <div style="position: relative;">
+                                <i class="fa-solid fa-shield-halved" style="color: #7c4dff; font-size: 40px;"></i>
+                                <i class="fa-solid fa-coins" style="color: #ffca28; position: absolute; bottom: -5px; right: -10px; font-size: 20px;"></i>
+                            </div>
+                        </div>
+                        <div class="feature-card" onclick="showPage('tasksPage')">
+                            <span class="feature-title">Tasks</span>
+                            <i class="fa-solid fa-envelope-open-text" style="color: #7c4dff; font-size: 40px;"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Deposit Page (User View) -->
+                <div class="page-container page-inactive" id="depositPage">
+                    <div class="page-content">
+                        <h2 class="page-title">Deposit Funds</h2>
+                        <div class="card">
+                            <h3 class="card-title">Payment Details</h3>
+                            <!-- These details are now fetched from Firebase -->
+                            <div class="info-row"><span class="info-label">Bank Name:</span><span class="info-value" id="depBankName">Loading...</span></div>
+                            <div class="info-row"><span class="info-label">Account Number:</span><span class="info-value" id="depAccNum">Loading...</span></div>
+                            <div class="info-row"><span class="info-label">Account Holder:</span><span class="info-value" id="depAccTitle">Loading...</span></div>
+                        </div>
+                        <div class="card">
+                            <h3 class="card-title">Submit Proof</h3>
+                            <div class="form-group">
+                                <label class="form-label">TRX ID</label>
+                                <input type="text" class="form-input" id="depositTrxId" placeholder="Enter TRX ID">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Amount (Rs)</label>
+                                <input type="number" class="form-input" id="depositAmount" placeholder="Amount">
+                            </div>
+                            <button class="btn" onclick="submitDeposit()">Submit Deposit</button>
+                        </div>
+                        <div class="card">
+                            <h3 class="card-title">History</h3>
+                            <table class="history-table">
+                                <thead><tr><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
+                                <tbody id="depositHistory"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Withdraw Page -->
+                <div class="page-container page-inactive" id="withdrawPage">
+                    <div class="page-content">
+                        <h2 class="page-title">Withdraw Funds</h2>
+                        <div class="card">
+                            <h3 class="card-title">Method</h3>
+                            <div class="payment-methods">
+                                <div class="payment-method" onclick="selectWithdrawMethod('easypaisa')"><i class="fa-solid fa-mobile-alt payment-icon"></i><div>Easypaisa</div></div>
+                                <div class="payment-method active" onclick="selectWithdrawMethod('jazcash')"><i class="fa-solid fa-building payment-icon"></i><div>JazzCash</div></div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h3 class="card-title">Details</h3>
+                            <div class="form-group"><label class="form-label">Account Number</label><input type="text" class="form-input" id="withdrawAccount"></div>
+                            <div class="form-group"><label class="form-label">Account Title</label><input type="text" class="form-input" id="withdrawName"></div>
+                            <div class="form-group"><label class="form-label">Amount</label><input type="number" class="form-input" id="withdrawAmount"></div>
+                            <button class="btn" onclick="submitWithdraw()">Submit Withdrawal</button>
+                        </div>
+                        <div class="card">
+                            <h3 class="card-title">History</h3>
+                            <table class="history-table">
+                                <thead><tr><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
+                                <tbody id="withdrawHistory"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Invite Page -->
+                <div class="page-container page-inactive" id="invitePage">
+                    <div class="page-content">
+                        <h2 class="page-title">Invite & Earn</h2>
+                        <div class="invite-code-box">
+                            <div>Your Code</div>
+                            <div class="invite-code" id="myInviteCode">LOADING</div>
+                            <button class="btn btn-secondary" onclick="copyInviteCode()"><i class="fas fa-copy"></i> Copy</button>
+                        </div>
+                        <div class="stats-box">
+                            <div class="stat-card"><div class="stat-value" id="totalInvites">0</div><div class="stat-label">Total Invites</div></div>
+                            <div class="stat-card"><div class="stat-value" id="activeInvites">0</div><div class="stat-label">Active Invites</div></div>
+                            <div class="stat-card"><div class="stat-value" id="inviteEarnings">Rs 0</div><div class="stat-label">Total Earnings</div></div>
+                        </div>
+                        <div class="card">
+                            <h3 class="card-title">Link</h3>
+                            <div class="form-group"><input type="text" class="form-input" id="inviteLink" readonly></div>
+                            <button class="btn btn-secondary" onclick="shareInviteLink()"><i class="fas fa-share-alt"></i> Share Link</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Panel (Hidden) -->
+                <div class="page-container page-inactive" id="adminPanelPage">
+                    <div class="page-content">
+                        <h2 class="page-title">ADMIN PANEL</h2>
+                        
+                        <div class="card">
+                            <h3 class="card-title">Update Bank Details</h3>
+                            <p style="color:#aaa; font-size:12px; margin-bottom:10px;">Change the bank info shown to users in the Deposit section.</p>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Bank Name / Method</label>
+                                <input type="text" class="form-input" id="adminBankName" placeholder="e.g. Easypaisa / Jazzcash">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Account Number</label>
+                                <input type="text" class="form-input" id="adminAccNum" placeholder="e.g. 03001234567">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Account Title</label>
+                                <input type="text" class="form-input" id="adminAccTitle" placeholder="e.g. John Doe">
+                            </div>
+                            <button class="btn" onclick="saveBankDetails()">Update Bank Details</button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Tasks Page -->
+                <div class="page-container page-inactive" id="tasksPage">
+                    <div class="page-content">
+                        <h2 class="page-title">Daily Tasks</h2>
+                        <div class="card" id="noPlanWarning" style="display: none;">
+                            <h3 class="card-title" style="color: #f44336;"><i class="fas fa-exclamation-triangle"></i> No Active Plan</h3>
+                            <p style="color: #aaa;">Activate a plan to earn.</p>
+                            <button class="btn" onclick="showPage('plansPage')">View Plans</button>
+                        </div>
+                        <div id="tasksList"></div>
+                    </div>
+                </div>
+
+                <!-- Plans Page -->
+                <div class="page-container page-inactive" id="plansPage">
+                    <div class="page-content">
+                        <h2 class="page-title">VIP Plans</h2>
+                        <div class="plan-grid"></div>
+                    </div>
+                </div>
+
+                <!-- Plan Details Page -->
+                <div class="page-container page-inactive" id="planDetailsPage">
+                    <div class="page-content"></div>
+                </div>
+
+                <!-- App Page -->
+                <div class="page-container page-inactive" id="appPage">
+                    <div class="page-content">
+                        <div style="text-align: center; padding: 50px 20px;">
+                            <i class="fa-brands fa-google-play" style="font-size: 80px; color: #4caf50; margin-bottom: 20px;"></i>
+                            <h2 class="page-title">Coming Soon</h2>
+                            <p style="color: #aaa; margin-bottom: 30px;">Our mobile app is under development.</p>
+                            <button class="btn" onclick="showPage('homePage')">Back to Home</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Page -->
+                <div class="page-container page-inactive" id="profilePage">
+                    <div class="page-content">
+                        <div class="card profile-card">
+                            <div class="profile-header">
+                                <div class="profile-left">
+                                    <div class="avatar-circle">
+                                        <img id="userProfilePic" src="https://iili.io/f75iDuI.jpg" alt="Profile">
+                                    </div>
+                                    <div style="margin-left: 10px;">
+                                        <div class="user-name" id="displayEmail">User</div>
+                                        <div style="font-size: 10px; color: #4caf50;">Verified User</div>
+                                    </div>
+                                </div>
+                                <div class="profile-right">
+                                    <div class="balance-label">Balance</div>
+                                    <div class="balance-amount">Rs <span id="walletBalance">0.00</span></div>
+                                </div>
+                            </div>
+                            <div class="stats-row">
+                                <div class="stat-item"><div class="stat-value" id="totalDeposit">Rs 0</div><div class="stat-label">Deposit</div></div>
+                                <div class="vertical-divider"></div>
+                                <div class="stat-item"><div class="stat-value" id="totalWithdraw">Rs 0</div><div class="stat-label">Withdraw</div></div>
+                            </div>
+                        </div>
+                        <div class="action-row">
+                            <div class="action-btn" onclick="showPage('depositPage')"><div class="btn-icon"><i class="fa-solid fa-arrow-up"></i></div><span class="btn-text">Deposit</span></div>
+                            <div class="action-btn" onclick="showPage('invitePage')"><div class="btn-icon"><i class="fa-solid fa-user-plus"></i></div><span class="btn-text">Invite</span></div>
+                            <div class="action-btn" onclick="showPage('withdrawPage')"><div class="btn-icon"><i class="fa-solid fa-arrow-down"></i></div><span class="btn-text">Withdraw</span></div>
+                        </div>
+                        <div class="card">
+                            <h3 class="card-title">Current Plan</h3>
+                            <div id="currentPlanInfo"><p style="color: #aaa; text-align: center;">No active plan</p></div>
+                        </div>
+                        <div class="menu-group">
+                            <div class="menu-item" onclick="showPage('depositPage')"><div class="menu-left"><div class="menu-icon-circle"><i class="fa-regular fa-credit-card"></i></div><span class="menu-text">Deposit History</span></div><i class="fa-solid fa-chevron-right" style="color: #555;"></i></div>
+                            <div class="menu-item" onclick="showPage('withdrawPage')"><div class="menu-left"><div class="menu-icon-circle"><i class="fa-solid fa-money-bill-transfer"></i></div><span class="menu-text">Withdraw History</span></div><i class="fa-solid fa-chevron-right" style="color: #555;"></i></div>
+                        </div>
+                        <div class="menu-group">
+                            <div class="menu-item" onclick="logout()"><div class="menu-left"><div class="menu-icon-circle"><i class="fa-solid fa-right-from-bracket"></i></div><span class="menu-text">Logout</span></div><i class="fa-solid fa-chevron-right" style="color: #555;"></i></div>
+                        </div>
+
+                        <!-- HIDDEN ADMIN BUTTON: Only visible to specific email -->
+                        <button id="adminAccessBtn" class="btn btn-admin" onclick="showPage('adminPanelPage')">ADMIN PANEL</button>
+                    
+                    </div>
+                </div>
+
+            </div> <!-- End Page Wrapper -->
+
+            <!-- Bottom Nav -->
+            <nav class="bottom-nav">
+                <div class="nav-item active" onclick="showPage('homePage')"><i class="fa-solid fa-house-chimney" style="color: #ff8a65;"></i><span>Home</span></div>
+                <div class="nav-item" onclick="showPage('tasksPage')"><i class="fa-solid fa-clipboard-list" style="color: #4fc3f7;"></i><span>Task</span></div>
+                <div class="nav-item center-btn-container"><div class="center-btn" onclick="showPage('plansPage')"><i class="fa-brands fa-firefox"></i></div></div>
+                <div class="nav-item" onclick="showPage('appPage')"><i class="fa-brands fa-google-play" style="color: #ffd54f;"></i><span>APP</span></div>
+                <div class="nav-item" onclick="showPage('profilePage')"><i class="fa-solid fa-circle-user" style="color: #ba68c8;"></i><span>Profile</span></div>
+            </nav>
+
+        </div> <!-- End Main App Content -->
+
+        <!-- Float Whatsapp -->
+        <div class="whatsapp-float" id="whatsappFloat" onclick="handleClickWhatsapp()">
+            <i class="fa-brands fa-whatsapp"></i>
+        </div>
+
+    </div>
+
+    <script>
+        // --- ADMIN CONFIGURATION ---
+        const ADMIN_EMAIL = "admin@gmail.com"; // CHANGE THIS TO YOUR EMAIL
+
+        // --- FIREBASE CONFIGURATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBAQIolFYwc0_QfaR3LC1VOwjZD0zFbYWc",
+            databaseURL: "https://zone-b2e27-default-rtdb.asia-southeast1.firebasedatabase.app/",
+            authDomain: "zone-b2e27.firebaseapp.com",
+            projectId: "zone-b2e27"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const auth = firebase.auth();
+        const db = firebase.database();
+
+        let currentUser = null;
+        let userData = {
+            walletBalance: 0,
+            totalDeposit: 0,
+            totalWithdraw: 0,
+            activePlan: null,
+            email: '',
+            phone: '',
+            inviteCode: '',
+            deposits: [],
+            withdrawals: [],
+            tasks: [],
+            invites: { total: 0, active: 0, earnings: 0 }
+        };
+
+        // --- AUTH & NAVIGATION ---
+
+        document.addEventListener('DOMContentLoaded', function() {
+            checkUrlInviteCode();
+            
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    currentUser = user;
+                    showLoading(true);
+                    
+                    // Check if User is Admin
+                    if (user.email === ADMIN_EMAIL) {
+                        document.getElementById('adminAccessBtn').style.display = 'block';
+                        loadAdminData();
+                    } else {
+                        document.getElementById('adminAccessBtn').style.display = 'none';
+                    }
+
+                    // Load Bank Details for everyone
+                    loadBankDetailsForUser();
+
+                    db.ref('users/' + user.uid).on('value', (snapshot) => {
+                        const data = snapshot.val();
+                        if (data) {
+                            userData = data;
+                            if (!userData.deposits) userData.deposits = [];
+                            if (!userData.withdrawals) userData.withdrawals = [];
+                            if (!userData.invites) userData.invites = { total: 0, active: 0, earnings: 0 };
+                            
+                            updateUI();
+                            loadTasks();
+                            updateHistoryTables();
+                            updateInviteStats();
+                            
+                            document.getElementById('loginScreen').classList.add('auth-hidden');
+                            document.getElementById('registerScreen').classList.add('auth-hidden');
+                            document.getElementById('forgotScreen').classList.add('auth-hidden');
+                            document.getElementById('mainAppContent').style.display = 'flex';
+                            showLoading(false);
+                        } else {
+                            showLoading(false);
+                            alert('User data missing. Please contact support.');
+                        }
+                    });
+                } else {
+                    currentUser = null;
+                    document.getElementById('mainAppContent').style.display = 'none';
+                    document.getElementById('loginScreen').classList.remove('auth-hidden');
+                    document.getElementById('registerScreen').classList.add('auth-hidden');
+                    showLoading(false);
+                }
+            });
+
+            generatePlans();
+            initDraggableWhatsapp();
+        });
+
+        // --- ADMIN FUNCTIONS ---
+
+        function loadAdminData() {
+            // Load current settings into admin inputs
+            db.ref('admin/settings/bank').once('value', (snap) => {
+                const bank = snap.val();
+                if (bank) {
+                    document.getElementById('adminBankName').value = bank.bankName || '';
+                    document.getElementById('adminAccNum').value = bank.accountNumber || '';
+                    document.getElementById('adminAccTitle').value = bank.accountTitle || '';
+                }
+            });
+        }
+
+        function saveBankDetails() {
+            if (currentUser.email !== ADMIN_EMAIL) return;
+            
+            const bankName = document.getElementById('adminBankName').value;
+            const accNum = document.getElementById('adminAccNum').value;
+            const accTitle = document.getElementById('adminAccTitle').value;
+
+            if(!bankName || !accNum || !accTitle) {
+                showAlert('Fill all bank details', 'error');
+                return;
+            }
+
+            showLoading(true);
+            db.ref('admin/settings/bank').set({
+                bankName: bankName,
+                accountNumber: accNum,
+                accountTitle: accTitle,
+                updatedAt: Date.now()
+            }).then(() => {
+                showLoading(false);
+                showAlert('Bank Details Updated!', 'success');
+            }).catch(err => {
+                showLoading(false);
+                showAlert(err.message, 'error');
+            });
+        }
+
+        // --- USER FUNCTIONS TO LOAD ADMIN DATA ---
+
+        function loadBankDetailsForUser() {
+            db.ref('admin/settings/bank').on('value', (snap) => {
+                const bank = snap.val();
+                if (bank) {
+                    document.getElementById('depBankName').textContent = bank.bankName;
+                    document.getElementById('depAccNum').textContent = bank.accountNumber;
+                    document.getElementById('depAccTitle').textContent = bank.accountTitle;
+                } else {
+                    document.getElementById('depBankName').textContent = "Not Set";
+                    document.getElementById('depAccNum').textContent = "Contact Admin";
+                    document.getElementById('depAccTitle').textContent = "-";
+                }
+            });
+        }
+
+        // --- AUTH ACTIONS ---
+        function handleRegister() {
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const confirmPass = document.getElementById('regConfirmPassword').value;
+            const countryCode = document.getElementById('countryCode').value;
+            const phone = document.getElementById('regPhone').value;
+            const inviteCode = document.getElementById('regInviteCode').value;
+
+            if (!email || !password || !phone) { showAlert('Please fill all fields', 'error'); return; }
+            if (password.length < 6) { showAlert('Password must be at least 6 characters', 'error'); return; }
+            if (password !== confirmPass) { showAlert('Passwords do not match', 'error'); return; }
+
+            const fullPhone = countryCode + phone;
+            const myInviteCode = 'USER' + Math.floor(10000 + Math.random() * 90000);
+
+            showLoading(true);
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    const newUserData = {
+                        email: email,
+                        phone: fullPhone,
+                        uid: user.uid,
+                        joinedDate: new Date().toLocaleDateString(),
+                        usedInviteCode: inviteCode || 'NONE',
+                        myInviteCode: myInviteCode,
+                        walletBalance: 0.00,
+                        totalDeposit: 0,
+                        totalWithdraw: 0,
+                        activePlan: null,
+                        profilePic: 'https://iili.io/f75iDuI.jpg',
+                        invites: { total: 0, active: 0, earnings: 0 }
+                    };
+                    return db.ref('users/' + user.uid).set(newUserData);
+                })
+                .then(() => {
+                    showAlert('Registration Successful!', 'success');
+                })
+                .catch((error) => {
+                    showLoading(false);
+                    showAlert(error.message, 'error');
+                });
+        }
+
+        function handleLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            if (!email || !password) { showAlert('Please enter email and password', 'error'); return; }
+            showLoading(true);
+            auth.signInWithEmailAndPassword(email, password)
+                .catch((error) => {
+                    showLoading(false);
+                    showAlert(error.message, 'error');
+                });
+        }
+
+        function logout() {
+            showLoading(true);
+            auth.signOut().then(() => {
+                window.location.reload();
+            });
+        }
+
+        function handleResetPassword() {
+            const email = document.getElementById('resetEmail').value;
+            if(!email) { showAlert('Enter email address', 'error'); return; }
+            showLoading(true);
+            auth.sendPasswordResetEmail(email)
+                .then(() => {
+                    showLoading(false);
+                    showAlert('Password reset link sent to email!', 'success');
+                    showLogin();
+                })
+                .catch((error) => {
+                    showLoading(false);
+                    showAlert(error.message, 'error');
+                });
+        }
+
+        function showRegister() {
+            document.getElementById('loginScreen').classList.add('auth-hidden');
+            document.getElementById('registerScreen').classList.remove('auth-hidden');
+        }
+        function showLogin() {
+            document.getElementById('registerScreen').classList.add('auth-hidden');
+            document.getElementById('forgotScreen').classList.add('auth-hidden');
+            document.getElementById('loginScreen').classList.remove('auth-hidden');
+        }
+        function showForgotPassword() {
+            document.getElementById('loginScreen').classList.add('auth-hidden');
+            document.getElementById('forgotScreen').classList.remove('auth-hidden');
+        }
+
+        function checkUrlInviteCode() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const inviteCode = urlParams.get('invite');
+            if (inviteCode) {
+                document.getElementById('regInviteCode').value = inviteCode;
+                showRegister();
+            }
+        }
+
+        // --- APP LOGIC ---
+
+        let pageHistory = ['homePage'];
+        let currentPage = 'homePage';
+
+        function saveUserData() {
+            if (currentUser) {
+                db.ref('users/' + currentUser.uid).update(userData);
+            }
+        }
+
+        function showPage(pageId) {
+            // Check Access Control for Admin Page
+            if (pageId === 'adminPanelPage' && (!currentUser || currentUser.email !== ADMIN_EMAIL)) {
+                showAlert('Access Denied', 'error');
+                return;
+            }
+
+            if (currentPage !== pageId) {
+                pageHistory.push(currentPage);
+                currentPage = pageId;
+            }
+            document.querySelectorAll('.page-container').forEach(page => {
+                page.classList.remove('page-active');
+                page.classList.add('page-inactive');
+            });
+            const targetPage = document.getElementById(pageId);
+            targetPage.classList.remove('page-inactive');
+            targetPage.classList.add('page-active');
+            targetPage.scrollTop = 0;
+
+            const backBtn = document.getElementById('backBtn');
+            if (pageId === 'homePage') {
+                backBtn.style.display = 'none';
+                document.getElementById('pageTitle').textContent = 'Earning App';
+            } else {
+                backBtn.style.display = 'block';
+                const titles = {
+                    'depositPage': 'Deposit Funds', 'withdrawPage': 'Withdraw Funds',
+                    'invitePage': 'Invite & Earn', 'adminPanelPage': 'Admin Control',
+                    'tasksPage': 'Daily Tasks', 'plansPage': 'VIP Plans',
+                    'planDetailsPage': 'Plan Details', 'appPage': 'Download App',
+                    'profilePage': 'My Profile'
+                };
+                document.getElementById('pageTitle').textContent = titles[pageId] || 'Earning App';
+            }
+            updateNavActiveState(pageId);
+        }
+
+        function goBack() {
+            if (pageHistory.length > 1) {
+                pageHistory.pop();
+                const previousPage = pageHistory[pageHistory.length - 1];
+                document.getElementById(currentPage).classList.remove('page-active');
+                document.getElementById(currentPage).classList.add('page-inactive');
+                currentPage = previousPage;
+                document.getElementById(currentPage).classList.remove('page-inactive');
+                document.getElementById(currentPage).classList.add('page-active');
+                
+                if (currentPage === 'homePage') {
+                    document.getElementById('backBtn').style.display = 'none';
+                    document.getElementById('pageTitle').textContent = 'Earning App';
+                }
+                updateNavActiveState(currentPage);
+            }
+        }
+
+        function updateNavActiveState(pageId) {
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            const navMap = { 'homePage': 0, 'tasksPage': 1, 'plansPage': 'center', 'appPage': 3, 'profilePage': 4 };
+            if (navMap[pageId] !== undefined && navMap[pageId] !== 'center') {
+                document.querySelectorAll('.nav-item')[navMap[pageId]].classList.add('active');
+            }
+        }
+
+        function submitDeposit() {
+            const trxId = document.getElementById('depositTrxId').value;
+            const amount = parseFloat(document.getElementById('depositAmount').value);
+            if (!trxId || !amount || amount < 300) { showAlert('Min deposit Rs 300 & TRX ID required', 'error'); return; }
+
+            const deposit = {
+                id: Date.now(),
+                date: new Date().toLocaleDateString(),
+                amount: amount,
+                trxId: trxId,
+                status: 'pending'
+            };
+            userData.deposits.push(deposit);
+            userData.totalDeposit += amount;
+            saveUserData();
+            showAlert('Deposit submitted!', 'success');
+            document.getElementById('depositTrxId').value = '';
+            document.getElementById('depositAmount').value = '';
+        }
+
+        function submitWithdraw() {
+            const account = document.getElementById('withdrawAccount').value;
+            const name = document.getElementById('withdrawName').value;
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            if (!account || !name || !amount) { showAlert('Fill all fields', 'error'); return; }
+            if (amount < 100) { showAlert('Min withdrawal Rs 100', 'error'); return; }
+            if (amount > userData.walletBalance) { showAlert('Insufficient balance', 'error'); return; }
+
+            const withdrawal = {
+                id: Date.now(),
+                date: new Date().toLocaleDateString(),
+                amount: amount,
+                account: account,
+                name: name,
+                method: 'jazcash',
+                status: 'pending'
+            };
+            userData.withdrawals.push(withdrawal);
+            userData.totalWithdraw += amount;
+            userData.walletBalance -= amount;
+            saveUserData();
+            showAlert('Withdrawal submitted!', 'success');
+            document.getElementById('withdrawAccount').value = '';
+            document.getElementById('withdrawName').value = '';
+            document.getElementById('withdrawAmount').value = '';
+        }
+
+        function contactAdmin() {
+            const message = encodeURIComponent('Hello, I need support with Earning App.');
+            // This now acts as support contact
+            window.open(`https://wa.me/923199242314?text=${message}`, '_blank');
+        }
+
+        function buyPlan(amount) {
+            if (userData.walletBalance < amount) {
+                showAlert('Insufficient balance', 'error');
+                setTimeout(() => showPage('depositPage'), 1000);
+                return;
+            }
+            userData.walletBalance -= amount;
+            userData.activePlan = {
+                amount: amount,
+                purchasedDate: new Date().toLocaleDateString(),
+                dailyEarning: amount * 0.10,
+                totalDays: 45,
+                daysCompleted: 0
+            };
+            saveUserData();
+            showAlert(`Plan purchased!`, 'success');
+            showPage('profilePage');
+        }
+
+        function completeTask(taskId) {
+            const task = userData.tasks.find(t => t.id === taskId);
+            if (!task) return;
+            showAlert(`Task started! Please wait ${task.duration}s...`, 'info');
+            setTimeout(() => {
+                const reward = userData.activePlan ? task.reward * (userData.activePlan.amount / 1000) : task.reward;
+                const finalReward = reward < 1 ? 1 : reward;
+                userData.walletBalance += finalReward;
+                saveUserData();
+                showAlert(`Earned Rs ${finalReward.toFixed(2)}`, 'success');
+            }, task.duration * 1000);
+        }
+
+        function updateUI() {
+            document.getElementById('walletBalance').textContent = userData.walletBalance.toFixed(2);
+            document.getElementById('totalDeposit').textContent = `Rs ${userData.totalDeposit.toFixed(2)}`;
+            document.getElementById('totalWithdraw').textContent = `Rs ${userData.totalWithdraw.toFixed(2)}`;
+            document.getElementById('displayEmail').textContent = userData.email.split('@')[0];
+            document.getElementById('userProfilePic').src = userData.profilePic;
+
+            const currentPlanInfo = document.getElementById('currentPlanInfo');
+            if (userData.activePlan) {
+                currentPlanInfo.innerHTML = `
+                    <div style="text-align: center;">
+                        <div style="font-size: 24px; color: #4caf50;">Rs ${userData.activePlan.amount}</div>
+                        <div style="font-size: 12px; color: #aaa;">Daily: Rs ${userData.activePlan.dailyEarning.toFixed(2)}<br>Purchased: ${userData.activePlan.purchasedDate}</div>
+                    </div>`;
+            } else {
+                currentPlanInfo.innerHTML = '<p style="color: #aaa; text-align: center;">No active plan</p>';
+            }
+            document.getElementById('myInviteCode').textContent = userData.myInviteCode;
+            document.getElementById('inviteLink').value = window.location.origin + window.location.pathname + '?invite=' + userData.myInviteCode;
+        }
+
+        function updateHistoryTables() {
+            const depList = document.getElementById('depositHistory');
+            depList.innerHTML = userData.deposits.length ? '' : '<tr><td colspan="3" style="text-align:center;">No deposits</td></tr>';
+            userData.deposits.slice().reverse().forEach(d => {
+                depList.innerHTML += `<tr><td>${d.date}</td><td>Rs ${d.amount}</td><td><span class="status status-${d.status}">${d.status}</span></td></tr>`;
+            });
+
+            const withList = document.getElementById('withdrawHistory');
+            withList.innerHTML = userData.withdrawals.length ? '' : '<tr><td colspan="3" style="text-align:center;">No withdrawals</td></tr>';
+            userData.withdrawals.slice().reverse().forEach(w => {
+                withList.innerHTML += `<tr><td>${w.date}</td><td>Rs ${w.amount}</td><td><span class="status status-${w.status}">${w.status}</span></td></tr>`;
+            });
+        }
+        
+        function updateInviteStats() {
+            document.getElementById('totalInvites').textContent = userData.invites.total;
+            document.getElementById('activeInvites').textContent = userData.invites.active;
+            document.getElementById('inviteEarnings').textContent = `Rs ${userData.invites.earnings.toFixed(2)}`;
+        }
+
+        function generatePlans() {
+            const plans = [300, 600, 1200, 2500, 5000, 7500, 10000];
+            const planGrid = document.querySelector('.plan-grid');
+            planGrid.innerHTML = '';
+            plans.forEach(amount => {
+                const daily = amount * 0.10;
+                planGrid.innerHTML += `
+                    <div class="plan-card" onclick="showPlanDetails(${amount})">
+                        <div class="plan-amount">Rs ${amount}</div>
+                        <div class="plan-details">Daily: Rs ${daily.toFixed(0)}<br>Total: Rs ${(daily*45).toFixed(0)}</div>
+                        <button class="btn" style="margin-top: auto; padding: 10px; font-size: 12px;">Buy Now</button>
+                    </div>`;
+            });
+        }
+        
+        function showPlanDetails(amount) {
+            const daily = amount * 0.10;
+            document.getElementById('planDetailsPage').innerHTML = `
+                <h2 class="page-title">Plan Details</h2>
+                <div class="card">
+                    <h3 class="card-title">VIP Plan: Rs ${amount}</h3>
+                    <div class="info-row"><span class="info-label">Daily (10%):</span><span class="info-value">Rs ${daily.toFixed(2)}</span></div>
+                    <div class="info-row"><span class="info-label">Duration:</span><span class="info-value">45 Days</span></div>
+                    <div class="info-row"><span class="info-label">Total:</span><span class="info-value">Rs ${(daily*45).toFixed(2)}</span></div>
+                    <button class="btn" onclick="buyPlan(${amount})">Confirm Purchase</button>
+                </div>`;
+            showPage('planDetailsPage');
+        }
+
+        function loadTasks() {
+            userData.tasks = [
+                { id: 1, title: 'Watch Ad', duration: 15, reward: 5 },
+                { id: 2, title: 'Check Website', duration: 10, reward: 8 }
+            ];
+            const tasksList = document.getElementById('tasksList');
+            const noPlan = document.getElementById('noPlanWarning');
+            if (!userData.activePlan) {
+                tasksList.innerHTML = ''; noPlan.style.display = 'block';
+            } else {
+                noPlan.style.display = 'none';
+                tasksList.innerHTML = '<div class="card"><h3 class="card-title">Available Tasks</h3>' + 
+                userData.tasks.map(t => `
+                    <div class="task-item">
+                        <div><div style="font-weight: bold; font-size: 14px;">${t.title}</div><div style="font-size: 11px; color: #aaa;">${t.duration}s</div></div>
+                        <div style="text-align: right;"><div class="task-reward">+Rs ${t.reward}</div><button class="btn" style="padding: 5px 12px; font-size: 11px; margin-top: 5px; width: auto;" onclick="completeTask(${t.id})">Start</button></div>
+                    </div>`).join('') + '</div>';
+            }
+        }
+
+        function copyInviteCode() {
+            const txt = document.createElement("textarea");
+            txt.value = userData.myInviteCode;
+            document.body.appendChild(txt); txt.select(); document.execCommand("Copy"); txt.remove();
+            showAlert('Code copied!', 'success');
+        }
+        
+        function shareInviteLink() {
+            const link = document.getElementById('inviteLink').value;
+            const txt = document.createElement("textarea");
+            txt.value = link;
+            document.body.appendChild(txt); txt.select(); document.execCommand("Copy"); txt.remove();
+            showAlert('Link copied!', 'success');
+        }
+
+        function showAlert(msg, type) {
+            const a = document.getElementById('alert');
+            a.textContent = msg;
+            a.style.backgroundColor = type === 'error' ? '#f44336' : '#4caf50';
+            a.style.display = 'block';
+            a.style.animation = 'slideDown 0.3s ease forwards';
+            setTimeout(() => { a.style.display = 'none'; }, 3000);
+        }
+
+        function showLoading(show) {
+            document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+        }
+
+        function selectWithdrawMethod(m) {
+            document.querySelectorAll('#withdrawPage .payment-method').forEach(i => i.classList.remove('active'));
+            event.target.closest('.payment-method').classList.add('active');
+        }
+
+        let isDragging = false, dragStartTime = 0;
+        function handleClickWhatsapp() { if (Date.now() - dragStartTime < 200 && !isDragging) contactAdmin(); }
+        function initDraggableWhatsapp() {
+            const btn = document.getElementById('whatsappFloat');
+            let offset = {x:0, y:0};
+            btn.addEventListener('touchstart', (e) => {
+                isDragging=false; dragStartTime=Date.now();
+                const touch=e.touches[0], rect=btn.getBoundingClientRect();
+                offset.x=touch.clientX-rect.left; offset.y=touch.clientY-rect.top;
+            });
+            btn.addEventListener('touchmove', (e) => {
+                e.preventDefault(); isDragging=true;
+                const touch=e.touches[0], app=document.querySelector('.app-container'), rect=app.getBoundingClientRect();
+                let l=touch.clientX-rect.left-offset.x, t=touch.clientY-rect.top-offset.y;
+                if(l<0)l=0; if(l>rect.width-btn.offsetWidth)l=rect.width-btn.offsetWidth;
+                if(t<0)t=0; if(t>rect.height-btn.offsetHeight)t=rect.height-btn.offsetHeight;
+                btn.style.right='auto'; btn.style.bottom='auto'; btn.style.left=l+'px'; btn.style.top=t+'px';
+            });
+        }
+    </script>
+</body>
+</html>
