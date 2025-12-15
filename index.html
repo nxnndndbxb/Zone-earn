@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Earning App - Updated Profile</title>
+    <title>Earning App - Premium UI</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Firebase SDKs -->
@@ -80,9 +80,7 @@
             justify-content: center; align-items: center; flex-direction: column;
             color: white;
         }
-        .timer-circle-container {
-            position: relative; width: 150px; height: 150px;
-        }
+        .timer-circle-container { position: relative; width: 150px; height: 150px; }
         .timer-svg { width: 150px; height: 150px; transform: rotate(-90deg); }
         .timer-circle-bg { fill: none; stroke: #333; stroke-width: 10; }
         .timer-circle-progress { 
@@ -90,11 +88,7 @@
             stroke-dasharray: 440; stroke-dashoffset: 440; 
             transition: stroke-dashoffset 1s linear;
         }
-        .timer-text {
-            position: absolute; top: 50%; left: 50%; 
-            transform: translate(-50%, -50%); 
-            font-size: 30px; font-weight: bold;
-        }
+        .timer-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 30px; font-weight: bold; }
         .ad-label { margin-top: 20px; font-size: 18px; color: #aaa; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
@@ -114,7 +108,20 @@
         .page-content { padding: 20px; color: white; max-width: 1000px; margin: 0 auto; width: 100%; }
 
         .banner-container { padding: 20px; background: linear-gradient(180deg, #750d37 0%, #031b38 30%); display: flex; justify-content: center; }
-        .banner { background-color: white; border-radius: 15px; height: 150px; display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.2); width: 100%; max-width: 800px; }
+        .banner { 
+            background-color: transparent; 
+            border-radius: 15px; 
+            height: 180px; 
+            width: 100%; 
+            max-width: 800px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            overflow: hidden; 
+            position: relative; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); 
+        }
+        .banner img { width: 100%; height: 100%; object-fit: cover; border-radius: 15px; }
         
         .ticker-container { margin: 0 auto; max-width: 800px; background: linear-gradient(90deg, #c21558, #5a0a29); border-radius: 20px; padding: 10px 15px; display: flex; align-items: center; color: white; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); width: 90%; }
         .marquee { overflow: hidden; white-space: nowrap; width: 100%; margin-left: 10px; }
@@ -240,36 +247,75 @@
         .alert { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background-color: #4caf50; color: white; padding: 15px 30px; border-radius: 10px; z-index: 5000; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.3); white-space: nowrap; }
         @keyframes slideDown { from { top: -100px; } to { top: 20px; } }
 
-        /* --- NEW TASK DASHBOARD STYLES --- */
-        .task-stats-row { display: flex; gap: 10px; margin-bottom: 15px; }
-        .task-stat-box { 
-            flex: 1; 
-            background-color: #1a222c; 
-            border-radius: 12px; 
-            padding: 15px 20px; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-        }
-        .task-stat-label { color: #9c9c9c; font-size: 14px; margin-bottom: 5px; font-weight: 500; }
-        .task-stat-count { color: white; font-size: 24px; font-weight: bold; }
-        
-        .reminder-box {
+        /* --- NEW REDESIGNED TASK DASHBOARD --- */
+        .task-dashboard-v2 {
             background-color: #1a222c;
-            border-radius: 12px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
-        .reminder-icon-circle { position: relative; width: 50px; height: 50px; }
-        .reminder-icon-circle i { font-size: 50px; color: #7986cb; opacity: 0.8; }
-        .reminder-content { flex-grow: 1; }
-        .reminder-label { color: #9c9c9c; font-size: 14px; text-transform: uppercase; margin-bottom: 5px; }
-        .reminder-timer { color: #ffca28; font-size: 20px; font-weight: bold; font-family: 'Courier New', Courier, monospace; letter-spacing: 1px; text-shadow: 0 0 10px rgba(255, 202, 40, 0.3); }
+        
+        /* The Grid for Series (Side by Side) */
+        .task-stats-series {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .task-stat-card-v2 {
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        .task-stat-card-v2:active { transform: scale(0.98); }
+
+        .card-completed {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            border: 1px solid rgba(100, 181, 246, 0.3);
+        }
+        .card-remaining {
+            background: linear-gradient(135deg, #8e24aa, #ab47bc);
+            border: 1px solid rgba(225, 190, 231, 0.3);
+        }
+
+        .stat-icon-circle {
+            width: 35px; height: 35px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex; justify-content: center; align-items: center;
+            margin-bottom: 8px;
+            color: white; font-size: 16px;
+        }
+
+        .stat-v2-label { font-size: 11px; color: rgba(255,255,255,0.8); text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-v2-count { font-size: 24px; font-weight: 800; color: white; margin-top: 2px; }
+
+        /* Bottom Timer Section */
+        .task-timer-section {
+            background: rgba(13, 21, 32, 0.6);
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #2c3542;
+        }
+        .timer-label-box { display: flex; align-items: center; gap: 8px; }
+        .timer-icon { color: #fdd835; animation: pulse-icon 2s infinite; }
+        .timer-text-label { font-size: 12px; color: #ccc; }
+        .timer-digital { font-family: 'Courier New', monospace; font-size: 18px; color: #4caf50; font-weight: bold; letter-spacing: 1px; }
+
+        @keyframes pulse-icon { 0% { opacity: 0.7; } 50% { opacity: 1; transform: scale(1.1); } 100% { opacity: 0.7; } }
+
 
         /* --- CUSTOM MODAL STYLES --- */
         .custom-modal {
@@ -290,11 +336,12 @@
         .modal-title { font-size: 18px; font-weight: bold; color: white; }
         .modal-close { color: #aaa; font-size: 24px; cursor: pointer; }
         
-        .detail-row { display: flex; justify-content: space-between; margin-bottom: 15px; padding: 10px; background: #0d1520; border-radius: 8px; align-items: center; }
-        .detail-icon { width: 35px; height: 35px; border-radius: 50%; background: #242d38; display: flex; justify-content: center; align-items: center; margin-right: 10px; color: #e91e63; }
-        .detail-text { flex: 1; color: white; font-size: 14px; }
-        .detail-value { color: #aaa; font-size: 12px; }
         .commission-card { background: linear-gradient(135deg, #1e3c72, #2a5298); padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 15px; }
+
+        /* Account Modal Specifics */
+        .modal-avatar-container { display: flex; justify-content: center; margin-bottom: 20px; }
+        .modal-avatar { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #e91e63; object-fit: cover; box-shadow: 0 0 15px rgba(233, 30, 99, 0.4); }
+        .modal-edit-hint { text-align: center; color: #aaa; font-size: 12px; margin-bottom: 20px; }
 
     </style>
 </head>
@@ -393,8 +440,7 @@
     <div class="page-container page-active" id="homePage">
         <div class="banner-container">
             <div class="banner">
-                <i class="fa-solid fa-sack-dollar" style="color: #8bc34a; font-size: 80px; text-shadow: 2px 2px 0px #33691e;"></i>
-                <i class="fa-solid fa-coins" style="color: #ffca28; font-size: 60px; margin-left: -20px; margin-top: 40px; text-shadow: 2px 2px 0px #ff6f00;"></i>
+                <img src="https://iili.io/fazQxyB.jpg" alt="Banner">
             </div>
         </div>
         <div class="ticker-container">
@@ -570,7 +616,7 @@
         </div>
     </div>
 
-    <!-- Profile Page (Updated with Account/Password/Commission Buttons) -->
+    <!-- Profile Page -->
     <div class="page-container page-inactive" id="profilePage">
         <div class="page-content">
             <div class="card profile-card">
@@ -596,37 +642,42 @@
                 </div>
             </div>
 
-            <!-- BUTTONS MOVED UP HERE -->
+            <!-- BUTTONS -->
             <div class="action-row">
                 <div class="action-btn" onclick="showPage('depositPage')"><div class="btn-icon"><i class="fa-solid fa-arrow-up"></i></div><span class="btn-text">Deposit</span></div>
                 <div class="action-btn" onclick="showPage('invitePage')"><div class="btn-icon"><i class="fa-solid fa-user-plus"></i></div><span class="btn-text">Invite</span></div>
                 <div class="action-btn" onclick="showPage('withdrawPage')"><div class="btn-icon"><i class="fa-solid fa-arrow-down"></i></div><span class="btn-text">Withdraw</span></div>
             </div>
 
-            <!-- TASK DASHBOARD MOVED DOWN HERE -->
-            <div class="task-dashboard">
-                <div class="task-stats-row">
-                    <div class="task-stat-box">
-                        <div class="task-stat-label">Complete</div>
-                        <div class="task-stat-count"><span id="taskCompletedCount">0</span> Task</div>
+            <!-- REDESIGNED TASK DASHBOARD -->
+            <div class="task-dashboard-v2">
+                <!-- Row 1: Series of Task Stats -->
+                <div class="task-stats-series">
+                    <!-- Completed -->
+                    <div class="task-stat-card-v2 card-completed">
+                        <div class="stat-icon-circle"><i class="fa-solid fa-check-double"></i></div>
+                        <span class="stat-v2-label">Completed</span>
+                        <span class="stat-v2-count" id="taskCompletedCount">0</span>
                     </div>
-                    <div class="task-stat-box">
-                        <div class="task-stat-label">Remain</div>
-                        <div class="task-stat-count"><span id="taskRemainCount">0</span> Task</div>
+                    <!-- Available -->
+                    <div class="task-stat-card-v2 card-remaining">
+                        <div class="stat-icon-circle"><i class="fa-solid fa-box-open"></i></div>
+                        <span class="stat-v2-label">Available</span>
+                        <span class="stat-v2-count" id="taskRemainCount">0</span>
                     </div>
                 </div>
-                <div class="reminder-box">
-                    <div class="reminder-icon-circle">
-                        <i class="fa-regular fa-clock" style="color: #7986cb; background: rgba(121, 134, 203, 0.2); border-radius: 50%; padding: 10px; font-size: 30px;"></i>
+                
+                <!-- Row 2: Timer at Bottom -->
+                <div class="task-timer-section">
+                    <div class="timer-label-box">
+                        <i class="fa-solid fa-clock timer-icon"></i>
+                        <span class="timer-text-label">NEXT RESET IN:</span>
                     </div>
-                    <div class="reminder-content">
-                        <div class="reminder-label">NEXT REMINDER</div>
-                        <div class="reminder-timer" id="nextReminderTimer">00h : 00m : 00s</div>
-                    </div>
+                    <div class="timer-digital" id="nextReminderTimer">00:00:00</div>
                 </div>
             </div>
 
-            <!-- NEW: Account Management Section -->
+            <!-- Settings -->
             <h3 style="color: #aaa; font-size: 14px; margin: 15px 0 10px 5px; text-transform: uppercase;">Account Settings</h3>
             <div class="menu-group">
                 <div class="menu-item" onclick="openModal('accountInfoModal')">
@@ -679,27 +730,31 @@
 <div id="accountInfoModal" class="custom-modal">
     <div class="modal-content">
         <div class="modal-header">
-            <span class="modal-title">Account Information</span>
+            <span class="modal-title">Edit Profile</span>
             <span class="modal-close" onclick="closeModal('accountInfoModal')">&times;</span>
         </div>
-        <div class="detail-row">
-            <div class="detail-icon"><i class="fa-solid fa-envelope"></i></div>
-            <div class="detail-text" id="accInfoEmail">user@gmail.com</div>
+        
+        <div class="modal-avatar-container">
+            <img src="https://iili.io/f75iDuI.jpg" id="modalUserImg" class="modal-avatar" alt="User Pic">
         </div>
-        <div class="detail-row">
-            <div class="detail-icon"><i class="fa-solid fa-phone"></i></div>
-            <div class="detail-text" id="accInfoPhone">+92 3000000000</div>
+        <div class="modal-edit-hint">Update your contact details</div>
+
+        <div class="form-group">
+            <label class="form-label">Email (Username)</label>
+            <input type="text" class="form-input" id="editEmail" readonly style="opacity: 0.6;">
         </div>
-        <div class="detail-row">
-            <div class="detail-icon"><i class="fa-solid fa-calendar"></i></div>
-            <div class="detail-text" style="color: #aaa;">Joined Date</div>
-            <div class="detail-value" id="accInfoDate">2023-01-01</div>
+        
+        <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input type="text" class="form-input" id="editPhone" placeholder="Update Phone">
         </div>
-        <div class="detail-row">
-            <div class="detail-icon"><i class="fa-solid fa-fingerprint"></i></div>
-            <div class="detail-text" style="color: #aaa;">User UID</div>
-            <div class="detail-value" id="accInfoUid" style="font-size: 10px;">UID12345</div>
+
+        <div class="form-group">
+            <label class="form-label">Joined Date</label>
+            <input type="text" class="form-input" id="editJoinDate" readonly style="opacity: 0.6;">
         </div>
+        
+        <button class="btn" onclick="saveAccountInfo()">Save Changes</button>
     </div>
 </div>
 
@@ -824,6 +879,7 @@
                         // Initialize new task tracking fields if missing
                         if (typeof userData.tasksCompletedToday === 'undefined') userData.tasksCompletedToday = 0;
                         if (typeof userData.lastTaskDate === 'undefined') userData.lastTaskDate = '';
+                        if (!userData.profilePic) userData.profilePic = 'https://iili.io/f75iDuI.jpg';
 
                         updateUI();
                         loadTasks();
@@ -857,14 +913,13 @@
         initDraggableWhatsapp();
     });
 
-    // --- MODAL FUNCTIONS (NEW) ---
+    // --- MODAL FUNCTIONS (UPDATED) ---
     function openModal(modalId) {
-        // Populate data before showing if needed
         if (modalId === 'accountInfoModal') {
-            document.getElementById('accInfoEmail').textContent = userData.email;
-            document.getElementById('accInfoPhone').textContent = userData.phone || 'N/A';
-            document.getElementById('accInfoDate').textContent = userData.joinedDate || 'N/A';
-            document.getElementById('accInfoUid').textContent = currentUser.uid;
+            document.getElementById('editEmail').value = userData.email;
+            document.getElementById('editPhone').value = userData.phone || '';
+            document.getElementById('editJoinDate').value = userData.joinedDate || 'N/A';
+            document.getElementById('modalUserImg').src = userData.profilePic;
         } else if (modalId === 'commissionModal') {
             document.getElementById('commTotalEarned').textContent = `Rs ${userData.invites.earnings.toFixed(2)}`;
             document.getElementById('commTotalInvites').textContent = userData.invites.total;
@@ -876,6 +931,17 @@
 
     function closeModal(modalId) {
         document.getElementById(modalId).classList.remove('open');
+    }
+    
+    function saveAccountInfo() {
+        const newPhone = document.getElementById('editPhone').value;
+        if (!newPhone) { showAlert("Phone number cannot be empty", "error"); return; }
+        showLoading(true);
+        userData.phone = newPhone;
+        saveUserData();
+        showLoading(false);
+        showAlert("Profile Updated Successfully", "success");
+        closeModal('accountInfoModal');
     }
 
     function doChangePassword() {
@@ -909,12 +975,11 @@
         const now = new Date();
         const tomorrow = new Date(now);
         tomorrow.setDate(tomorrow.getDate() + 1);
-        tomorrow.setHours(0, 0, 0, 0); // Next Midnight
+        tomorrow.setHours(0, 0, 0, 0); 
         
         const diff = tomorrow - now;
-        
         if (diff <= 0) {
-            document.getElementById('nextReminderTimer').textContent = "00h : 00m : 00s";
+            document.getElementById('nextReminderTimer').textContent = "00:00:00";
             return;
         }
         
@@ -924,12 +989,11 @@
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
         
         const totalHours = (days * 24) + hours;
-        
         const fHours = (totalHours < 10 ? "0" : "") + totalHours;
         const fMins = (minutes < 10 ? "0" : "") + minutes;
         const fSecs = (seconds < 10 ? "0" : "") + seconds;
         
-        document.getElementById('nextReminderTimer').textContent = `${fHours}h : ${fMins}m : ${fSecs}s`;
+        document.getElementById('nextReminderTimer').textContent = `${fHours}:${fMins}:${fSecs}`;
     }
 
     // --- ADMIN FUNCTIONS ---
@@ -1262,14 +1326,10 @@
         let timeLeft = 20;
         countText.textContent = timeLeft;
         
-        // Reset Animation
         circle.style.transition = 'none';
         circle.style.strokeDashoffset = '0';
+        circle.getBoundingClientRect(); // Trigger reflow
         
-        // Trigger reflow
-        circle.getBoundingClientRect();
-        
-        // Start Animation
         circle.style.transition = 'stroke-dashoffset 20s linear';
         circle.style.strokeDashoffset = '440';
 
@@ -1292,7 +1352,7 @@
         
         showAlert(`Task Complete! Rs ${amount} added.`, 'success');
         loadTasks();
-        updateUI(); // Updates the profile page counters too
+        updateUI(); 
     }
 
     // --- UTILS & UI UPDATES ---
