@@ -543,11 +543,27 @@
                             <div class="action-btn" onclick="showPage('invitePage')"><div class="btn-icon"><i class="fa-solid fa-user-plus"></i></div><span class="btn-text">Invite</span></div>
                             <div class="action-btn" onclick="showPage('withdrawPage')"><div class="btn-icon"><i class="fa-solid fa-arrow-down"></i></div><span class="btn-text">Withdraw</span></div>
                         </div>
+                        
+                        <!-- NEW PROFILE TASK STATUS CARD -->
                         <div class="card">
-                            <h3 class="card-title">Current Plan</h3>
-                            <div id="currentPlanInfo"><p style="color: #aaa; text-align: center;">No active plan</p></div>
+                            <h3 class="card-title">Daily Task Progress</h3>
+                            <div class="stats-box" style="margin-bottom: 0;">
+                                <div class="stat-card">
+                                    <div class="stat-value" id="profCompleted">0</div>
+                                    <div class="stat-label">Completed</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value" id="profAvailable">0</div>
+                                    <div class="stat-label">Available</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value" id="profNextReset" style="font-size: 16px; color: #ffca28;">--:--</div>
+                                    <div class="stat-label">Next Reset</div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="menu-group">
+
+                        <div class="menu-group" style="margin-top: 20px;">
                             <div class="menu-item" onclick="showPage('depositHistoryPage')"><div class="menu-left"><div class="menu-icon-circle"><i class="fa-regular fa-credit-card"></i></div><span class="menu-text">Deposit History</span></div><i class="fa-solid fa-chevron-right" style="color: #555;"></i></div>
                             <div class="menu-item" onclick="showPage('withdrawHistoryPage')"><div class="menu-left"><div class="menu-icon-circle"><i class="fa-solid fa-money-bill-transfer"></i></div><span class="menu-text">Withdraw History</span></div><i class="fa-solid fa-chevron-right" style="color: #555;"></i></div>
                         </div>
@@ -1055,6 +1071,7 @@
             
             showAlert(`Task Complete! Rs ${amount} added.`, 'success');
             loadTasks(); // Refresh list to show updated count or limit warning
+            updateUI(); // Refresh Profile UI numbers
         }
 
         // --- UTILS & UI UPDATES ---
@@ -1065,18 +1082,56 @@
             document.getElementById('displayEmail').textContent = userData.email.split('@')[0];
             document.getElementById('userProfilePic').src = userData.profilePic;
 
-            const currentPlanInfo = document.getElementById('currentPlanInfo');
+            // --- CHANGED: Profile Task Status Logic ---
+            const completed = userData.tasksCompletedToday || 0;
+            let limit = 0;
             if (userData.activePlan) {
-                currentPlanInfo.innerHTML = `
-                    <div style="text-align: center;">
-                        <div style="font-size: 24px; color: #4caf50;">Rs ${userData.activePlan.amount}</div>
-                        <div style="font-size: 12px; color: #aaa;">Daily: Rs ${userData.activePlan.dailyEarning}<br>Purchased: ${userData.activePlan.purchasedDate}</div>
-                    </div>`;
-            } else {
-                currentPlanInfo.innerHTML = '<p style="color: #aaa; text-align: center;">No active plan</p>';
+                limit = userData.activePlan.dailyLimit;
             }
+            const available = Math.max(0, limit - completed);
+
+            document.getElementById('profCompleted').textContent = completed;
+            document.getElementById('profAvailable').textContent = available;
+            
+            // Start the reset timer
+            startProfileTimer();
+
             document.getElementById('myInviteCode').textContent = userData.myInviteCode;
             document.getElementById('inviteLink').value = window.location.origin + window.location.pathname + '?invite=' + userData.myInviteCode;
+        }
+
+        // New function to handle the "Next Reset" countdown
+        function startProfileTimer() {
+            // Clear existing interval if any to prevent duplicates
+            if (window.profileTimerInterval) clearInterval(window.profileTimerInterval);
+            
+            function updateTimer() {
+                const now = new Date();
+                const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1); // Midnight next day
+                const diff = tomorrow - now;
+
+                if (diff <= 0) {
+                    // It's a new day
+                     const timerEl = document.getElementById('profNextReset');
+                     if(timerEl) timerEl.textContent = "00:00:00";
+                     return;
+                }
+
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                const timerEl = document.getElementById('profNextReset');
+                if (timerEl) {
+                    timerEl.textContent = 
+                        (hours < 10 ? "0" + hours : hours) + ":" + 
+                        (minutes < 10 ? "0" + minutes : minutes) + ":" + 
+                        (seconds < 10 ? "0" + seconds : seconds);
+                }
+            }
+
+            updateTimer(); // Run once immediately
+            window.profileTimerInterval = setInterval(updateTimer, 1000);
         }
 
         function updateHistoryTables() {
