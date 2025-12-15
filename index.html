@@ -265,35 +265,37 @@
             margin-bottom: 20px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.2);
         }
-        .reminder-icon-circle {
-            position: relative;
-            width: 50px;
-            height: 50px;
+        .reminder-icon-circle { position: relative; width: 50px; height: 50px; }
+        .reminder-icon-circle i { font-size: 50px; color: #7986cb; opacity: 0.8; }
+        .reminder-content { flex-grow: 1; }
+        .reminder-label { color: #9c9c9c; font-size: 14px; text-transform: uppercase; margin-bottom: 5px; }
+        .reminder-timer { color: #ffca28; font-size: 20px; font-weight: bold; font-family: 'Courier New', Courier, monospace; letter-spacing: 1px; text-shadow: 0 0 10px rgba(255, 202, 40, 0.3); }
+
+        /* --- CUSTOM MODAL STYLES --- */
+        .custom-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 6000;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s;
         }
-        .reminder-icon-circle i {
-            font-size: 50px;
-            color: #7986cb; /* Light indigo */
-            opacity: 0.8;
+        .custom-modal.open { opacity: 1; pointer-events: auto; }
+        .modal-content {
+            background: #1a222c; width: 90%; max-width: 400px;
+            border-radius: 15px; padding: 25px;
+            position: relative; transform: translateY(20px); transition: transform 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .reminder-content {
-            flex-grow: 1;
-        }
-        .reminder-label {
-            color: #9c9c9c;
-            font-size: 14px;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
+        .custom-modal.open .modal-content { transform: translateY(0); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .modal-title { font-size: 18px; font-weight: bold; color: white; }
+        .modal-close { color: #aaa; font-size: 24px; cursor: pointer; }
         
-        /* UPDATED REMINDER TIMER STYLE */
-        .reminder-timer {
-            color: #ffca28; /* Gold color */
-            font-size: 20px; /* Small size */
-            font-weight: bold;
-            font-family: 'Courier New', Courier, monospace; /* Digital clock font */
-            letter-spacing: 1px;
-            text-shadow: 0 0 10px rgba(255, 202, 40, 0.3); /* Slight glow */
-        }
+        .detail-row { display: flex; justify-content: space-between; margin-bottom: 15px; padding: 10px; background: #0d1520; border-radius: 8px; align-items: center; }
+        .detail-icon { width: 35px; height: 35px; border-radius: 50%; background: #242d38; display: flex; justify-content: center; align-items: center; margin-right: 10px; color: #e91e63; }
+        .detail-text { flex: 1; color: white; font-size: 14px; }
+        .detail-value { color: #aaa; font-size: 12px; }
+        .commission-card { background: linear-gradient(135deg, #1e3c72, #2a5298); padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 15px; }
+
     </style>
 </head>
 <body>
@@ -568,7 +570,7 @@
         </div>
     </div>
 
-    <!-- Profile Page (Updated with Task Dashboard) -->
+    <!-- Profile Page (Updated with Account/Password/Commission Buttons) -->
     <div class="page-container page-inactive" id="profilePage">
         <div class="page-content">
             <div class="card profile-card">
@@ -594,7 +596,14 @@
                 </div>
             </div>
 
-            <!-- NEW: Task Dashboard -->
+            <!-- BUTTONS MOVED UP HERE -->
+            <div class="action-row">
+                <div class="action-btn" onclick="showPage('depositPage')"><div class="btn-icon"><i class="fa-solid fa-arrow-up"></i></div><span class="btn-text">Deposit</span></div>
+                <div class="action-btn" onclick="showPage('invitePage')"><div class="btn-icon"><i class="fa-solid fa-user-plus"></i></div><span class="btn-text">Invite</span></div>
+                <div class="action-btn" onclick="showPage('withdrawPage')"><div class="btn-icon"><i class="fa-solid fa-arrow-down"></i></div><span class="btn-text">Withdraw</span></div>
+            </div>
+
+            <!-- TASK DASHBOARD MOVED DOWN HERE -->
             <div class="task-dashboard">
                 <div class="task-stats-row">
                     <div class="task-stat-box">
@@ -608,27 +617,38 @@
                 </div>
                 <div class="reminder-box">
                     <div class="reminder-icon-circle">
-                        <!-- Using a clock icon similar to the image -->
                         <i class="fa-regular fa-clock" style="color: #7986cb; background: rgba(121, 134, 203, 0.2); border-radius: 50%; padding: 10px; font-size: 30px;"></i>
                     </div>
                     <div class="reminder-content">
                         <div class="reminder-label">NEXT REMINDER</div>
-                        <!-- Updated Timer Structure -->
                         <div class="reminder-timer" id="nextReminderTimer">00h : 00m : 00s</div>
                     </div>
                 </div>
             </div>
 
-            <div class="action-row">
-                <div class="action-btn" onclick="showPage('depositPage')"><div class="btn-icon"><i class="fa-solid fa-arrow-up"></i></div><span class="btn-text">Deposit</span></div>
-                <div class="action-btn" onclick="showPage('invitePage')"><div class="btn-icon"><i class="fa-solid fa-user-plus"></i></div><span class="btn-text">Invite</span></div>
-                <div class="action-btn" onclick="showPage('withdrawPage')"><div class="btn-icon"><i class="fa-solid fa-arrow-down"></i></div><span class="btn-text">Withdraw</span></div>
+            <!-- NEW: Account Management Section -->
+            <h3 style="color: #aaa; font-size: 14px; margin: 15px 0 10px 5px; text-transform: uppercase;">Account Settings</h3>
+            <div class="menu-group">
+                <div class="menu-item" onclick="openModal('accountInfoModal')">
+                    <div class="menu-left"><div class="menu-icon-circle" style="background: rgba(33, 150, 243, 0.1); color: #2196f3;"><i class="fa-solid fa-id-card"></i></div><span class="menu-text">Account Information</span></div>
+                    <i class="fa-solid fa-chevron-right" style="color: #555;"></i>
+                </div>
+                <div class="menu-item" onclick="openModal('commissionModal')">
+                    <div class="menu-left"><div class="menu-icon-circle" style="background: rgba(255, 152, 0, 0.1); color: #ff9800;"><i class="fa-solid fa-users-viewfinder"></i></div><span class="menu-text">Invitation Commission</span></div>
+                    <i class="fa-solid fa-chevron-right" style="color: #555;"></i>
+                </div>
+                <div class="menu-item" onclick="openModal('changePassModal')">
+                    <div class="menu-left"><div class="menu-icon-circle" style="background: rgba(244, 67, 54, 0.1); color: #f44336;"><i class="fa-solid fa-lock"></i></div><span class="menu-text">Change Password</span></div>
+                    <i class="fa-solid fa-chevron-right" style="color: #555;"></i>
+                </div>
             </div>
 
+            <h3 style="color: #aaa; font-size: 14px; margin: 15px 0 10px 5px; text-transform: uppercase;">History & Records</h3>
             <div class="menu-group">
                 <div class="menu-item" onclick="showPage('depositHistoryPage')"><div class="menu-left"><div class="menu-icon-circle"><i class="fa-regular fa-credit-card"></i></div><span class="menu-text">Deposit History</span></div><i class="fa-solid fa-chevron-right" style="color: #555;"></i></div>
                 <div class="menu-item" onclick="showPage('withdrawHistoryPage')"><div class="menu-left"><div class="menu-icon-circle"><i class="fa-solid fa-money-bill-transfer"></i></div><span class="menu-text">Withdraw History</span></div><i class="fa-solid fa-chevron-right" style="color: #555;"></i></div>
             </div>
+            
             <div class="menu-group">
                 <div class="menu-item" onclick="logout()"><div class="menu-left"><div class="menu-icon-circle"><i class="fa-solid fa-right-from-bracket"></i></div><span class="menu-text">Logout</span></div><i class="fa-solid fa-chevron-right" style="color: #555;"></i></div>
             </div>
@@ -652,7 +672,81 @@
 
 <!-- Float Whatsapp -->
 <div class="whatsapp-float" id="whatsappFloat" onclick="handleClickWhatsapp()"><i class="fa-brands fa-whatsapp"></i></div>
+
+<!-- ================= NEW MODALS FOR PROFILE BUTTONS ================= -->
+
+<!-- Account Info Modal -->
+<div id="accountInfoModal" class="custom-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="modal-title">Account Information</span>
+            <span class="modal-close" onclick="closeModal('accountInfoModal')">&times;</span>
+        </div>
+        <div class="detail-row">
+            <div class="detail-icon"><i class="fa-solid fa-envelope"></i></div>
+            <div class="detail-text" id="accInfoEmail">user@gmail.com</div>
+        </div>
+        <div class="detail-row">
+            <div class="detail-icon"><i class="fa-solid fa-phone"></i></div>
+            <div class="detail-text" id="accInfoPhone">+92 3000000000</div>
+        </div>
+        <div class="detail-row">
+            <div class="detail-icon"><i class="fa-solid fa-calendar"></i></div>
+            <div class="detail-text" style="color: #aaa;">Joined Date</div>
+            <div class="detail-value" id="accInfoDate">2023-01-01</div>
+        </div>
+        <div class="detail-row">
+            <div class="detail-icon"><i class="fa-solid fa-fingerprint"></i></div>
+            <div class="detail-text" style="color: #aaa;">User UID</div>
+            <div class="detail-value" id="accInfoUid" style="font-size: 10px;">UID12345</div>
+        </div>
+    </div>
 </div>
+
+<!-- Commission Modal -->
+<div id="commissionModal" class="custom-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="modal-title">Commission Details</span>
+            <span class="modal-close" onclick="closeModal('commissionModal')">&times;</span>
+        </div>
+        <div class="commission-card">
+            <div style="font-size: 12px; color: #ccc; margin-bottom: 5px;">TOTAL EARNINGS</div>
+            <div style="font-size: 28px; font-weight: bold; color: #fdd835;" id="commTotalEarned">Rs 0.00</div>
+        </div>
+        <div class="stats-box" style="margin-bottom: 0;">
+            <div class="stat-card" style="background: #151d27;">
+                <div class="stat-value" id="commTotalInvites">0</div>
+                <div class="stat-label">Total Team</div>
+            </div>
+            <div class="stat-card" style="background: #151d27;">
+                <div class="stat-value" id="commActiveInvites">0</div>
+                <div class="stat-label">Active VIPs</div>
+            </div>
+        </div>
+        <button class="btn" style="margin-top: 20px;" onclick="closeModal('commissionModal'); showPage('invitePage')">Invite More</button>
+    </div>
+</div>
+
+<!-- Change Password Modal -->
+<div id="changePassModal" class="custom-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="modal-title">Change Password</span>
+            <span class="modal-close" onclick="closeModal('changePassModal')">&times;</span>
+        </div>
+        <div class="form-group">
+            <label class="form-label">New Password</label>
+            <input type="password" class="form-input" id="newPasswordInput" placeholder="Enter new strong password">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Confirm Password</label>
+            <input type="password" class="form-input" id="confirmNewPasswordInput" placeholder="Repeat new password">
+        </div>
+        <button class="btn" onclick="doChangePassword()">Update Password</button>
+    </div>
+</div>
+
 
 <script>
     // --- ADMIN CONFIGURATION ---
@@ -763,13 +857,51 @@
         initDraggableWhatsapp();
     });
 
-    // --- DASHBOARD TIMER LOGIC (UPDATED FOR 24H LOOK) ---
+    // --- MODAL FUNCTIONS (NEW) ---
+    function openModal(modalId) {
+        // Populate data before showing if needed
+        if (modalId === 'accountInfoModal') {
+            document.getElementById('accInfoEmail').textContent = userData.email;
+            document.getElementById('accInfoPhone').textContent = userData.phone || 'N/A';
+            document.getElementById('accInfoDate').textContent = userData.joinedDate || 'N/A';
+            document.getElementById('accInfoUid').textContent = currentUser.uid;
+        } else if (modalId === 'commissionModal') {
+            document.getElementById('commTotalEarned').textContent = `Rs ${userData.invites.earnings.toFixed(2)}`;
+            document.getElementById('commTotalInvites').textContent = userData.invites.total;
+            document.getElementById('commActiveInvites').textContent = userData.invites.active;
+        }
+        
+        document.getElementById(modalId).classList.add('open');
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove('open');
+    }
+
+    function doChangePassword() {
+        const newPass = document.getElementById('newPasswordInput').value;
+        const confirmPass = document.getElementById('confirmNewPasswordInput').value;
+        
+        if (!newPass || newPass.length < 6) return showAlert('Password must be 6+ chars', 'error');
+        if (newPass !== confirmPass) return showAlert('Passwords do not match', 'error');
+        
+        showLoading(true);
+        currentUser.updatePassword(newPass).then(() => {
+            showLoading(false);
+            showAlert('Password updated successfully!', 'success');
+            closeModal('changePassModal');
+            document.getElementById('newPasswordInput').value = '';
+            document.getElementById('confirmNewPasswordInput').value = '';
+        }).catch((error) => {
+            showLoading(false);
+            showAlert(error.message, 'error');
+        });
+    }
+
+    // --- DASHBOARD TIMER LOGIC ---
     function startDashboardTimer() {
         if(countdownInterval) clearInterval(countdownInterval);
-        
-        // Update immediately
         updateDashboardTimer();
-        
         countdownInterval = setInterval(updateDashboardTimer, 1000);
     }
     
@@ -786,21 +918,17 @@
             return;
         }
         
-        // Calculate remaining time
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
         
-        // Convert days to hours if any (though usually 0 for daily cycle)
         const totalHours = (days * 24) + hours;
         
-        // Format with leading zeros
         const fHours = (totalHours < 10 ? "0" : "") + totalHours;
         const fMins = (minutes < 10 ? "0" : "") + minutes;
         const fSecs = (seconds < 10 ? "0" : "") + seconds;
         
-        // Beautiful Small Format: HHh : MMm : SSs
         document.getElementById('nextReminderTimer').textContent = `${fHours}h : ${fMins}m : ${fSecs}s`;
     }
 
@@ -1179,8 +1307,6 @@
         const dailyLimit = userData.activePlan ? userData.activePlan.dailyLimit : 0;
         const completed = userData.tasksCompletedToday || 0;
         const remain = dailyLimit - completed;
-        
-        // Ensure remain is not negative (e.g. if plan changed)
         const safeRemain = remain > 0 ? remain : 0;
 
         document.getElementById('taskCompletedCount').textContent = completed;
@@ -1270,4 +1396,4 @@
 </script>
 
 </body>
-                    </html>
+    </html>
