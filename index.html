@@ -10,288 +10,291 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
-<style>
-    /* --- Base Styles --- */
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
     
-    body { 
-        background-color: #031b38; 
-        height: 100vh; 
-        width: 100vw;
-        overflow: hidden; 
-    }
+    <style>
+        /* --- Base Styles --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            background-color: #031b38; 
+            height: 100vh; 
+            width: 100vw;
+            overflow: hidden; 
+        }
 
-    .app-container { 
-        width: 100%; 
-        height: 100%; 
-        background-color: #031b38; 
-        position: relative; 
-        display: flex; 
-        flex-direction: column; 
-    }
+        .app-container { 
+            width: 100%; 
+            height: 100%; 
+            background-color: #031b38; 
+            position: relative; 
+            display: flex; 
+            flex-direction: column; 
+        }
 
-    /* --- AUTH SCREEN STYLES --- */
-    .auth-screen { 
-        position: absolute; 
-        top: 0; left: 0; 
-        width: 100%; height: 100%; 
-        background: linear-gradient(135deg, #031b38 0%, #000000 100%); 
-        z-index: 2000; 
-        padding: 30px; 
-        display: flex; 
-        flex-direction: column; 
-        justify-content: center; 
-        align-items: center; 
-        overflow-y: auto; 
-        transition: transform 0.3s ease; 
-    }
-    
-    .auth-content-box { width: 100%; max-width: 400px; }
-    .auth-hidden { transform: translateY(100%); pointer-events: none; }
-    .auth-logo { text-align: center; margin-bottom: 30px; }
-    .auth-logo i { font-size: 60px; color: #e91e63; text-shadow: 0 0 15px rgba(233, 30, 99, 0.5); }
-    .auth-title { color: white; font-size: 28px; font-weight: bold; text-align: center; margin-bottom: 10px; }
-    .auth-subtitle { color: #aaa; text-align: center; margin-bottom: 30px; font-size: 14px; }
-    .auth-form-group { margin-bottom: 15px; position: relative; width: 100%; }
-    .auth-input { width: 100%; padding: 15px 15px 15px 45px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font-size: 14px; transition: border-color 0.3s; }
-    .auth-input:focus { border-color: #e91e63; outline: none; background: rgba(255, 255, 255, 0.1); }
-    .auth-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #e91e63; }
-    .country-group { display: flex; gap: 10px; }
-    .country-select { width: 100px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; padding: 0 10px; }
-    .country-select option { background-color: #031b38; }
-    .auth-btn { width: 100%; padding: 15px; background: linear-gradient(90deg, #e91e63, #ff4081); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 5px 15px rgba(233, 30, 99, 0.3); transition: transform 0.2s; }
-    .auth-btn:active { transform: scale(0.98); }
-    .auth-link { text-align: center; margin-top: 20px; color: #aaa; font-size: 14px; }
-    .auth-link span { color: #e91e63; cursor: pointer; font-weight: bold; }
-    .forgot-password { text-align: right; margin-bottom: 20px; font-size: 12px; width: 100%; }
-    .forgot-password span { color: #aaa; cursor: pointer; }
+        /* --- AUTH SCREEN STYLES --- */
+        .auth-screen { 
+            position: absolute; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%; 
+            background: linear-gradient(135deg, #031b38 0%, #000000 100%); 
+            z-index: 2000; 
+            padding: 30px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            overflow-y: auto; 
+            transition: transform 0.3s ease; 
+        }
+        
+        .auth-content-box { width: 100%; max-width: 400px; }
+        .auth-hidden { transform: translateY(100%); pointer-events: none; }
+        .auth-logo { text-align: center; margin-bottom: 30px; }
+        .auth-logo i { font-size: 60px; color: #e91e63; text-shadow: 0 0 15px rgba(233, 30, 99, 0.5); }
+        .auth-title { color: white; font-size: 28px; font-weight: bold; text-align: center; margin-bottom: 10px; }
+        .auth-subtitle { color: #aaa; text-align: center; margin-bottom: 30px; font-size: 14px; }
+        .auth-form-group { margin-bottom: 15px; position: relative; width: 100%; }
+        .auth-input { width: 100%; padding: 15px 15px 15px 45px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font-size: 14px; transition: border-color 0.3s; }
+        .auth-input:focus { border-color: #e91e63; outline: none; background: rgba(255, 255, 255, 0.1); }
+        .auth-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #e91e63; }
+        .country-group { display: flex; gap: 10px; }
+        .country-select { width: 100px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; padding: 0 10px; }
+        .country-select option { background-color: #031b38; }
+        .auth-btn { width: 100%; padding: 15px; background: linear-gradient(90deg, #e91e63, #ff4081); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 5px 15px rgba(233, 30, 99, 0.3); transition: transform 0.2s; }
+        .auth-btn:active { transform: scale(0.98); }
+        .auth-link { text-align: center; margin-top: 20px; color: #aaa; font-size: 14px; }
+        .auth-link span { color: #e91e63; cursor: pointer; font-weight: bold; }
+        .forgot-password { text-align: right; margin-bottom: 20px; font-size: 12px; width: 100%; }
+        .forgot-password span { color: #aaa; cursor: pointer; }
 
-    /* --- Loading Overlay --- */
-    #loadingOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; display: flex; justify-content: center; align-items: center; flex-direction: column; color: white; display: none; }
-    .spinner { border: 4px solid rgba(255,255,255,0.3); border-radius: 50%; border-top: 4px solid #e91e63; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 10px; }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* --- Loading Overlay --- */
+        #loadingOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; display: flex; justify-content: center; align-items: center; flex-direction: column; color: white; display: none; }
+        .spinner { border: 4px solid rgba(255,255,255,0.3); border-radius: 50%; border-top: 4px solid #e91e63; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 10px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* --- TASK AD TIMER OVERLAY --- */
-    #taskTimerOverlay {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-        background: rgba(0,0,0,0.95); z-index: 4000; 
-        display: none; 
-        justify-content: center; align-items: center; flex-direction: column;
-        color: white;
-    }
-    .timer-circle-container {
-        position: relative; width: 150px; height: 150px;
-    }
-    .timer-svg { width: 150px; height: 150px; transform: rotate(-90deg); }
-    .timer-circle-bg { fill: none; stroke: #333; stroke-width: 10; }
-    .timer-circle-progress { 
-        fill: none; stroke: #e91e63; stroke-width: 10; 
-        stroke-dasharray: 440; stroke-dashoffset: 440; 
-        transition: stroke-dashoffset 1s linear;
-    }
-    .timer-text {
-        position: absolute; top: 50%; left: 50%; 
-        transform: translate(-50%, -50%); 
-        font-size: 30px; font-weight: bold;
-    }
-    .ad-label { margin-top: 20px; font-size: 18px; color: #aaa; animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        /* --- TASK AD TIMER OVERLAY --- */
+        #taskTimerOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.95); z-index: 4000; 
+            display: none; 
+            justify-content: center; align-items: center; flex-direction: column;
+            color: white;
+        }
+        .timer-circle-container {
+            position: relative; width: 150px; height: 150px;
+        }
+        .timer-svg { width: 150px; height: 150px; transform: rotate(-90deg); }
+        .timer-circle-bg { fill: none; stroke: #333; stroke-width: 10; }
+        .timer-circle-progress { 
+            fill: none; stroke: #e91e63; stroke-width: 10; 
+            stroke-dasharray: 440; stroke-dashoffset: 440; 
+            transition: stroke-dashoffset 1s linear;
+        }
+        .timer-text {
+            position: absolute; top: 50%; left: 50%; 
+            transform: translate(-50%, -50%); 
+            font-size: 30px; font-weight: bold;
+        }
+        .ad-label { margin-top: 20px; font-size: 18px; color: #aaa; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
 
-    /* --- APP STYLES --- */
-    header { background: linear-gradient(180deg, #c21558 0%, #750d37 100%); padding: 0 20px; display: flex; justify-content: space-between; align-items: center; height: 60px; flex-shrink: 0; z-index: 100; width: 100%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-    .header-left { display: flex; align-items: center; gap: 10px; }
-    .header-logo { background: white; padding: 5px; border-radius: 4px; font-size: 12px; color: #28a745; font-weight: bold; }
-    .header-title { color: white; font-size: 16px; font-weight: bold; }
-    .header-icon { color: white; font-size: 24px; }
-    .back-btn { color: white; font-size: 18px; cursor: pointer; display: none; padding: 5px; }
+        /* --- APP STYLES --- */
+        header { background: linear-gradient(180deg, #c21558 0%, #750d37 100%); padding: 0 20px; display: flex; justify-content: space-between; align-items: center; height: 60px; flex-shrink: 0; z-index: 100; width: 100%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .header-left { display: flex; align-items: center; gap: 10px; }
+        .header-logo { background: white; padding: 5px; border-radius: 4px; font-size: 12px; color: #28a745; font-weight: bold; }
+        .header-title { color: white; font-size: 16px; font-weight: bold; }
+        .header-icon { color: white; font-size: 24px; }
+        .back-btn { color: white; font-size: 18px; cursor: pointer; display: none; padding: 5px; }
 
-    .page-wrapper { position: relative; flex-grow: 1; width: 100%; overflow: hidden; }
-    .page-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; padding-bottom: 80px; transition: transform 0.3s ease; background-color: #031b38; scrollbar-width: none; }
-    .page-container::-webkit-scrollbar { display: none; }
-    
-    .page-content { padding: 20px; color: white; max-width: 1000px; margin: 0 auto; width: 100%; }
+        .page-wrapper { position: relative; flex-grow: 1; width: 100%; overflow: hidden; }
+        .page-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; padding-bottom: 80px; transition: transform 0.3s ease; background-color: #031b38; scrollbar-width: none; }
+        .page-container::-webkit-scrollbar { display: none; }
+        
+        .page-content { padding: 20px; color: white; max-width: 1000px; margin: 0 auto; width: 100%; }
 
-    .banner-container { padding: 20px; background: linear-gradient(180deg, #750d37 0%, #031b38 30%); display: flex; justify-content: center; }
-    .banner { background-color: white; border-radius: 15px; height: 150px; display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.2); width: 100%; max-width: 800px; }
-    
-    .ticker-container { margin: 0 auto; max-width: 800px; background: linear-gradient(90deg, #c21558, #5a0a29); border-radius: 20px; padding: 10px 15px; display: flex; align-items: center; color: white; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); width: 90%; }
-    .marquee { overflow: hidden; white-space: nowrap; width: 100%; margin-left: 10px; }
-    .marquee span { display: inline-block; animation: scroll 10s linear infinite; }
-    @keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        .banner-container { padding: 20px; background: linear-gradient(180deg, #750d37 0%, #031b38 30%); display: flex; justify-content: center; }
+        .banner { background-color: white; border-radius: 15px; height: 150px; display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.2); width: 100%; max-width: 800px; }
+        
+        .ticker-container { margin: 0 auto; max-width: 800px; background: linear-gradient(90deg, #c21558, #5a0a29); border-radius: 20px; padding: 10px 15px; display: flex; align-items: center; color: white; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); width: 90%; }
+        .marquee { overflow: hidden; white-space: nowrap; width: 100%; margin-left: 10px; }
+        .marquee span { display: inline-block; animation: scroll 10s linear infinite; }
+        @keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-    .action-grid { 
-        display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 15px; 
-        padding: 20px; background-color: #1a222c; margin: 20px auto; 
-        border-radius: 15px; max-width: 800px;
-    }
-    .action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.2s; }
-    .action-item:hover { transform: translateY(-5px); }
-    .icon-box { width: 50px; height: 50px; border-radius: 12px; background: linear-gradient(135deg, #e91e63, #880e4f); display: flex; justify-content: center; align-items: center; color: white; font-size: 20px; margin-bottom: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.4); }
-    .action-text { color: white; font-size: 12px; font-weight: 500; }
+        .action-grid { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 15px; 
+            padding: 20px; background-color: #1a222c; margin: 20px auto; 
+            border-radius: 15px; max-width: 800px;
+        }
+        .action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.2s; }
+        .action-item:hover { transform: translateY(-5px); }
+        .icon-box { width: 50px; height: 50px; border-radius: 12px; background: linear-gradient(135deg, #e91e63, #880e4f); display: flex; justify-content: center; align-items: center; color: white; font-size: 20px; margin-bottom: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.4); }
+        .action-text { color: white; font-size: 12px; font-weight: 500; }
 
-    .feature-grid { 
-        display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; 
-        padding: 0 20px; margin-bottom: 20px; max-width: 800px; margin-left: auto; margin-right: auto;
-    }
-    .feature-card { background-color: #1a222c; border-radius: 10px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 120px; cursor: pointer; transition: transform 0.2s; }
-    .feature-card:active { transform: scale(0.95); }
-    .feature-title { color: white; font-size: 14px; font-weight: bold; margin-bottom: 10px; }
+        .feature-grid { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; 
+            padding: 0 20px; margin-bottom: 20px; max-width: 800px; margin-left: auto; margin-right: auto;
+        }
+        .feature-card { background-color: #1a222c; border-radius: 10px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 120px; cursor: pointer; transition: transform 0.2s; }
+        .feature-card:active { transform: scale(0.95); }
+        .feature-title { color: white; font-size: 14px; font-weight: bold; margin-bottom: 10px; }
 
-    .page-title { font-size: 22px; margin-bottom: 20px; color: #e91e63; text-align: center; }
-    .card { background-color: #1a222c; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
-    .card-title { font-size: 16px; margin-bottom: 15px; color: #ffca28; }
-    
-    .info-row { display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #2c3542; }
-    .info-label { color: #aaa; }
-    .info-value { color: white; font-weight: bold; }
+        .page-title { font-size: 22px; margin-bottom: 20px; color: #e91e63; text-align: center; }
+        .card { background-color: #1a222c; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        .card-title { font-size: 16px; margin-bottom: 15px; color: #ffca28; }
+        
+        .info-row { display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #2c3542; }
+        .info-label { color: #aaa; }
+        .info-value { color: white; font-weight: bold; }
 
-    .form-group { margin-bottom: 20px; }
-    .form-label { display: block; margin-bottom: 8px; color: #aaa; }
-    .form-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #2c3542; background-color: #0d1520; color: white; font-size: 14px; }
-    textarea.form-input { height: 100px; resize: none; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; margin-bottom: 8px; color: #aaa; }
+        .form-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #2c3542; background-color: #0d1520; color: white; font-size: 14px; }
+        textarea.form-input { height: 100px; resize: none; }
 
-    .btn { width: 100%; padding: 15px; background: linear-gradient(135deg, #e91e63, #880e4f); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: transform 0.2s; }
-    .btn:hover { opacity: 0.9; }
-    .btn:active { transform: scale(0.98); }
-    .btn-secondary { background: linear-gradient(135deg, #2196f3, #0d47a1); }
-    .btn-admin { background: linear-gradient(135deg, #d32f2f, #b71c1c); display: none; } 
+        .btn { width: 100%; padding: 15px; background: linear-gradient(135deg, #e91e63, #880e4f); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: transform 0.2s; }
+        .btn:hover { opacity: 0.9; }
+        .btn:active { transform: scale(0.98); }
+        .btn-secondary { background: linear-gradient(135deg, #2196f3, #0d47a1); }
+        .btn-admin { background: linear-gradient(135deg, #d32f2f, #b71c1c); display: none; } 
 
-    .payment-methods { display: flex; gap: 10px; margin-bottom: 20px; }
-    .payment-method { flex: 1; text-align: center; padding: 15px; border: 2px solid #2c3542; border-radius: 10px; cursor: pointer; transition: all 0.3s; }
-    .payment-method.active { border-color: #e91e63; background-color: rgba(233, 30, 99, 0.1); }
-    .payment-icon { font-size: 30px; margin-bottom: 10px; color: #4caf50; }
+        .payment-methods { display: flex; gap: 10px; margin-bottom: 20px; }
+        .payment-method { flex: 1; text-align: center; padding: 15px; border: 2px solid #2c3542; border-radius: 10px; cursor: pointer; transition: all 0.3s; }
+        .payment-method.active { border-color: #e91e63; background-color: rgba(233, 30, 99, 0.1); }
+        .payment-icon { font-size: 30px; margin-bottom: 10px; color: #4caf50; }
 
-    .plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; margin-bottom: 20px; }
-    .plan-card { background: linear-gradient(135deg, #1a237e, #283593); border-radius: 10px; padding: 15px; cursor: pointer; transition: transform 0.3s; display: flex; flex-direction: column; justify-content: space-between; min-height: 150px; }
-    .plan-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-    .plan-amount { font-size: 24px; font-weight: bold; color: #ffca28; margin-bottom: 5px; }
-    .plan-details { font-size: 12px; color: #aaa; margin-bottom: 10px; }
+        .plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .plan-card { background: linear-gradient(135deg, #1a237e, #283593); border-radius: 10px; padding: 15px; cursor: pointer; transition: transform 0.3s; display: flex; flex-direction: column; justify-content: space-between; min-height: 150px; }
+        .plan-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .plan-amount { font-size: 24px; font-weight: bold; color: #ffca28; margin-bottom: 5px; }
+        .plan-details { font-size: 12px; color: #aaa; margin-bottom: 10px; }
 
-    .task-item { background-color: #0d1520; border-radius: 10px; padding: 15px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
-    .task-reward { color: #4caf50; font-weight: bold; }
-    
-    .invite-code-box { background: linear-gradient(135deg, #ff9800, #f57c00); padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
-    .invite-code { font-size: 32px; font-weight: bold; letter-spacing: 5px; color: white; margin: 10px 0; word-break: break-all; }
-    
-    .stats-box { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-    .stat-card { background-color: #0d1520; padding: 15px; border-radius: 10px; text-align: center; }
-    .stat-value { font-size: 20px; color: #4caf50; margin-bottom: 5px; }
-    .stat-label { font-size: 10px; color: #aaa; }
+        .task-item { background-color: #0d1520; border-radius: 10px; padding: 15px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+        .task-reward { color: #4caf50; font-weight: bold; }
+        
+        .invite-code-box { background: linear-gradient(135deg, #ff9800, #f57c00); padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
+        .invite-code { font-size: 32px; font-weight: bold; letter-spacing: 5px; color: white; margin: 10px 0; word-break: break-all; }
+        
+        .stats-box { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .stat-card { background-color: #0d1520; padding: 15px; border-radius: 10px; text-align: center; }
+        .stat-value { font-size: 20px; color: #4caf50; margin-bottom: 5px; }
+        .stat-label { font-size: 10px; color: #aaa; }
 
-    .history-table { width: 100%; border-collapse: collapse; }
-    .history-table th { background-color: #0d1520; padding: 10px; text-align: left; color: #aaa; font-size: 12px; }
-    .history-table td { padding: 12px; border-bottom: 1px solid #2c3542; color: #ddd; font-size: 13px; }
-    .status { padding: 5px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
-    .status-pending { background-color: #ff9800; color: black; }
-    .status-completed { background-color: #4caf50; color: white; }
-    .status-rejected { background-color: #f44336; color: white; }
+        .history-table { width: 100%; border-collapse: collapse; }
+        .history-table th { background-color: #0d1520; padding: 10px; text-align: left; color: #aaa; font-size: 12px; }
+        .history-table td { padding: 12px; border-bottom: 1px solid #2c3542; color: #ddd; font-size: 13px; }
+        .status { padding: 5px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        .status-pending { background-color: #ff9800; color: black; }
+        .status-completed { background-color: #4caf50; color: white; }
+        .status-rejected { background-color: #f44336; color: white; }
 
-    .bottom-nav { 
-        background-color: #1a222c; height: 70px; width: 100%; 
-        display: flex; justify-content: center; align-items: center; 
-        border-top: 1px solid #333; z-index: 500; 
-        position: fixed; bottom: 0; left: 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
-    }
-    .nav-wrapper { display: flex; justify-content: space-around; width: 100%; max-width: 600px; position: relative; }
-    .nav-item { display: flex; flex-direction: column; align-items: center; color: #888; font-size: 10px; cursor: pointer; width: 20%; padding-top: 10px; transition: color 0.3s; }
-    .nav-item:hover { color: #ccc; }
-    .nav-item i { font-size: 20px; margin-bottom: 4px; }
-    .nav-item.active { color: #fff; }
-    
-    .center-btn-container { position: relative; top: -20px; }
-    .center-btn { width: 60px; height: 60px; background: linear-gradient(135deg, #ff4081, #c51162); border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 5px solid #1a222c; color: white; font-size: 28px; box-shadow: 0 -5px 10px rgba(0,0,0,0.3); cursor: pointer; transition: transform 0.2s; }
-    .center-btn:hover { transform: scale(1.1); }
+        .bottom-nav { 
+            background-color: #1a222c; height: 70px; width: 100%; 
+            display: flex; justify-content: center; align-items: center; 
+            border-top: 1px solid #333; z-index: 500; 
+            position: fixed; bottom: 0; left: 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+        }
+        .nav-wrapper { display: flex; justify-content: space-around; width: 100%; max-width: 600px; position: relative; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #888; font-size: 10px; cursor: pointer; width: 20%; padding-top: 10px; transition: color 0.3s; }
+        .nav-item:hover { color: #ccc; }
+        .nav-item i { font-size: 20px; margin-bottom: 4px; }
+        .nav-item.active { color: #fff; }
+        
+        .center-btn-container { position: relative; top: -20px; }
+        .center-btn { width: 60px; height: 60px; background: linear-gradient(135deg, #ff4081, #c51162); border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 5px solid #1a222c; color: white; font-size: 28px; box-shadow: 0 -5px 10px rgba(0,0,0,0.3); cursor: pointer; transition: transform 0.2s; }
+        .center-btn:hover { transform: scale(1.1); }
 
-    .whatsapp-float { position: fixed; bottom: 85px; right: 20px; width: 55px; height: 55px; background-color: #25D366; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border: 2px solid white; z-index: 999; cursor: pointer; transition: transform 0.1s; }
-    .whatsapp-float:active { transform: scale(0.95); }
+        .whatsapp-float { position: fixed; bottom: 85px; right: 20px; width: 55px; height: 55px; background-color: #25D366; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border: 2px solid white; z-index: 999; cursor: pointer; transition: transform 0.1s; }
+        .whatsapp-float:active { transform: scale(0.95); }
 
-    .profile-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
-    .profile-left { display: flex; align-items: center; gap: 10px; }
-    .profile-right { text-align: right; }
-    .avatar-circle { width: 70px; height: 70px; border-radius: 50%; background: #1a222c; border: 2px solid #e91e63; overflow: hidden; flex-shrink: 0; }
-    .avatar-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .user-name { font-size: 16px; font-weight: 600; color: white; }
-    .balance-label { font-size: 10px; color: #ccc; margin-top: 5px; }
-    .balance-amount { color: #fdd835; font-size: 18px; font-weight: bold; }
-    
-    .stats-row { border-top: 1px solid #333; padding-top: 15px; display: flex; justify-content: space-around; align-items: center; margin-top: 10px; }
-    .stat-item { text-align: center; width: 45%; }
-    .vertical-divider { width: 1px; height: 30px; background-color: #333; }
+        .profile-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+        .profile-left { display: flex; align-items: center; gap: 10px; }
+        .profile-right { text-align: right; }
+        .avatar-circle { width: 70px; height: 70px; border-radius: 50%; background: #1a222c; border: 2px solid #e91e63; overflow: hidden; flex-shrink: 0; }
+        .avatar-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .user-name { font-size: 16px; font-weight: 600; color: white; }
+        .balance-label { font-size: 10px; color: #ccc; margin-top: 5px; }
+        .balance-amount { color: #fdd835; font-size: 18px; font-weight: bold; }
+        
+        .stats-row { border-top: 1px solid #333; padding-top: 15px; display: flex; justify-content: space-around; align-items: center; margin-top: 10px; }
+        .stat-item { text-align: center; width: 45%; }
+        .vertical-divider { width: 1px; height: 30px; background-color: #333; }
 
-    .action-row { display: flex; justify-content: space-around; margin: 20px 0; padding: 0; }
-    .action-btn { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: opacity 0.2s; }
-    .action-btn:hover { opacity: 0.8; }
-    .btn-icon { width: 45px; height: 45px; background-color: #1a222c; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 5px; color: #e91e63; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-    .btn-text { font-size: 12px; color: #ccc; }
+        .action-row { display: flex; justify-content: space-around; margin: 20px 0; padding: 0; }
+        .action-btn { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: opacity 0.2s; }
+        .action-btn:hover { opacity: 0.8; }
+        .btn-icon { width: 45px; height: 45px; background-color: #1a222c; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 5px; color: #e91e63; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .btn-text { font-size: 12px; color: #ccc; }
 
-    .menu-group { background-color: #1a222c; border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
-    .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #2c3542; cursor: pointer; transition: background 0.2s; }
-    .menu-item:hover { background-color: #242d38; }
-    .menu-left { display: flex; align-items: center; gap: 10px; }
-    .menu-icon-circle { width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; background-color: rgba(233, 30, 99, 0.1); color: #e91e63; }
-    .menu-text { color: white; font-size: 14px; }
-    .menu-item:last-child { border-bottom: none; }
+        .menu-group { background-color: #1a222c; border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
+        .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #2c3542; cursor: pointer; transition: background 0.2s; }
+        .menu-item:hover { background-color: #242d38; }
+        .menu-left { display: flex; align-items: center; gap: 10px; }
+        .menu-icon-circle { width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; background-color: rgba(233, 30, 99, 0.1); color: #e91e63; }
+        .menu-text { color: white; font-size: 14px; }
+        .menu-item:last-child { border-bottom: none; }
 
-    .page-active { transform: translateX(0); }
-    .page-inactive { transform: translateX(100%); }
-    
-    .alert { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background-color: #4caf50; color: white; padding: 15px 30px; border-radius: 10px; z-index: 5000; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.3); white-space: nowrap; }
-    @keyframes slideDown { from { top: -100px; } to { top: 20px; } }
+        .page-active { transform: translateX(0); }
+        .page-inactive { transform: translateX(100%); }
+        
+        .alert { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background-color: #4caf50; color: white; padding: 15px 30px; border-radius: 10px; z-index: 5000; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.3); white-space: nowrap; }
+        @keyframes slideDown { from { top: -100px; } to { top: 20px; } }
 
-    /* --- NEW TASK DASHBOARD STYLES --- */
-    .task-stats-row { display: flex; gap: 10px; margin-bottom: 15px; }
-    .task-stat-box { 
-        flex: 1; 
-        background-color: #1a222c; 
-        border-radius: 12px; 
-        padding: 15px 20px; 
-        display: flex; 
-        flex-direction: column; 
-        justify-content: center;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-    }
-    .task-stat-label { color: #9c9c9c; font-size: 14px; margin-bottom: 5px; font-weight: 500; }
-    .task-stat-count { color: white; font-size: 24px; font-weight: bold; }
-    
-    .reminder-box {
-        background-color: #1a222c;
-        border-radius: 12px;
-        padding: 20px;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-    }
-    .reminder-icon-circle {
-        position: relative;
-        width: 50px;
-        height: 50px;
-    }
-    .reminder-icon-circle i {
-        font-size: 50px;
-        color: #7986cb; /* Light indigo */
-        opacity: 0.8;
-    }
-    .reminder-content {
-        flex-grow: 1;
-    }
-    .reminder-label {
-        color: #9c9c9c;
-        font-size: 14px;
-        text-transform: uppercase;
-        margin-bottom: 5px;
-    }
-    .reminder-timer {
-        color: white;
-        font-size: 28px;
-        font-weight: bold;
-        font-family: monospace;
-    }
-</style>
-
+        /* --- NEW TASK DASHBOARD STYLES --- */
+        .task-stats-row { display: flex; gap: 10px; margin-bottom: 15px; }
+        .task-stat-box { 
+            flex: 1; 
+            background-color: #1a222c; 
+            border-radius: 12px; 
+            padding: 15px 20px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        .task-stat-label { color: #9c9c9c; font-size: 14px; margin-bottom: 5px; font-weight: 500; }
+        .task-stat-count { color: white; font-size: 24px; font-weight: bold; }
+        
+        .reminder-box {
+            background-color: #1a222c;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        .reminder-icon-circle {
+            position: relative;
+            width: 50px;
+            height: 50px;
+        }
+        .reminder-icon-circle i {
+            font-size: 50px;
+            color: #7986cb; /* Light indigo */
+            opacity: 0.8;
+        }
+        .reminder-content {
+            flex-grow: 1;
+        }
+        .reminder-label {
+            color: #9c9c9c;
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        
+        /* UPDATED REMINDER TIMER STYLE */
+        .reminder-timer {
+            color: #ffca28; /* Gold color */
+            font-size: 20px; /* Small size */
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace; /* Digital clock font */
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(255, 202, 40, 0.3); /* Slight glow */
+        }
+    </style>
 </head>
 <body>
 
@@ -365,286 +368,286 @@
     </div>
 </div>
 
-
 <!-- ================= MAIN APP CONTENT (Hidden until login) ================= -->
+
 <div id="mainAppContent" style="display: none; height: 100%; flex-direction: column;">
+
+<!-- Header -->
+<header>
+    <div class="header-left">
+        <div class="back-btn" id="backBtn" onclick="goBack()"><i class="fas fa-arrow-left"></i></div>
+        <div class="header-logo"><i class="fa-solid fa-money-bill-wave"></i></div>
+        <div class="header-title" id="pageTitle">Earning App</div>
+    </div>
+    <div class="header-icon">
+        <i class="fa-solid fa-power-off" onclick="logout()" style="font-size: 18px; cursor: pointer;"></i>
+    </div>
+</header>
+
+<!-- Page Wrapper -->
+<div class="page-wrapper">
     
-    <!-- Header -->
-    <header>
-        <div class="header-left">
-            <div class="back-btn" id="backBtn" onclick="goBack()"><i class="fas fa-arrow-left"></i></div>
-            <div class="header-logo"><i class="fa-solid fa-money-bill-wave"></i></div>
-            <div class="header-title" id="pageTitle">Earning App</div>
-        </div>
-        <div class="header-icon">
-            <i class="fa-solid fa-power-off" onclick="logout()" style="font-size: 18px; cursor: pointer;"></i>
-        </div>
-    </header>
-
-    <!-- Page Wrapper -->
-    <div class="page-wrapper">
-        
-        <!-- Home Page -->
-        <div class="page-container page-active" id="homePage">
-            <div class="banner-container">
-                <div class="banner">
-                    <i class="fa-solid fa-sack-dollar" style="color: #8bc34a; font-size: 80px; text-shadow: 2px 2px 0px #33691e;"></i>
-                    <i class="fa-solid fa-coins" style="color: #ffca28; font-size: 60px; margin-left: -20px; margin-top: 40px; text-shadow: 2px 2px 0px #ff6f00;"></i>
-                </div>
-            </div>
-            <div class="ticker-container">
-                <i class="fa-solid fa-volume-high ticker-icon"></i>
-                <div class="marquee"><span>Don't create multiple accounts! Join now for rewards. Withdrawals approved within 1 hour.</span></div>
-            </div>
-            <div class="action-grid">
-                <div class="action-item" onclick="showPage('depositPage')"><div class="icon-box"><i class="fa-solid fa-arrow-up"></i></div><span class="action-text">Deposit</span></div>
-                <div class="action-item" onclick="showPage('withdrawPage')"><div class="icon-box"><i class="fa-solid fa-arrow-down"></i></div><span class="action-text">Withdraw</span></div>
-                <div class="action-item" onclick="showPage('invitePage')"><div class="icon-box"><i class="fa-solid fa-user-plus"></i></div><span class="action-text">Invite</span></div>
-                <div class="action-item" onclick="showPage('supportPage')"><div class="icon-box"><i class="fa-solid fa-headset"></i></div><span class="action-text">Support</span></div>
-            </div>
-            <div class="feature-grid">
-                <div class="feature-card" onclick="showPage('plansPage')"><span class="feature-title">VIP Plans</span><div style="position: relative;"><i class="fa-solid fa-shield-halved" style="color: #7c4dff; font-size: 40px;"></i><i class="fa-solid fa-coins" style="color: #ffca28; position: absolute; bottom: -5px; right: -10px; font-size: 20px;"></i></div></div>
-                <div class="feature-card" onclick="showPage('tasksPage')"><span class="feature-title">Tasks</span><i class="fa-solid fa-envelope-open-text" style="color: #7c4dff; font-size: 40px;"></i></div>
+    <!-- Home Page -->
+    <div class="page-container page-active" id="homePage">
+        <div class="banner-container">
+            <div class="banner">
+                <i class="fa-solid fa-sack-dollar" style="color: #8bc34a; font-size: 80px; text-shadow: 2px 2px 0px #33691e;"></i>
+                <i class="fa-solid fa-coins" style="color: #ffca28; font-size: 60px; margin-left: -20px; margin-top: 40px; text-shadow: 2px 2px 0px #ff6f00;"></i>
             </div>
         </div>
-
-        <!-- Support Page -->
-        <div class="page-container page-inactive" id="supportPage">
-            <div class="page-content">
-                <h2 class="page-title">Contact Admin</h2>
-                <div class="card">
-                    <h3 class="card-title">Send a Message</h3>
-                    <div class="form-group"><label class="form-label">Subject</label><input type="text" class="form-input" id="supportSubject" placeholder="Brief topic of your issue"></div>
-                    <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" id="supportMessage" placeholder="Describe your issue or question in detail..."></textarea></div>
-                    <button class="btn" onclick="sendEmailToAdmin()">Send Message via Email</button>
-                </div>
-            </div>
+        <div class="ticker-container">
+            <i class="fa-solid fa-volume-high ticker-icon"></i>
+            <div class="marquee"><span>Don't create multiple accounts! Join now for rewards. Withdrawals approved within 1 hour.</span></div>
         </div>
-
-        <!-- Deposit Page -->
-        <div class="page-container page-inactive" id="depositPage">
-            <div class="page-content">
-                <h2 class="page-title">Deposit Funds</h2>
-                <div class="card">
-                    <h3 class="card-title">Payment Details</h3>
-                    <div class="info-row"><span class="info-label">Bank Name:</span><span class="info-value" id="depBankName">Loading...</span></div>
-                    <div class="info-row"><span class="info-label">Account Number:</span><span class="info-value" id="depAccNum">Loading...</span></div>
-                    <div class="info-row"><span class="info-label">Account Holder:</span><span class="info-value" id="depAccTitle">Loading...</span></div>
-                </div>
-                <div class="card">
-                    <h3 class="card-title">Submit Proof</h3>
-                    <div class="form-group"><label class="form-label">TRX ID</label><input type="text" class="form-input" id="depositTrxId" placeholder="Enter TRX ID"></div>
-                    <div class="form-group"><label class="form-label">Amount (Rs)</label><input type="number" class="form-input" id="depositAmount" placeholder="Amount"></div>
-                    <button class="btn" onclick="submitDeposit()">Submit Deposit</button>
-                </div>
-            </div>
+        <div class="action-grid">
+            <div class="action-item" onclick="showPage('depositPage')"><div class="icon-box"><i class="fa-solid fa-arrow-up"></i></div><span class="action-text">Deposit</span></div>
+            <div class="action-item" onclick="showPage('withdrawPage')"><div class="icon-box"><i class="fa-solid fa-arrow-down"></i></div><span class="action-text">Withdraw</span></div>
+            <div class="action-item" onclick="showPage('invitePage')"><div class="icon-box"><i class="fa-solid fa-user-plus"></i></div><span class="action-text">Invite</span></div>
+            <div class="action-item" onclick="showPage('supportPage')"><div class="icon-box"><i class="fa-solid fa-headset"></i></div><span class="action-text">Support</span></div>
         </div>
-
-        <!-- Deposit History Page -->
-        <div class="page-container page-inactive" id="depositHistoryPage">
-            <div class="page-content">
-                <h2 class="page-title">Deposit History</h2>
-                <div class="card">
-                    <table class="history-table">
-                        <thead><tr><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
-                        <tbody id="depositHistory"></tbody>
-                    </table>
-                </div>
-            </div>
+        <div class="feature-grid">
+            <div class="feature-card" onclick="showPage('plansPage')"><span class="feature-title">VIP Plans</span><div style="position: relative;"><i class="fa-solid fa-shield-halved" style="color: #7c4dff; font-size: 40px;"></i><i class="fa-solid fa-coins" style="color: #ffca28; position: absolute; bottom: -5px; right: -10px; font-size: 20px;"></i></div></div>
+            <div class="feature-card" onclick="showPage('tasksPage')"><span class="feature-title">Tasks</span><i class="fa-solid fa-envelope-open-text" style="color: #7c4dff; font-size: 40px;"></i></div>
         </div>
-
-        <!-- Withdraw Page -->
-        <div class="page-container page-inactive" id="withdrawPage">
-            <div class="page-content">
-                <h2 class="page-title">Withdraw Funds</h2>
-                <div class="card">
-                    <h3 class="card-title">Method</h3>
-                    <div class="payment-methods">
-                        <div class="payment-method" onclick="selectWithdrawMethod('easypaisa')"><i class="fa-solid fa-mobile-alt payment-icon"></i><div>Easypaisa</div></div>
-                        <div class="payment-method active" onclick="selectWithdrawMethod('jazcash')"><i class="fa-solid fa-building payment-icon"></i><div>JazzCash</div></div>
-                    </div>
-                </div>
-                <div class="card">
-                    <h3 class="card-title">Details</h3>
-                    <div class="form-group"><label class="form-label">Account Number</label><input type="text" class="form-input" id="withdrawAccount"></div>
-                    <div class="form-group"><label class="form-label">Account Title</label><input type="text" class="form-input" id="withdrawName"></div>
-                    <div class="form-group"><label class="form-label">Amount</label><input type="number" class="form-input" id="withdrawAmount"></div>
-                    <button class="btn" onclick="submitWithdraw()">Submit Withdrawal</button>
-                </div>
-            </div>
-        </div>
-
-         <!-- Withdraw History Page -->
-         <div class="page-container page-inactive" id="withdrawHistoryPage">
-            <div class="page-content">
-                <h2 class="page-title">Withdrawal History</h2>
-                <div class="card">
-                    <table class="history-table">
-                        <thead><tr><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
-                        <tbody id="withdrawHistory"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Invite Page -->
-        <div class="page-container page-inactive" id="invitePage">
-            <div class="page-content">
-                <h2 class="page-title">Invite & Earn</h2>
-                <div class="invite-code-box">
-                    <div>Your Code</div>
-                    <div class="invite-code" id="myInviteCode">LOADING</div>
-                    <button class="btn btn-secondary" onclick="copyInviteCode()"><i class="fas fa-copy"></i> Copy</button>
-                </div>
-                <div class="stats-box">
-                    <div class="stat-card"><div class="stat-value" id="totalInvites">0</div><div class="stat-label">Total Invites</div></div>
-                    <div class="stat-card"><div class="stat-value" id="activeInvites">0</div><div class="stat-label">Active Invites</div></div>
-                    <div class="stat-card"><div class="stat-value" id="inviteEarnings">Rs 0</div><div class="stat-label">Total Earnings</div></div>
-                </div>
-                <div class="card">
-                    <h3 class="card-title">Link</h3>
-                    <div class="form-group"><input type="text" class="form-input" id="inviteLink" readonly></div>
-                    <button class="btn btn-secondary" onclick="shareInviteLink()"><i class="fas fa-share-alt"></i> Share Link</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Admin Panel (Hidden) -->
-        <div class="page-container page-inactive" id="adminPanelPage">
-            <div class="page-content">
-                <h2 class="page-title">ADMIN PANEL</h2>
-                <div class="card">
-                    <h3 class="card-title">Update Bank Details</h3>
-                    <div class="form-group"><label class="form-label">Bank Name / Method</label><input type="text" class="form-input" id="adminBankName"></div>
-                    <div class="form-group"><label class="form-label">Account Number</label><input type="text" class="form-input" id="adminAccNum"></div>
-                    <div class="form-group"><label class="form-label">Account Title</label><input type="text" class="form-input" id="adminAccTitle"></div>
-                    <button class="btn" onclick="saveBankDetails()">Update Bank Details</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tasks Page -->
-        <div class="page-container page-inactive" id="tasksPage">
-            <div class="page-content">
-                <h2 class="page-title">Daily Tasks</h2>
-                <div class="card" id="noPlanWarning" style="display: none;">
-                    <h3 class="card-title" style="color: #f44336;"><i class="fas fa-exclamation-triangle"></i> No Active Plan</h3>
-                    <p style="color: #aaa;">Activate a plan to start earning.</p>
-                    <button class="btn" onclick="showPage('plansPage')">View Plans</button>
-                </div>
-                <div class="card" id="taskLimitWarning" style="display: none;">
-                    <h3 class="card-title" style="color: #4caf50;"><i class="fas fa-check-circle"></i> Tasks Completed</h3>
-                    <p style="color: #aaa;">You have completed your daily tasks. Come back tomorrow for more!</p>
-                </div>
-                <div id="tasksList"></div>
-            </div>
-        </div>
-
-        <!-- Plans Page -->
-        <div class="page-container page-inactive" id="plansPage">
-            <div class="page-content">
-                <h2 class="page-title">VIP Plans</h2>
-                <div class="plan-grid"></div>
-            </div>
-        </div>
-
-        <!-- Plan Details Page -->
-        <div class="page-container page-inactive" id="planDetailsPage">
-            <div class="page-content"></div>
-        </div>
-
-        <!-- App Page -->
-        <div class="page-container page-inactive" id="appPage">
-            <div class="page-content">
-                <div style="text-align: center; padding: 50px 20px;">
-                    <i class="fa-brands fa-google-play" style="font-size: 80px; color: #4caf50; margin-bottom: 20px;"></i>
-                    <h2 class="page-title">Coming Soon</h2>
-                    <p style="color: #aaa; margin-bottom: 30px;">Our mobile app is under development.</p>
-                    <button class="btn" onclick="showPage('homePage')">Back to Home</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Profile Page (Updated with Task Dashboard) -->
-        <div class="page-container page-inactive" id="profilePage">
-            <div class="page-content">
-                <div class="card profile-card">
-                    <div class="profile-header">
-                        <div class="profile-left">
-                            <div class="avatar-circle">
-                                <img id="userProfilePic" src="https://iili.io/f75iDuI.jpg" alt="Profile">
-                            </div>
-                            <div style="margin-left: 10px;">
-                                <div class="user-name" id="displayEmail">User</div>
-                                <div style="font-size: 10px; color: #4caf50;">Verified User</div>
-                            </div>
-                        </div>
-                        <div class="profile-right">
-                            <div class="balance-label">Balance</div>
-                            <div class="balance-amount">Rs <span id="walletBalance">0.00</span></div>
-                        </div>
-                    </div>
-                    <div class="stats-row">
-                        <div class="stat-item"><div class="stat-value" id="totalDeposit">Rs 0</div><div class="stat-label">Deposit</div></div>
-                        <div class="vertical-divider"></div>
-                        <div class="stat-item"><div class="stat-value" id="totalWithdraw">Rs 0</div><div class="stat-label">Withdraw</div></div>
-                    </div>
-                </div>
-
-                <!-- NEW: Task Dashboard -->
-                <div class="task-dashboard">
-                    <div class="task-stats-row">
-                        <div class="task-stat-box">
-                            <div class="task-stat-label">Complete</div>
-                            <div class="task-stat-count"><span id="taskCompletedCount">0</span> Task</div>
-                        </div>
-                        <div class="task-stat-box">
-                            <div class="task-stat-label">Remain</div>
-                            <div class="task-stat-count"><span id="taskRemainCount">0</span> Task</div>
-                        </div>
-                    </div>
-                    <div class="reminder-box">
-                        <div class="reminder-icon-circle">
-                            <!-- Using a clock icon similar to the image -->
-                            <i class="fa-regular fa-clock" style="color: #7986cb; background: rgba(121, 134, 203, 0.2); border-radius: 50%; padding: 10px; font-size: 30px;"></i>
-                        </div>
-                        <div class="reminder-content">
-                            <div class="reminder-label">NEXT REMINDER</div>
-                            <div class="reminder-timer" id="nextReminderTimer">0d: 00h: 00m: 00s</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="action-row">
-                    <div class="action-btn" onclick="showPage('depositPage')"><div class="btn-icon"><i class="fa-solid fa-arrow-up"></i></div><span class="btn-text">Deposit</span></div>
-                    <div class="action-btn" onclick="showPage('invitePage')"><div class="btn-icon"><i class="fa-solid fa-user-plus"></i></div><span class="btn-text">Invite</span></div>
-                    <div class="action-btn" onclick="showPage('withdrawPage')"><div class="btn-icon"><i class="fa-solid fa-arrow-down"></i></div><span class="btn-text">Withdraw</span></div>
-                </div>
-
-                <div class="menu-group">
-                    <div class="menu-item" onclick="showPage('depositHistoryPage')"><div class="menu-left"><div class="menu-icon-circle"><i class="fa-regular fa-credit-card"></i></div><span class="menu-text">Deposit History</span></div><i class="fa-solid fa-chevron-right" style="color: #555;"></i></div>
-                    <div class="menu-item" onclick="showPage('withdrawHistoryPage')"><div class="menu-left"><div class="menu-icon-circle"><i class="fa-solid fa-money-bill-transfer"></i></div><span class="menu-text">Withdraw History</span></div><i class="fa-solid fa-chevron-right" style="color: #555;"></i></div>
-                </div>
-                <div class="menu-group">
-                    <div class="menu-item" onclick="logout()"><div class="menu-left"><div class="menu-icon-circle"><i class="fa-solid fa-right-from-bracket"></i></div><span class="menu-text">Logout</span></div><i class="fa-solid fa-chevron-right" style="color: #555;"></i></div>
-                </div>
-                <button id="adminAccessBtn" class="btn btn-admin" onclick="showPage('adminPanelPage')">ADMIN PANEL</button>
-            </div>
-        </div>
-
     </div>
 
-    <!-- Bottom Nav -->
-    <nav class="bottom-nav">
-        <div class="nav-wrapper">
-            <div class="nav-item active" onclick="showPage('homePage')"><i class="fa-solid fa-house-chimney" style="color: #ff8a65;"></i><span>Home</span></div>
-            <div class="nav-item" onclick="showPage('tasksPage')"><i class="fa-solid fa-clipboard-list" style="color: #4fc3f7;"></i><span>Task</span></div>
-            <div class="nav-item center-btn-container"><div class="center-btn" onclick="showPage('plansPage')"><i class="fa-brands fa-firefox"></i></div></div>
-            <div class="nav-item" onclick="showPage('appPage')"><i class="fa-brands fa-google-play" style="color: #ffd54f;"></i><span>APP</span></div>
-            <div class="nav-item" onclick="showPage('profilePage')"><i class="fa-solid fa-circle-user" style="color: #ba68c8;"></i><span>Profile</span></div>
+    <!-- Support Page -->
+    <div class="page-container page-inactive" id="supportPage">
+        <div class="page-content">
+            <h2 class="page-title">Contact Admin</h2>
+            <div class="card">
+                <h3 class="card-title">Send a Message</h3>
+                <div class="form-group"><label class="form-label">Subject</label><input type="text" class="form-input" id="supportSubject" placeholder="Brief topic of your issue"></div>
+                <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" id="supportMessage" placeholder="Describe your issue or question in detail..."></textarea></div>
+                <button class="btn" onclick="sendEmailToAdmin()">Send Message via Email</button>
+            </div>
         </div>
-    </nav>
+    </div>
 
+    <!-- Deposit Page -->
+    <div class="page-container page-inactive" id="depositPage">
+        <div class="page-content">
+            <h2 class="page-title">Deposit Funds</h2>
+            <div class="card">
+                <h3 class="card-title">Payment Details</h3>
+                <div class="info-row"><span class="info-label">Bank Name:</span><span class="info-value" id="depBankName">Loading...</span></div>
+                <div class="info-row"><span class="info-label">Account Number:</span><span class="info-value" id="depAccNum">Loading...</span></div>
+                <div class="info-row"><span class="info-label">Account Holder:</span><span class="info-value" id="depAccTitle">Loading...</span></div>
+            </div>
+            <div class="card">
+                <h3 class="card-title">Submit Proof</h3>
+                <div class="form-group"><label class="form-label">TRX ID</label><input type="text" class="form-input" id="depositTrxId" placeholder="Enter TRX ID"></div>
+                <div class="form-group"><label class="form-label">Amount (Rs)</label><input type="number" class="form-input" id="depositAmount" placeholder="Amount"></div>
+                <button class="btn" onclick="submitDeposit()">Submit Deposit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Deposit History Page -->
+    <div class="page-container page-inactive" id="depositHistoryPage">
+        <div class="page-content">
+            <h2 class="page-title">Deposit History</h2>
+            <div class="card">
+                <table class="history-table">
+                    <thead><tr><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
+                    <tbody id="depositHistory"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Withdraw Page -->
+    <div class="page-container page-inactive" id="withdrawPage">
+        <div class="page-content">
+            <h2 class="page-title">Withdraw Funds</h2>
+            <div class="card">
+                <h3 class="card-title">Method</h3>
+                <div class="payment-methods">
+                    <div class="payment-method" onclick="selectWithdrawMethod('easypaisa')"><i class="fa-solid fa-mobile-alt payment-icon"></i><div>Easypaisa</div></div>
+                    <div class="payment-method active" onclick="selectWithdrawMethod('jazcash')"><i class="fa-solid fa-building payment-icon"></i><div>JazzCash</div></div>
+                </div>
+            </div>
+            <div class="card">
+                <h3 class="card-title">Details</h3>
+                <div class="form-group"><label class="form-label">Account Number</label><input type="text" class="form-input" id="withdrawAccount"></div>
+                <div class="form-group"><label class="form-label">Account Title</label><input type="text" class="form-input" id="withdrawName"></div>
+                <div class="form-group"><label class="form-label">Amount</label><input type="number" class="form-input" id="withdrawAmount"></div>
+                <button class="btn" onclick="submitWithdraw()">Submit Withdrawal</button>
+            </div>
+        </div>
+    </div>
+
+     <!-- Withdraw History Page -->
+     <div class="page-container page-inactive" id="withdrawHistoryPage">
+        <div class="page-content">
+            <h2 class="page-title">Withdrawal History</h2>
+            <div class="card">
+                <table class="history-table">
+                    <thead><tr><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
+                    <tbody id="withdrawHistory"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invite Page -->
+    <div class="page-container page-inactive" id="invitePage">
+        <div class="page-content">
+            <h2 class="page-title">Invite & Earn</h2>
+            <div class="invite-code-box">
+                <div>Your Code</div>
+                <div class="invite-code" id="myInviteCode">LOADING</div>
+                <button class="btn btn-secondary" onclick="copyInviteCode()"><i class="fas fa-copy"></i> Copy</button>
+            </div>
+            <div class="stats-box">
+                <div class="stat-card"><div class="stat-value" id="totalInvites">0</div><div class="stat-label">Total Invites</div></div>
+                <div class="stat-card"><div class="stat-value" id="activeInvites">0</div><div class="stat-label">Active Invites</div></div>
+                <div class="stat-card"><div class="stat-value" id="inviteEarnings">Rs 0</div><div class="stat-label">Total Earnings</div></div>
+            </div>
+            <div class="card">
+                <h3 class="card-title">Link</h3>
+                <div class="form-group"><input type="text" class="form-input" id="inviteLink" readonly></div>
+                <button class="btn btn-secondary" onclick="shareInviteLink()"><i class="fas fa-share-alt"></i> Share Link</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel (Hidden) -->
+    <div class="page-container page-inactive" id="adminPanelPage">
+        <div class="page-content">
+            <h2 class="page-title">ADMIN PANEL</h2>
+            <div class="card">
+                <h3 class="card-title">Update Bank Details</h3>
+                <div class="form-group"><label class="form-label">Bank Name / Method</label><input type="text" class="form-input" id="adminBankName"></div>
+                <div class="form-group"><label class="form-label">Account Number</label><input type="text" class="form-input" id="adminAccNum"></div>
+                <div class="form-group"><label class="form-label">Account Title</label><input type="text" class="form-input" id="adminAccTitle"></div>
+                <button class="btn" onclick="saveBankDetails()">Update Bank Details</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tasks Page -->
+    <div class="page-container page-inactive" id="tasksPage">
+        <div class="page-content">
+            <h2 class="page-title">Daily Tasks</h2>
+            <div class="card" id="noPlanWarning" style="display: none;">
+                <h3 class="card-title" style="color: #f44336;"><i class="fas fa-exclamation-triangle"></i> No Active Plan</h3>
+                <p style="color: #aaa;">Activate a plan to start earning.</p>
+                <button class="btn" onclick="showPage('plansPage')">View Plans</button>
+            </div>
+            <div class="card" id="taskLimitWarning" style="display: none;">
+                <h3 class="card-title" style="color: #4caf50;"><i class="fas fa-check-circle"></i> Tasks Completed</h3>
+                <p style="color: #aaa;">You have completed your daily tasks. Come back tomorrow for more!</p>
+            </div>
+            <div id="tasksList"></div>
+        </div>
+    </div>
+
+    <!-- Plans Page -->
+    <div class="page-container page-inactive" id="plansPage">
+        <div class="page-content">
+            <h2 class="page-title">VIP Plans</h2>
+            <div class="plan-grid"></div>
+        </div>
+    </div>
+
+    <!-- Plan Details Page -->
+    <div class="page-container page-inactive" id="planDetailsPage">
+        <div class="page-content"></div>
+    </div>
+
+    <!-- App Page -->
+    <div class="page-container page-inactive" id="appPage">
+        <div class="page-content">
+            <div style="text-align: center; padding: 50px 20px;">
+                <i class="fa-brands fa-google-play" style="font-size: 80px; color: #4caf50; margin-bottom: 20px;"></i>
+                <h2 class="page-title">Coming Soon</h2>
+                <p style="color: #aaa; margin-bottom: 30px;">Our mobile app is under development.</p>
+                <button class="btn" onclick="showPage('homePage')">Back to Home</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Page (Updated with Task Dashboard) -->
+    <div class="page-container page-inactive" id="profilePage">
+        <div class="page-content">
+            <div class="card profile-card">
+                <div class="profile-header">
+                    <div class="profile-left">
+                        <div class="avatar-circle">
+                            <img id="userProfilePic" src="https://iili.io/f75iDuI.jpg" alt="Profile">
+                        </div>
+                        <div style="margin-left: 10px;">
+                            <div class="user-name" id="displayEmail">User</div>
+                            <div style="font-size: 10px; color: #4caf50;">Verified User</div>
+                        </div>
+                    </div>
+                    <div class="profile-right">
+                        <div class="balance-label">Balance</div>
+                        <div class="balance-amount">Rs <span id="walletBalance">0.00</span></div>
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-item"><div class="stat-value" id="totalDeposit">Rs 0</div><div class="stat-label">Deposit</div></div>
+                    <div class="vertical-divider"></div>
+                    <div class="stat-item"><div class="stat-value" id="totalWithdraw">Rs 0</div><div class="stat-label">Withdraw</div></div>
+                </div>
+            </div>
+
+            <!-- NEW: Task Dashboard -->
+            <div class="task-dashboard">
+                <div class="task-stats-row">
+                    <div class="task-stat-box">
+                        <div class="task-stat-label">Complete</div>
+                        <div class="task-stat-count"><span id="taskCompletedCount">0</span> Task</div>
+                    </div>
+                    <div class="task-stat-box">
+                        <div class="task-stat-label">Remain</div>
+                        <div class="task-stat-count"><span id="taskRemainCount">0</span> Task</div>
+                    </div>
+                </div>
+                <div class="reminder-box">
+                    <div class="reminder-icon-circle">
+                        <!-- Using a clock icon similar to the image -->
+                        <i class="fa-regular fa-clock" style="color: #7986cb; background: rgba(121, 134, 203, 0.2); border-radius: 50%; padding: 10px; font-size: 30px;"></i>
+                    </div>
+                    <div class="reminder-content">
+                        <div class="reminder-label">NEXT REMINDER</div>
+                        <!-- Updated Timer Structure -->
+                        <div class="reminder-timer" id="nextReminderTimer">00h : 00m : 00s</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-row">
+                <div class="action-btn" onclick="showPage('depositPage')"><div class="btn-icon"><i class="fa-solid fa-arrow-up"></i></div><span class="btn-text">Deposit</span></div>
+                <div class="action-btn" onclick="showPage('invitePage')"><div class="btn-icon"><i class="fa-solid fa-user-plus"></i></div><span class="btn-text">Invite</span></div>
+                <div class="action-btn" onclick="showPage('withdrawPage')"><div class="btn-icon"><i class="fa-solid fa-arrow-down"></i></div><span class="btn-text">Withdraw</span></div>
+            </div>
+
+            <div class="menu-group">
+                <div class="menu-item" onclick="showPage('depositHistoryPage')"><div class="menu-left"><div class="menu-icon-circle"><i class="fa-regular fa-credit-card"></i></div><span class="menu-text">Deposit History</span></div><i class="fa-solid fa-chevron-right" style="color: #555;"></i></div>
+                <div class="menu-item" onclick="showPage('withdrawHistoryPage')"><div class="menu-left"><div class="menu-icon-circle"><i class="fa-solid fa-money-bill-transfer"></i></div><span class="menu-text">Withdraw History</span></div><i class="fa-solid fa-chevron-right" style="color: #555;"></i></div>
+            </div>
+            <div class="menu-group">
+                <div class="menu-item" onclick="logout()"><div class="menu-left"><div class="menu-icon-circle"><i class="fa-solid fa-right-from-bracket"></i></div><span class="menu-text">Logout</span></div><i class="fa-solid fa-chevron-right" style="color: #555;"></i></div>
+            </div>
+            <button id="adminAccessBtn" class="btn btn-admin" onclick="showPage('adminPanelPage')">ADMIN PANEL</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- Bottom Nav -->
+<nav class="bottom-nav">
+    <div class="nav-wrapper">
+        <div class="nav-item active" onclick="showPage('homePage')"><i class="fa-solid fa-house-chimney" style="color: #ff8a65;"></i><span>Home</span></div>
+        <div class="nav-item" onclick="showPage('tasksPage')"><i class="fa-solid fa-clipboard-list" style="color: #4fc3f7;"></i><span>Task</span></div>
+        <div class="nav-item center-btn-container"><div class="center-btn" onclick="showPage('plansPage')"><i class="fa-brands fa-firefox"></i></div></div>
+        <div class="nav-item" onclick="showPage('appPage')"><i class="fa-brands fa-google-play" style="color: #ffd54f;"></i><span>APP</span></div>
+        <div class="nav-item" onclick="showPage('profilePage')"><i class="fa-solid fa-circle-user" style="color: #ba68c8;"></i><span>Profile</span></div>
+    </div>
+</nav>
 </div>
 
 <!-- Float Whatsapp -->
@@ -760,7 +763,7 @@
         initDraggableWhatsapp();
     });
 
-    // --- DASHBOARD TIMER LOGIC ---
+    // --- DASHBOARD TIMER LOGIC (UPDATED FOR 24H LOOK) ---
     function startDashboardTimer() {
         if(countdownInterval) clearInterval(countdownInterval);
         
@@ -779,23 +782,26 @@
         const diff = tomorrow - now;
         
         if (diff <= 0) {
-            // It's exactly midnight, logic handles reload on next cycle anyway
-            document.getElementById('nextReminderTimer').textContent = "0d: 00h: 00m: 00s";
+            document.getElementById('nextReminderTimer').textContent = "00h : 00m : 00s";
             return;
         }
         
+        // Calculate remaining time
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
         
-        // Format with leading zeros
-        const fDays = days + "d";
-        const fHours = (hours < 10 ? "0" : "") + hours + "h";
-        const fMins = (minutes < 10 ? "0" : "") + minutes + "m";
-        const fSecs = (seconds < 10 ? "0" : "") + seconds + "s";
+        // Convert days to hours if any (though usually 0 for daily cycle)
+        const totalHours = (days * 24) + hours;
         
-        document.getElementById('nextReminderTimer').textContent = `${fDays}: ${fHours}: ${fMins}: ${fSecs}`;
+        // Format with leading zeros
+        const fHours = (totalHours < 10 ? "0" : "") + totalHours;
+        const fMins = (minutes < 10 ? "0" : "") + minutes;
+        const fSecs = (seconds < 10 ? "0" : "") + seconds;
+        
+        // Beautiful Small Format: HHh : MMm : SSs
+        document.getElementById('nextReminderTimer').textContent = `${fHours}h : ${fMins}m : ${fSecs}s`;
     }
 
     // --- ADMIN FUNCTIONS ---
@@ -1264,4 +1270,4 @@
 </script>
 
 </body>
-                                    </html>
+                    </html>
