@@ -72,14 +72,7 @@
         .spinner { border: 4px solid rgba(255,255,255,0.3); border-radius: 50%; border-top: 4px solid #e91e63; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* --- TASK AD TIMER OVERLAY --- */
-        #taskTimerOverlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.95); z-index: 4000; 
-            display: none; 
-            justify-content: center; align-items: center; flex-direction: column;
-            color: white;
-        }
+        /* --- Timer Circle Styles (reusable for timer page) --- */
         .timer-circle-container { position: relative; width: 150px; height: 150px; }
         .timer-svg { width: 150px; height: 150px; transform: rotate(-90deg); }
         .timer-circle-bg { fill: none; stroke: #333; stroke-width: 10; }
@@ -221,6 +214,7 @@
             justify-content: space-between;
             padding: 8px 0;
             border-bottom: 1px dashed #2c3542;
+            text-align: left;
         }
         
         .benefit-item:last-child { border-bottom: none; }
@@ -240,53 +234,6 @@
         
         .buy-btn-new {
             letter-spacing: 0.5px;
-        }
-        
-        .divider {
-            height: 1px;
-            background: linear-gradient(to right, transparent, #2c3542, transparent);
-            margin: 30px 0;
-        }
-        
-        .referral-section {
-            background-color: #1a222c;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        }
-        
-        .referral-title {
-            text-align: center;
-            font-size: 1.8rem;
-            color: #e91e63;
-            margin-bottom: 25px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #2c3542;
-        }
-        
-        .referral-plans {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-        }
-        
-        .referral-plan {
-            background-color: #0d1520;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            border-left: 4px solid #e91e63;
-            transition: transform 0.2s;
-        }
-        
-        .referral-plan:hover { transform: scale(1.03); }
-        .referral-plan-title { font-weight: 700; color: #ccc; margin-bottom: 8px; font-size: 0.95rem; }
-        .referral-amount { font-size: 1.4rem; font-weight: 800; color: #4caf50; }
-        
-        .urdu-text {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            direction: rtl;
-            font-size: 1.1rem;
         }
         
         .plan-number {
@@ -478,18 +425,6 @@
 <div id="loadingOverlay">
     <div class="spinner"></div>
     <div>Loading...</div>
-</div>
-
-<!-- Task Visual Timer Overlay -->
-<div id="taskTimerOverlay">
-    <div class="timer-circle-container">
-        <svg class="timer-svg">
-            <circle class="timer-circle-bg" cx="75" cy="75" r="70"></circle>
-            <circle class="timer-circle-progress" cx="75" cy="75" r="70" id="timerProgress"></circle>
-        </svg>
-        <div class="timer-text" id="timerCount">20</div>
-    </div>
-    <div class="ad-label">Viewing Ad...</div>
 </div>
 
 <!-- Alert Message -->
@@ -718,6 +653,22 @@
         </div>
     </div>
 
+    <!-- Ad Timer Page -->
+    <div class="page-container page-inactive" id="adTimerPage">
+        <div class="page-content" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%;">
+            <h2 class="page-title">Watching Ad</h2>
+            <p style="color: #aaa; text-align: center; margin-bottom: 30px;">Your ad is playing in a new tab. Please wait for the timer to finish to receive your reward.</p>
+            <div class="timer-circle-container" style="margin-bottom: 20px;">
+                 <svg class="timer-svg">
+                    <circle class="timer-circle-bg" cx="75" cy="75" r="70"></circle>
+                    <circle class="timer-circle-progress" cx="75" cy="75" r="70" id="adPageTimerProgress"></circle>
+                </svg>
+                <div class="timer-text" id="adPageTimerCount">20</div>
+            </div>
+             <p style="color: #aaa; text-align: center;">Do not close this page.</p>
+        </div>
+    </div>
+
     <!-- Plans Page -->
     <div class="page-container page-inactive" id="plansPage">
         <div class="page-content">
@@ -728,17 +679,17 @@
                 <div class="plan-card-new">
                     <div class="plan-number">1</div>
                     <div class="investment-amount">300 <span class="unit">PKR</span></div>
-                    <div class="benefits-container urdu-text">
+                    <div class="benefits-container">
                         <div class="benefit-item">
-                            <span class="benefit-label">روزانه منافع</span>
+                            <span class="benefit-label">Daily Profit</span>
                             <span class="benefit-value">100</span>
                         </div>
                         <div class="benefit-item">
-                            <span class="benefit-label">روزانه اید</span>
+                            <span class="benefit-label">Daily Ads</span>
                             <span class="benefit-value">2</span>
                         </div>
                     </div>
-                    <div class="duration">پلان مدت 360 دن</div>
+                    <div class="duration">Duration 65 Days</div>
                     <button class="btn buy-btn-new" onclick="buyPlan(300)">BUY NOW</button>
                 </div>
                 
@@ -746,17 +697,17 @@
                 <div class="plan-card-new">
                     <div class="plan-number">2</div>
                     <div class="investment-amount">400 <span class="unit">PKR</span></div>
-                    <div class="benefits-container urdu-text">
+                    <div class="benefits-container">
                         <div class="benefit-item">
-                            <span class="benefit-label">روزانه منافع</span>
+                            <span class="benefit-label">Daily Profit</span>
                             <span class="benefit-value">150</span>
                         </div>
                         <div class="benefit-item">
-                            <span class="benefit-label">روزانه اید</span>
+                            <span class="benefit-label">Daily Ads</span>
                             <span class="benefit-value">3</span>
                         </div>
                     </div>
-                    <div class="duration">پلان مدت 360 دن</div>
+                    <div class="duration">Duration 65 Days</div>
                     <button class="btn buy-btn-new" onclick="buyPlan(400)">BUY NOW</button>
                 </div>
                 
@@ -764,17 +715,17 @@
                 <div class="plan-card-new">
                     <div class="plan-number">3</div>
                     <div class="investment-amount">500 <span class="unit">PKR</span></div>
-                    <div class="benefits-container urdu-text">
+                    <div class="benefits-container">
                         <div class="benefit-item">
-                            <span class="benefit-label">روزانه منافع</span>
+                            <span class="benefit-label">Daily Profit</span>
                             <span class="benefit-value">200</span>
                         </div>
                         <div class="benefit-item">
-                            <span class="benefit-label">روزانه اید</span>
+                            <span class="benefit-label">Daily Ads</span>
                             <span class="benefit-value">4</span>
                         </div>
                     </div>
-                    <div class="duration">پلان مدت 360 دن</div>
+                    <div class="duration">Duration 65 Days</div>
                     <button class="btn buy-btn-new" onclick="buyPlan(500)">BUY NOW</button>
                 </div>
                 
@@ -782,17 +733,17 @@
                 <div class="plan-card-new">
                     <div class="plan-number">4</div>
                     <div class="investment-amount">750 <span class="unit">PKR</span></div>
-                    <div class="benefits-container urdu-text">
+                    <div class="benefits-container">
                         <div class="benefit-item">
-                            <span class="benefit-label">روزانه منافع</span>
+                            <span class="benefit-label">Daily Profit</span>
                             <span class="benefit-value">350</span>
                         </div>
                         <div class="benefit-item">
-                            <span class="benefit-label">روزانه اید</span>
+                            <span class="benefit-label">Daily Ads</span>
                             <span class="benefit-value">7</span>
                         </div>
                     </div>
-                    <div class="duration">پلان مدت 360 دن</div>
+                    <div class="duration">Duration 65 Days</div>
                     <button class="btn buy-btn-new" onclick="buyPlan(750)">BUY NOW</button>
                 </div>
                 
@@ -800,50 +751,18 @@
                 <div class="plan-card-new">
                     <div class="plan-number">5</div>
                     <div class="investment-amount">1000 <span class="unit">PKR</span></div>
-                    <div class="benefits-container urdu-text">
+                    <div class="benefits-container">
                         <div class="benefit-item">
-                            <span class="benefit-label">روزانه منافع</span>
+                            <span class="benefit-label">Daily Profit</span>
                             <span class="benefit-value">500</span>
                         </div>
                         <div class="benefit-item">
-                            <span class="benefit-label">روزانه اید</span>
+                            <span class="benefit-label">Daily Ads</span>
                             <span class="benefit-value">10</span>
                         </div>
                     </div>
-                    <div class="duration">پلان مدت 360 دن</div>
+                    <div class="duration">Duration 65 Days</div>
                     <button class="btn buy-btn-new" onclick="buyPlan(1000)">BUY NOW</button>
-                </div>
-            </div>
-            
-            <div class="divider"></div>
-            
-            <div class="referral-section">
-                <h2 class="referral-title">ریفر کمیشن</h2>
-                <div class="referral-plans">
-                    <div class="referral-plan">
-                        <div class="referral-plan-title">Plan 1 Refer Commission</div>
-                        <div class="referral-amount">Rs <span>45</span></div>
-                    </div>
-                    
-                    <div class="referral-plan">
-                        <div class="referral-plan-title">Plan 2 Refer Commission</div>
-                        <div class="referral-amount">Rs <span>60</span></div>
-                    </div>
-                    
-                    <div class="referral-plan">
-                        <div class="referral-plan-title">Plan 3 Refer Commission</div>
-                        <div class="referral-amount">Rs <span>75</span></div>
-                    </div>
-                    
-                    <div class="referral-plan">
-                        <div class="referral-plan-title">Plan 4 Refer Commission</div>
-                        <div class="referral-amount">Rs <span>112</span></div>
-                    </div>
-                    
-                    <div class="referral-plan">
-                        <div class="referral-plan-title">Plan 5 Refer Commission</div>
-                        <div class="referral-amount">Rs <span>150</span></div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -1364,7 +1283,8 @@
                 'tasksPage': 'Daily Tasks', 'plansPage': 'VIP Plans',
                 'appPage': 'Download App', 'profilePage': 'My Profile', 
                 'supportPage': 'Contact Admin',
-                'depositHistoryPage': 'Deposit History', 'withdrawHistoryPage': 'Withdrawal History'
+                'depositHistoryPage': 'Deposit History', 'withdrawHistoryPage': 'Withdrawal History',
+                'adTimerPage': 'Viewing Ad'
             };
             document.getElementById('pageTitle').textContent = titles[pageId] || 'Earning App';
         }
@@ -1391,7 +1311,8 @@
                     'tasksPage': 'Daily Tasks', 'plansPage': 'VIP Plans',
                     'appPage': 'Download App', 'profilePage': 'My Profile', 
                     'supportPage': 'Contact Admin',
-                    'depositHistoryPage': 'Deposit History', 'withdrawHistoryPage': 'Withdrawal History'
+                    'depositHistoryPage': 'Deposit History', 'withdrawHistoryPage': 'Withdrawal History',
+                    'adTimerPage': 'Viewing Ad'
                 };
                 document.getElementById('backBtn').style.display = 'block';
                 document.getElementById('pageTitle').textContent = titles[currentPage] || 'Earning App';
@@ -1516,54 +1437,64 @@
                     </div>
                     <div style="text-align: right;">
                         <div class="task-reward">+Rs ${reward}</div>
-                        <button class="btn" style="padding: 5px 12px; font-size: 11px; margin-top: 5px; width: auto;" onclick="startVisualTask(${reward})">Start</button>
+                        <button class="btn" style="padding: 5px 12px; font-size: 11px; margin-top: 5px; width: auto;" onclick="viewAd(${reward})">View Ad</button>
                     </div>
                 </div>`;
         }
         html += '</div>';
         tasksList.innerHTML = html;
     }
+    
+    // --- NEW AD SYSTEM LOGIC ---
+    let currentTaskReward = 0;
+    let adPageTimerInterval = null;
 
-    // --- VISUAL TASK TIMER LOGIC ---
-    let taskTimerInterval = null;
+    function viewAd(rewardAmount) {
+        currentTaskReward = rewardAmount;
+        window.open('https://disappearinghew.com/zqsh5azq?key=e5492d993837d52891191ad8cbc91350', '_blank');
+        showPage('adTimerPage');
+        startAdPageTimer();
+    }
+    
+    function startAdPageTimer() {
+        if(adPageTimerInterval) clearInterval(adPageTimerInterval);
 
-    function startVisualTask(rewardAmount) {
-        const overlay = document.getElementById('taskTimerOverlay');
-        const circle = document.getElementById('timerProgress');
-        const countText = document.getElementById('timerCount');
-        
-        overlay.style.display = 'flex';
-        
+        const circle = document.getElementById('adPageTimerProgress');
+        const countText = document.getElementById('adPageTimerCount');
         let timeLeft = 20;
         countText.textContent = timeLeft;
-        
+
         circle.style.transition = 'none';
         circle.style.strokeDashoffset = '0';
         circle.getBoundingClientRect(); 
-        
         circle.style.transition = 'stroke-dashoffset 20s linear';
         circle.style.strokeDashoffset = '440';
 
-        taskTimerInterval = setInterval(() => {
+        adPageTimerInterval = setInterval(() => {
             timeLeft--;
-            countText.textContent = timeLeft;
-            if (timeLeft <= 0) {
-                clearInterval(taskTimerInterval);
-                finishTask(rewardAmount);
+            if (timeLeft >= 0) {
+                 countText.textContent = timeLeft;
+            }
+            if (timeLeft < 0) {
+                clearInterval(adPageTimerInterval);
+                finishTask(currentTaskReward);
+                currentTaskReward = 0; 
             }
         }, 1000);
     }
 
     function finishTask(amount) {
-        document.getElementById('taskTimerOverlay').style.display = 'none';
-        
         userData.walletBalance += amount;
         userData.tasksCompletedToday++;
         saveUserData();
         
         showAlert(`Task Complete! Rs ${amount} added.`, 'success');
         loadTasks();
-        updateUI(); 
+        updateUI();
+
+        setTimeout(() => {
+            showPage('tasksPage');
+        }, 1500);
     }
 
     // --- UTILS & UI UPDATES ---
