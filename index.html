@@ -163,18 +163,18 @@
         .payment-method.active { border-color: #e91e63; background-color: rgba(233, 30, 99, 0.1); }
         .payment-icon { font-size: 30px; margin-bottom: 10px; color: #4caf50; }
 
-        /* --- NEW PLAN STYLES (ADAPTED FOR DARK THEME) --- */
+        /* --- NEW PLAN STYLES (ADAPTED FOR DARK THEME & SMALLER SIZE) --- */
         .plans-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* smaller minmax */
+            gap: 15px; /* reduced gap */
             margin-bottom: 30px;
         }
         
         .plan-card-new {
             background-color: #1a222c;
             border-radius: 12px;
-            padding: 25px;
+            padding: 20px; /* reduced padding */
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s, box-shadow 0.3s;
             text-align: center;
@@ -189,14 +189,14 @@
         }
         
         .investment-amount {
-            font-size: 2rem;
+            font-size: 1.8rem; /* reduced font size */
             font-weight: 700;
             color: #e91e63;
-            margin-bottom: 10px;
+            margin-bottom: 8px; /* reduced margin */
         }
         
         .unit {
-            font-size: 1.3rem;
+            font-size: 1.1rem; /* reduced font size */
             font-weight: 600;
             color: #aaa;
         }
@@ -204,17 +204,18 @@
         .benefits-container {
             background-color: #0d1520;
             border-radius: 8px;
-            padding: 15px;
-            margin: 20px 0;
+            padding: 12px; /* reduced padding */
+            margin: 15px 0; /* reduced margin */
             text-align: right;
         }
         
         .benefit-item {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
+            padding: 6px 0; /* reduced padding */
             border-bottom: 1px dashed #2c3542;
             text-align: left;
+            font-size: 14px; /* added font size */
         }
         
         .benefit-item:last-child { border-bottom: none; }
@@ -224,16 +225,18 @@
         .duration {
             background-color: rgba(233, 30, 99, 0.1);
             color: #e91e63;
-            padding: 8px 15px;
+            padding: 6px 12px; /* reduced padding */
             border-radius: 20px;
             font-weight: 600;
             display: inline-block;
-            margin-bottom: 20px;
-            font-size: 14px;
+            margin-bottom: 15px; /* reduced margin */
+            font-size: 12px; /* reduced font size */
         }
         
         .buy-btn-new {
             letter-spacing: 0.5px;
+            padding: 12px; /* reduced padding */
+            font-size: 14px; /* reduced font size */
         }
         
         .plan-number {
@@ -676,7 +679,7 @@
                     <circle class="timer-circle-bg" cx="75" cy="75" r="70"></circle>
                     <circle class="timer-circle-progress" cx="75" cy="75" r="70" id="adPageTimerProgress"></circle>
                 </svg>
-                <div class="timer-text" id="adPageTimerCount">20</div>
+                <div class="timer-text" id="adPageTimerCount">10</div>
             </div>
              <p style="color: #aaa; text-align: center;">Do not close this page.</p>
         </div>
@@ -688,6 +691,24 @@
             <h2 class="page-title">Zone Earn Plans</h2>
             
             <div class="plans-container">
+                <!-- Plan 0: 300 PKR -->
+                <div class="plan-card-new">
+                    <div class="plan-number">0</div>
+                    <div class="investment-amount">300 <span class="unit">PKR</span></div>
+                    <div class="benefits-container">
+                        <div class="benefit-item">
+                            <span class="benefit-label">Daily Profit</span>
+                            <span class="benefit-value">75</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-label">Daily Ads</span>
+                            <span class="benefit-value">3</span>
+                        </div>
+                    </div>
+                    <div class="duration">Duration 65 Days</div>
+                    <button class="btn buy-btn-new" onclick="buyPlan(300)">BUY NOW</button>
+                </div>
+
                 <!-- Plan 1: 750 PKR -->
                 <div class="plan-card-new">
                     <div class="plan-number">1</div>
@@ -861,10 +882,6 @@
                     <div class="menu-left"><div class="menu-icon-circle" style="background: rgba(33, 150, 243, 0.1); color: #2196f3;"><i class="fa-solid fa-id-card"></i></div><span class="menu-text">Account Information</span></div>
                     <i class="fa-solid fa-chevron-right" style="color: #555;"></i>
                 </div>
-                <div class="menu-item" onclick="openModal('commissionModal')">
-                    <div class="menu-left"><div class="menu-icon-circle" style="background: rgba(255, 152, 0, 0.1); color: #ff9800;"><i class="fa-solid fa-users-viewfinder"></i></div><span class="menu-text">Invitation Commission</span></div>
-                    <i class="fa-solid fa-chevron-right" style="color: #555;"></i>
-                </div>
                 <div class="menu-item" onclick="openModal('changePassModal')">
                     <div class="menu-left"><div class="menu-icon-circle" style="background: rgba(244, 67, 54, 0.1); color: #f44336;"><i class="fa-solid fa-lock"></i></div><span class="menu-text">Change Password</span></div>
                     <i class="fa-solid fa-chevron-right" style="color: #555;"></i>
@@ -873,6 +890,10 @@
 
             <h3 style="color: #aaa; font-size: 14px; margin: 15px 0 10px 5px; text-transform: uppercase;">History & Records</h3>
             <div class="menu-group">
+                <div class="menu-item" onclick="openModal('commissionModal')">
+                    <div class="menu-left"><div class="menu-icon-circle" style="background: rgba(255, 152, 0, 0.1); color: #ff9800;"><i class="fa-solid fa-users-viewfinder"></i></div><span class="menu-text">Invitation Commission</span></div>
+                    <i class="fa-solid fa-chevron-right" style="color: #555;"></i>
+                </div>
                 <div class="menu-item" onclick="showPage('depositHistoryPage')"><div class="menu-left"><div class="menu-icon-circle"><i class="fa-regular fa-credit-card"></i></div><span class="menu-text">Deposit History</span></div><i class="fa-solid fa-chevron-right" style="color: #555;"></i></div>
                 <div class="menu-item" onclick="showPage('withdrawHistoryPage')"><div class="menu-left"><div class="menu-icon-circle"><i class="fa-solid fa-money-bill-transfer"></i></div><span class="menu-text">Withdraw History</span></div><i class="fa-solid fa-chevron-right" style="color: #555;"></i></div>
             </div>
@@ -986,6 +1007,7 @@
 
     // --- NEW PLAN CONFIGURATION ---
     const PLAN_CONFIG = {
+        300:   { dailyLimit: 3,  earningPerTask: 25, dailyProfit: 75 },
         750:   { dailyLimit: 6,  earningPerTask: 50, dailyProfit: 300 },
         1000:  { dailyLimit: 8,  earningPerTask: 50, dailyProfit: 400 },
         1500:  { dailyLimit: 10, earningPerTask: 50, dailyProfit: 500 },
@@ -1446,7 +1468,7 @@
                 <div class="task-item">
                     <div>
                         <div style="font-weight: bold; font-size: 14px;">Sponsored Ad Task ${userData.tasksCompletedToday + i + 1}</div>
-                        <div style="font-size: 11px; color: #aaa;">Duration: 20s</div>
+                        <div style="font-size: 11px; color: #aaa;">Duration: 10s</div>
                     </div>
                     <div style="text-align: right;">
                         <div class="task-reward">+Rs ${reward}</div>
@@ -1474,13 +1496,13 @@
 
         const circle = document.getElementById('adPageTimerProgress');
         const countText = document.getElementById('adPageTimerCount');
-        let timeLeft = 20;
+        let timeLeft = 10;
         countText.textContent = timeLeft;
 
         circle.style.transition = 'none';
         circle.style.strokeDashoffset = '0';
         circle.getBoundingClientRect(); 
-        circle.style.transition = 'stroke-dashoffset 20s linear';
+        circle.style.transition = 'stroke-dashoffset 10s linear';
         circle.style.strokeDashoffset = '440';
 
         adPageTimerInterval = setInterval(() => {
