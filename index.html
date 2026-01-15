@@ -339,26 +339,42 @@
             margin-bottom: 15px;
         }
 
+        /* === EDITED STYLES START === */
         .task-stat-card-v2 {
+            background: #000; /* Black background */
             border-radius: 15px;
-            padding: 15px;
+            padding: 20px;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            flex-direction: row; /* Horizontal layout */
+            align-items: center; /* Vertically center items */
+            justify-content: space-between; /* Puts label on left, count on right */
             position: relative;
             overflow: hidden;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             transition: transform 0.2s;
+            min-height: 70px; /* Decreased height */
         }
         .task-stat-card-v2:active { transform: scale(0.98); }
+        
+        .stat-v2-label { 
+            font-size: 14px; /* Larger label */
+            color: rgba(255,255,255,0.8); 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            font-weight: 600;
+        }
+        .stat-v2-count { 
+            font-size: 26px; /* Larger count */
+            font-weight: 800; 
+            color: white; 
+            margin-top: 0; /* Removed top margin */
+        }
+        /* === EDITED STYLES END === */
 
         .card-completed {
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
             border: 1px solid rgba(100, 181, 246, 0.3);
         }
         .card-remaining {
-            background: linear-gradient(135deg, #8e24aa, #ab47bc);
             border: 1px solid rgba(225, 190, 231, 0.3);
         }
 
@@ -370,9 +386,6 @@
             margin-bottom: 8px;
             color: white; font-size: 16px;
         }
-
-        .stat-v2-label { font-size: 11px; color: rgba(255,255,255,0.8); text-transform: uppercase; letter-spacing: 0.5px; }
-        .stat-v2-count { font-size: 24px; font-weight: 800; color: white; margin-top: 2px; }
 
         .task-timer-section {
             background: rgba(13, 21, 32, 0.6);
@@ -675,82 +688,46 @@
             <h2 class="page-title">Zone Earn Plans</h2>
             
             <div class="plans-container">
-                <!-- Plan 1: 300 PKR -->
+                <!-- Plan 1: 750 PKR -->
                 <div class="plan-card-new">
                     <div class="plan-number">1</div>
-                    <div class="investment-amount">300 <span class="unit">PKR</span></div>
-                    <div class="benefits-container">
-                        <div class="benefit-item">
-                            <span class="benefit-label">Daily Profit</span>
-                            <span class="benefit-value">100</span>
-                        </div>
-                        <div class="benefit-item">
-                            <span class="benefit-label">Daily Ads</span>
-                            <span class="benefit-value">2</span>
-                        </div>
-                    </div>
-                    <div class="duration">Duration 65 Days</div>
-                    <button class="btn buy-btn-new" onclick="buyPlan(300)">BUY NOW</button>
-                </div>
-                
-                <!-- Plan 2: 400 PKR -->
-                <div class="plan-card-new">
-                    <div class="plan-number">2</div>
-                    <div class="investment-amount">400 <span class="unit">PKR</span></div>
-                    <div class="benefits-container">
-                        <div class="benefit-item">
-                            <span class="benefit-label">Daily Profit</span>
-                            <span class="benefit-value">150</span>
-                        </div>
-                        <div class="benefit-item">
-                            <span class="benefit-label">Daily Ads</span>
-                            <span class="benefit-value">3</span>
-                        </div>
-                    </div>
-                    <div class="duration">Duration 65 Days</div>
-                    <button class="btn buy-btn-new" onclick="buyPlan(400)">BUY NOW</button>
-                </div>
-                
-                <!-- Plan 3: 500 PKR -->
-                <div class="plan-card-new">
-                    <div class="plan-number">3</div>
-                    <div class="investment-amount">500 <span class="unit">PKR</span></div>
-                    <div class="benefits-container">
-                        <div class="benefit-item">
-                            <span class="benefit-label">Daily Profit</span>
-                            <span class="benefit-value">200</span>
-                        </div>
-                        <div class="benefit-item">
-                            <span class="benefit-label">Daily Ads</span>
-                            <span class="benefit-value">4</span>
-                        </div>
-                    </div>
-                    <div class="duration">Duration 65 Days</div>
-                    <button class="btn buy-btn-new" onclick="buyPlan(500)">BUY NOW</button>
-                </div>
-                
-                <!-- Plan 4: 750 PKR -->
-                <div class="plan-card-new">
-                    <div class="plan-number">4</div>
                     <div class="investment-amount">750 <span class="unit">PKR</span></div>
                     <div class="benefits-container">
                         <div class="benefit-item">
                             <span class="benefit-label">Daily Profit</span>
-                            <span class="benefit-value">350</span>
+                            <span class="benefit-value">300</span>
                         </div>
                         <div class="benefit-item">
                             <span class="benefit-label">Daily Ads</span>
-                            <span class="benefit-value">7</span>
+                            <span class="benefit-value">6</span>
                         </div>
                     </div>
                     <div class="duration">Duration 65 Days</div>
                     <button class="btn buy-btn-new" onclick="buyPlan(750)">BUY NOW</button>
                 </div>
                 
-                <!-- Plan 5: 1000 PKR -->
+                <!-- Plan 2: 1000 PKR -->
                 <div class="plan-card-new">
-                    <div class="plan-number">5</div>
+                    <div class="plan-number">2</div>
                     <div class="investment-amount">1000 <span class="unit">PKR</span></div>
+                    <div class="benefits-container">
+                        <div class="benefit-item">
+                            <span class="benefit-label">Daily Profit</span>
+                            <span class="benefit-value">400</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-label">Daily Ads</span>
+                            <span class="benefit-value">8</span>
+                        </div>
+                    </div>
+                    <div class="duration">Duration 65 Days</div>
+                    <button class="btn buy-btn-new" onclick="buyPlan(1000)">BUY NOW</button>
+                </div>
+                
+                <!-- Plan 3: 1500 PKR -->
+                <div class="plan-card-new">
+                    <div class="plan-number">3</div>
+                    <div class="investment-amount">1500 <span class="unit">PKR</span></div>
                     <div class="benefits-container">
                         <div class="benefit-item">
                             <span class="benefit-label">Daily Profit</span>
@@ -762,7 +739,43 @@
                         </div>
                     </div>
                     <div class="duration">Duration 65 Days</div>
-                    <button class="btn buy-btn-new" onclick="buyPlan(1000)">BUY NOW</button>
+                    <button class="btn buy-btn-new" onclick="buyPlan(1500)">BUY NOW</button>
+                </div>
+                
+                <!-- Plan 4: 3000 PKR -->
+                <div class="plan-card-new">
+                    <div class="plan-number">4</div>
+                    <div class="investment-amount">3000 <span class="unit">PKR</span></div>
+                    <div class="benefits-container">
+                        <div class="benefit-item">
+                            <span class="benefit-label">Daily Profit</span>
+                            <span class="benefit-value">750</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-label">Daily Ads</span>
+                            <span class="benefit-value">15</span>
+                        </div>
+                    </div>
+                    <div class="duration">Duration 65 Days</div>
+                    <button class="btn buy-btn-new" onclick="buyPlan(3000)">BUY NOW</button>
+                </div>
+                
+                <!-- Plan 5: 5000 PKR -->
+                <div class="plan-card-new">
+                    <div class="plan-number">5</div>
+                    <div class="investment-amount">5000 <span class="unit">PKR</span></div>
+                    <div class="benefits-container">
+                        <div class="benefit-item">
+                            <span class="benefit-label">Daily Profit</span>
+                            <span class="benefit-value">1000</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-label">Daily Ads</span>
+                            <span class="benefit-value">20</span>
+                        </div>
+                    </div>
+                    <div class="duration">Duration 65 Days</div>
+                    <button class="btn buy-btn-new" onclick="buyPlan(5000)">BUY NOW</button>
                 </div>
             </div>
         </div>
@@ -817,18 +830,18 @@
             <div class="task-dashboard-v2">
                 <!-- Row 1: Series of Task Stats -->
                 <div class="task-stats-series">
+                    <!-- === EDITED HTML START === -->
                     <!-- Completed -->
                     <div class="task-stat-card-v2 card-completed">
-                        <div class="stat-icon-circle"><i class="fa-solid fa-check-double"></i></div>
                         <span class="stat-v2-label">Completed</span>
                         <span class="stat-v2-count" id="taskCompletedCount">0</span>
                     </div>
                     <!-- Available -->
                     <div class="task-stat-card-v2 card-remaining">
-                        <div class="stat-icon-circle"><i class="fa-solid fa-box-open"></i></div>
                         <span class="stat-v2-label">Available</span>
                         <span class="stat-v2-count" id="taskRemainCount">0</span>
                     </div>
+                    <!-- === EDITED HTML END === -->
                 </div>
                 
                 <!-- Row 2: Timer at Bottom -->
@@ -973,11 +986,11 @@
 
     // --- NEW PLAN CONFIGURATION ---
     const PLAN_CONFIG = {
-        300:   { dailyLimit: 2,  earningPerTask: 50, dailyProfit: 100 },
-        400:   { dailyLimit: 3,  earningPerTask: 50, dailyProfit: 150 },
-        500:   { dailyLimit: 4,  earningPerTask: 50, dailyProfit: 200 },
-        750:   { dailyLimit: 7,  earningPerTask: 50, dailyProfit: 350 },
-        1000:  { dailyLimit: 10, earningPerTask: 50, dailyProfit: 500 }
+        750:   { dailyLimit: 6,  earningPerTask: 50, dailyProfit: 300 },
+        1000:  { dailyLimit: 8,  earningPerTask: 50, dailyProfit: 400 },
+        1500:  { dailyLimit: 10, earningPerTask: 50, dailyProfit: 500 },
+        3000:  { dailyLimit: 15, earningPerTask: 50, dailyProfit: 750 },
+        5000:  { dailyLimit: 20, earningPerTask: 50, dailyProfit: 1000 }
     };
 
     // --- FIREBASE CONFIGURATION ---
