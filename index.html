@@ -10,6 +10,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
     
     <style>
         /* --- Base Styles --- */
@@ -150,7 +151,45 @@
         .form-group { margin-bottom: 20px; }
         .form-label { display: block; margin-bottom: 8px; color: #aaa; }
         .form-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #2c3542; background-color: #0d1520; color: white; font-size: 14px; }
+        
+        /* Style for file input to match theme */
+        .form-input[type="file"] { padding: 10px; }
+        .form-input[type="file"]::-webkit-file-upload-button {
+            background: #e91e63;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
         textarea.form-input { height: 100px; resize: none; }
+        
+        /* === NEW DEPOSIT PREVIEW STYLES === */
+        .image-preview-container {
+            width: 100%;
+            margin-top: 15px;
+            border: 2px dashed #2c3542;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 150px;
+            position: relative;
+            background-color: #0d1520;
+            overflow: hidden;
+        }
+        .image-preview {
+            display: none;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .image-preview-text {
+            color: #aaa;
+            font-size: 14px;
+        }
+        /* === END NEW STYLES === */
 
         .btn { width: 100%; padding: 15px; background: linear-gradient(135deg, #e91e63, #880e4f); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: transform 0.2s; }
         .btn:hover { opacity: 0.9; }
@@ -342,7 +381,6 @@
             margin-bottom: 15px;
         }
 
-        /* === EDITED STYLES START === */
         .task-stat-card-v2 {
             background: #000; /* Black background */
             border-radius: 15px;
@@ -372,7 +410,6 @@
             color: white; 
             margin-top: 0; /* Removed top margin */
         }
-        /* === EDITED STYLES END === */
 
         .card-completed {
             border: 1px solid rgba(100, 181, 246, 0.3);
@@ -440,7 +477,7 @@
 <!-- Loading Overlay -->
 <div id="loadingOverlay">
     <div class="spinner"></div>
-    <div>Loading...</div>
+    <div id="loadingText">Loading...</div>
 </div>
 
 <!-- Alert Message -->
@@ -562,12 +599,25 @@
             </div>
             <div class="card">
                 <h3 class="card-title">Submit Proof</h3>
-                <div class="form-group"><label class="form-label">TRX ID</label><input type="text" class="form-input" id="depositTrxId" placeholder="Enter TRX ID"></div>
-                <div class="form-group"><label class="form-label">Amount (Rs)</label><input type="number" class="form-input" id="depositAmount" placeholder="Amount"></div>
+                <!-- === EDITED DEPOSIT SYSTEM HTML START === -->
+                <div class="form-group">
+                    <label class="form-label">Payment Proof (Screenshot)</label>
+                    <input type="file" class="form-input" id="depositProofImage" accept="image/*" onchange="previewDepositImage(event)">
+                    <div class="image-preview-container" id="depositPreviewContainer">
+                        <img src="" alt="Image Preview" class="image-preview" id="depositImagePreview">
+                        <span class="image-preview-text" id="depositPreviewText">Image Preview</span>
+                    </div>
+                </div>
+                 <!-- === EDITED DEPOSIT SYSTEM HTML END === -->
+                <div class="form-group">
+                    <label class="form-label">Amount (Rs)</label>
+                    <input type="number" class="form-input" id="depositAmount" placeholder="Enter amount sent">
+                </div>
                 <button class="btn" onclick="submitDeposit()">Submit Deposit</button>
             </div>
         </div>
     </div>
+
 
     <!-- Deposit History Page -->
     <div class="page-container page-inactive" id="depositHistoryPage">
@@ -851,7 +901,6 @@
             <div class="task-dashboard-v2">
                 <!-- Row 1: Series of Task Stats -->
                 <div class="task-stats-series">
-                    <!-- === EDITED HTML START === -->
                     <!-- Completed -->
                     <div class="task-stat-card-v2 card-completed">
                         <span class="stat-v2-label">Completed</span>
@@ -862,7 +911,6 @@
                         <span class="stat-v2-label">Available</span>
                         <span class="stat-v2-count" id="taskRemainCount">0</span>
                     </div>
-                    <!-- === EDITED HTML END === -->
                 </div>
                 
                 <!-- Row 2: Timer at Bottom -->
@@ -1020,7 +1068,8 @@
         apiKey: "AIzaSyBAQIolFYwc0_QfaR3LC1VOwjZD0zFbYWc",
         databaseURL: "https://zone-b2e27-default-rtdb.asia-southeast1.firebasedatabase.app/",
         authDomain: "zone-b2e27.firebaseapp.com",
-        projectId: "zone-b2e27"
+        projectId: "zone-b2e27",
+        storageBucket: "zone-b2e27.appspot.com"
     };
 
     if (!firebase.apps.length) {
@@ -1028,6 +1077,8 @@
     }
     const auth = firebase.auth();
     const db = firebase.database();
+    // Firebase storage is no longer needed for deposits but might be used elsewhere.
+    const storage = firebase.storage(); 
 
     let currentUser = null;
     let userData = {
@@ -1054,7 +1105,7 @@
         auth.onAuthStateChanged((user) => {
             if (user) {
                 currentUser = user;
-                showLoading(true);
+                showLoading(true, "Loading...");
                 
                 if (user.email === ADMIN_EMAIL) {
                     document.getElementById('adminAccessBtn').style.display = 'block';
@@ -1130,7 +1181,7 @@
     function saveAccountInfo() {
         const newPhone = document.getElementById('editPhone').value;
         if (!newPhone) { showAlert("Phone number cannot be empty", "error"); return; }
-        showLoading(true);
+        showLoading(true, "Saving...");
         userData.phone = newPhone;
         saveUserData();
         showLoading(false);
@@ -1145,7 +1196,7 @@
         if (!newPass || newPass.length < 6) return showAlert('Password must be 6+ chars', 'error');
         if (newPass !== confirmPass) return showAlert('Passwords do not match', 'error');
         
-        showLoading(true);
+        showLoading(true, "Updating...");
         currentUser.updatePassword(newPass).then(() => {
             showLoading(false);
             showAlert('Password updated successfully!', 'success');
@@ -1209,7 +1260,7 @@
         const accTitle = document.getElementById('adminAccTitle').value;
         if(!bankName || !accNum || !accTitle) { showAlert('Fill all details', 'error'); return; }
 
-        showLoading(true);
+        showLoading(true, "Updating...");
         db.ref('admin/settings/bank').set({
             bankName: bankName, accountNumber: accNum, accountTitle: accTitle
         }).then(() => {
@@ -1242,7 +1293,7 @@
         if (password.length < 6) { showAlert('Min password 6 chars', 'error'); return; }
         if (password !== confirmPass) { showAlert('Password mismatch', 'error'); return; }
 
-        showLoading(true);
+        showLoading(true, "Registering...");
         auth.createUserWithEmailAndPassword(email, password)
             .then((cred) => {
                 const newUserData = {
@@ -1264,11 +1315,11 @@
         const email = document.getElementById('loginEmail').value;
         const pass = document.getElementById('loginPassword').value;
         if (!email || !pass) return showAlert('Enter credentials', 'error');
-        showLoading(true);
+        showLoading(true, "Logging in...");
         auth.signInWithEmailAndPassword(email, pass).catch(e => { showLoading(false); showAlert(e.message, 'error'); });
     }
 
-    function logout() { showLoading(true); auth.signOut().then(() => window.location.reload()); }
+    function logout() { showLoading(true, "Logging out..."); auth.signOut().then(() => window.location.reload()); }
 
     function handleResetPassword() {
         const email = document.getElementById('resetEmail').value;
@@ -1365,19 +1416,88 @@
     }
 
     // --- TRANSACTIONS ---
-    function submitDeposit() {
-        const trxId = document.getElementById('depositTrxId').value;
-        const amount = parseFloat(document.getElementById('depositAmount').value);
-        if (!trxId || !amount || amount < 300) return showAlert('Min Rs 300 & TRX ID required', 'error');
+    
+    // === EDITED DEPOSIT SYSTEM SCRIPT START ===
+    function previewDepositImage(event) {
+        const preview = document.getElementById('depositImagePreview');
+        const text = document.getElementById('depositPreviewText');
+        const file = event.target.files[0];
+        const reader = new FileReader();
 
-        const deposit = { id: Date.now(), date: new Date().toLocaleDateString(), amount: amount, trxId: trxId, status: 'pending' };
-        userData.deposits.push(deposit);
-        // Do not add to totalDeposit until admin approves
-        saveUserData();
-        showAlert('Deposit submitted for review!', 'success');
-        document.getElementById('depositTrxId').value = '';
-        document.getElementById('depositAmount').value = '';
+        reader.onloadend = function() {
+            preview.src = reader.result;
+            preview.style.display = 'block';
+            text.style.display = 'none';
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = "";
+            preview.style.display = 'none';
+            text.style.display = 'block';
+        }
     }
+
+    async function submitDeposit() {
+        const proofFile = document.getElementById('depositProofImage').files[0];
+        const amount = parseFloat(document.getElementById('depositAmount').value);
+
+        if (!proofFile || !amount || amount < 300) {
+            return showAlert('Min Rs 300 & a proof image are required', 'error');
+        }
+        
+        showLoading(true, 'Uploading proof...');
+
+        const apiKey = '31c324eeef3df98e593e1897b02cc37b';
+        const apiUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+        
+        const formData = new FormData();
+        formData.append('image', proofFile);
+        
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                body: formData,
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                const imageUrl = result.data.url;
+                const deposit = { 
+                    id: Date.now(), 
+                    date: new Date().toLocaleDateString(), 
+                    amount: amount, 
+                    proofImageUrl: imageUrl,
+                    status: 'pending' 
+                };
+                
+                if (!userData.deposits) userData.deposits = [];
+                userData.deposits.push(deposit);
+                saveUserData();
+                
+                showLoading(false);
+                showAlert('Deposit submitted for review!', 'success');
+                
+                // Reset form
+                document.getElementById('depositProofImage').value = '';
+                document.getElementById('depositAmount').value = '';
+                document.getElementById('depositImagePreview').src = '';
+                document.getElementById('depositImagePreview').style.display = 'none';
+                document.getElementById('depositPreviewText').style.display = 'block';
+
+            } else {
+                showLoading(false);
+                showAlert(result.error?.message || 'Image upload failed. Please try again.', 'error');
+            }
+        } catch (error) {
+            showLoading(false);
+            console.error('Image upload network error:', error);
+            showAlert('An error occurred during upload. Check your internet connection.', 'error');
+        }
+    }
+    // === EDITED DEPOSIT SYSTEM SCRIPT END ===
 
     function submitWithdraw() {
         const account = document.getElementById('withdrawAccount').value;
@@ -1388,6 +1508,7 @@
         if (amount > userData.walletBalance) return showAlert('Insufficient balance', 'error');
 
         const withdrawal = { id: Date.now(), date: new Date().toLocaleDateString(), amount: amount, account: account, name: name, status: 'pending' };
+        if (!userData.withdrawals) userData.withdrawals = [];
         userData.withdrawals.push(withdrawal);
         userData.walletBalance -= amount;
         saveUserData();
@@ -1537,12 +1658,12 @@
         document.getElementById('walletBalance').textContent = userData.walletBalance.toFixed(2);
         
         // Calculate total approved deposit
-        const totalApprovedDeposit = userData.deposits
+        const totalApprovedDeposit = (userData.deposits || [])
             .filter(d => d.status === 'completed')
             .reduce((sum, d) => sum + d.amount, 0);
         document.getElementById('totalDeposit').textContent = `Rs ${totalApprovedDeposit.toFixed(2)}`;
 
-        const totalApprovedWithdraw = userData.withdrawals
+        const totalApprovedWithdraw = (userData.withdrawals || [])
             .filter(w => w.status === 'completed')
             .reduce((sum, w) => sum + w.amount, 0);
         document.getElementById('totalWithdraw').textContent = `Rs ${totalApprovedWithdraw.toFixed(2)}`;
@@ -1563,15 +1684,17 @@
     }
 
     function updateHistoryTables() {
+        const deposits = userData.deposits || [];
         const depList = document.getElementById('depositHistory');
-        depList.innerHTML = userData.deposits.length ? '' : '<tr><td colspan="3" style="text-align:center;">No deposits</td></tr>';
-        userData.deposits.slice().reverse().forEach(d => {
+        depList.innerHTML = deposits.length ? '' : '<tr><td colspan="3" style="text-align:center;">No deposits</td></tr>';
+        deposits.slice().reverse().forEach(d => {
             depList.innerHTML += `<tr><td>${d.date}</td><td>Rs ${d.amount}</td><td><span class="status status-${d.status}">${d.status}</span></td></tr>`;
         });
 
+        const withdrawals = userData.withdrawals || [];
         const withList = document.getElementById('withdrawHistory');
-        withList.innerHTML = userData.withdrawals.length ? '' : '<tr><td colspan="3" style="text-align:center;">No withdrawals</td></tr>';
-        userData.withdrawals.slice().reverse().forEach(w => {
+        withList.innerHTML = withdrawals.length ? '' : '<tr><td colspan="3" style="text-align:center;">No withdrawals</td></tr>';
+        withdrawals.slice().reverse().forEach(w => {
             withList.innerHTML += `<tr><td>${w.date}</td><td>Rs ${w.amount}</td><td><span class="status status-${w.status}">${w.status}</span></td></tr>`;
         });
     }
@@ -1604,7 +1727,10 @@
         setTimeout(() => { a.style.display = 'none'; }, 3000);
     }
 
-    function showLoading(show) { document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none'; }
+    function showLoading(show, message = "Loading...") { 
+        document.getElementById('loadingText').textContent = message;
+        document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none'; 
+    }
     
     function selectWithdrawMethod(m) {
         document.querySelectorAll('#withdrawPage .payment-method').forEach(i => i.classList.remove('active'));
@@ -1618,10 +1744,12 @@
         window.location.href = `mailto:${ADMIN_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     }
 
-    function redirectToGmail() { window.location.href = `mailto:${ADMIN_EMAIL}`; }
-
     let isDragging = false, dragStartTime = 0;
-    function handleClickWhatsapp() { if (Date.now() - dragStartTime < 200 && !isDragging) redirectToGmail(); }
+    function handleClickWhatsapp() { 
+        if (Date.now() - dragStartTime < 200 && !isDragging) {
+            window.open('https://chat.whatsapp.com/CkmbMrjbsMVEoiJHajrJup', '_blank');
+        }
+    }
     function initDraggableWhatsapp() {
         const btn = document.getElementById('whatsappFloat');
         let offset = {x:0, y:0};
