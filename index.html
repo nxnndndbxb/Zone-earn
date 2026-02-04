@@ -100,6 +100,13 @@
         .page-container::-webkit-scrollbar { display: none; }
         
         .page-content { padding: 20px; color: white; max-width: 1000px; margin: 0 auto; width: 100%; }
+        .page-container#supportPage .page-content { /* CUSTOM: Override padding for full-height chat */
+            padding: 0;
+            padding-bottom: 0 !important;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
 
         .banner-container { padding: 20px; background: linear-gradient(180deg, #750d37 0%, #031b38 30%); display: flex; justify-content: center; }
         .banner { 
@@ -165,32 +172,6 @@
         }
         textarea.form-input { height: 100px; resize: none; }
         
-        /* === NEW DEPOSIT PREVIEW STYLES === */
-        .image-preview-container {
-            width: 100%;
-            margin-top: 15px;
-            border: 2px dashed #2c3542;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 150px;
-            position: relative;
-            background-color: #0d1520;
-            overflow: hidden;
-        }
-        .image-preview {
-            display: none;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .image-preview-text {
-            color: #aaa;
-            font-size: 14px;
-        }
-        /* === END NEW STYLES === */
-
         .btn { width: 100%; padding: 15px; background: linear-gradient(135deg, #e91e63, #880e4f); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: transform 0.2s; }
         .btn:hover { opacity: 0.9; }
         .btn:active { transform: scale(0.98); }
@@ -365,81 +346,69 @@
         .alert { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background-color: #4caf50; color: white; padding: 15px 30px; border-radius: 10px; z-index: 5000; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.3); white-space: nowrap; }
         @keyframes slideDown { from { top: -100px; } to { top: 20px; } }
 
-        /* --- NEW REDESIGNED TASK DASHBOARD --- */
+        /* --- NEW REDESIGNED TASK DASHBOARD (Very Small Size) --- */
         .task-dashboard-v2 {
             background-color: #1a222c;
-            border-radius: 20px;
-            padding: 15px;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            border-radius: 12px; /* Smaller border radius */
+            padding: 10px; /* Reduced padding */
+            margin-bottom: 15px; /* Reduced margin */
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2); /* Smaller shadow */
         }
         
         .task-stats-series {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 15px;
+            gap: 10px; /* Reduced gap */
+            margin-bottom: 10px; /* Reduced margin */
         }
 
         .task-stat-card-v2 {
-            background: #000; /* Black background */
-            border-radius: 15px;
-            padding: 20px;
+            background: #0d1520; /* Darker BG */
+            border-radius: 8px; /* Smaller border radius */
+            padding: 10px; /* Greatly reduced padding */
             display: flex;
-            flex-direction: row; /* Horizontal layout */
-            align-items: center; /* Vertically center items */
-            justify-content: space-between; /* Puts label on left, count on right */
+            flex-direction: column; /* Stacked layout for small size */
+            align-items: flex-start; /* Align text to start */
+            justify-content: center;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Smaller shadow */
             transition: transform 0.2s;
-            min-height: 70px; /* Decreased height */
+            min-height: 55px; /* Significantly reduced height */
         }
         .task-stat-card-v2:active { transform: scale(0.98); }
         
         .stat-v2-label { 
-            font-size: 14px; /* Larger label */
+            font-size: 10px; /* Much smaller label */
             color: rgba(255,255,255,0.8); 
             text-transform: uppercase; 
             letter-spacing: 0.5px; 
-            font-weight: 600;
+            font-weight: 500; /* Medium font weight */
+            margin-bottom: 2px;
         }
         .stat-v2-count { 
-            font-size: 26px; /* Larger count */
-            font-weight: 800; 
+            font-size: 18px; /* Smaller count */
+            font-weight: 700; 
             color: white; 
-            margin-top: 0; /* Removed top margin */
+            margin-top: 0;
         }
 
-        .card-completed {
-            border: 1px solid rgba(100, 181, 246, 0.3);
-        }
-        .card-remaining {
-            border: 1px solid rgba(225, 190, 231, 0.3);
-        }
-
-        .stat-icon-circle {
-            width: 35px; height: 35px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            display: flex; justify-content: center; align-items: center;
-            margin-bottom: 8px;
-            color: white; font-size: 16px;
-        }
+        .card-completed { border: 1px solid rgba(100, 181, 246, 0.2); }
+        .card-remaining { border: 1px solid rgba(225, 190, 231, 0.2); }
 
         .task-timer-section {
-            background: rgba(13, 21, 32, 0.6);
-            border-radius: 12px;
-            padding: 12px;
+            background: #0d1520;
+            border-radius: 8px;
+            padding: 8px; /* Reduced padding */
             display: flex;
             justify-content: space-between;
             align-items: center;
             border: 1px solid #2c3542;
         }
-        .timer-label-box { display: flex; align-items: center; gap: 8px; }
-        .timer-icon { color: #fdd835; animation: pulse-icon 2s infinite; }
-        .timer-text-label { font-size: 12px; color: #ccc; }
-        .timer-digital { font-family: 'Courier New', monospace; font-size: 18px; color: #4caf50; font-weight: bold; letter-spacing: 1px; }
+        .timer-label-box { display: flex; align-items: center; gap: 5px; } /* Reduced gap */
+        .timer-icon { color: #fdd835; animation: pulse-icon 2s infinite; font-size: 14px; } /* Smaller icon */
+        .timer-text-label { font-size: 10px; color: #ccc; } /* Smaller label */
+        .timer-digital { font-family: 'Courier New', monospace; font-size: 14px; color: #4caf50; font-weight: bold; letter-spacing: 1px; } /* Smaller digital time */
 
         @keyframes pulse-icon { 0% { opacity: 0.7; } 50% { opacity: 1; transform: scale(1.1); } 100% { opacity: 0.7; } }
 
@@ -469,6 +438,30 @@
         .modal-avatar-container { display: flex; justify-content: center; margin-bottom: 20px; }
         .modal-avatar { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #e91e63; object-fit: cover; box-shadow: 0 0 15px rgba(233, 30, 99, 0.4); }
         .modal-edit-hint { text-align: center; color: #aaa; font-size: 12px; margin-bottom: 20px; }
+
+        /* --- ADDED CHAT STYLES --- */
+        .chat-message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+        .user-message {
+            background-color: #e91e63;
+            color: white;
+            align-self: flex-end;
+            margin-left: auto; /* Push to right */
+            border-bottom-right-radius: 2px;
+        }
+        .ai-message {
+            background-color: #2c3542;
+            color: white;
+            align-self: flex-start;
+            margin-right: auto; /* Push to left */
+            border-bottom-left-radius: 2px;
+        }
 
     </style>
 </head>
@@ -574,16 +567,27 @@
         </div>
     </div>
 
-    <!-- Support Page -->
+    <!-- Support Page (CUSTOM: Support Chat Interface) -->
     <div class="page-container page-inactive" id="supportPage">
-        <div class="page-content">
-            <h2 class="page-title">Contact Admin</h2>
-            <div class="card">
-                <h3 class="card-title">Send a Message</h3>
-                <div class="form-group"><label class="form-label">Subject</label><input type="text" class="form-input" id="supportSubject" placeholder="Brief topic of your issue"></div>
-                <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" id="supportMessage" placeholder="Describe your issue or question in detail..."></textarea></div>
-                <button class="btn" onclick="sendEmailToAdmin()">Send Message via Email</button>
+        <div class="page-content" style="padding: 0; display: flex; flex-direction: column; height: 100%;">
+            <!-- New Chat Interface -->
+            <div id="chatBox" style="flex-grow: 1; padding: 15px; overflow-y: auto; background-color: #0d1520; display: flex; flex-direction: column; gap: 10px;">
+                <!-- Assistant Welcome Message (Non-AI wording) -->
+                <div class="chat-message ai-message">
+                    Hello! I'm your support assistant. I can answer questions about plans, deposits, withdrawals, and tasks. How can I help you today?
+                </div>
             </div>
+            
+            <!-- Input Area -->
+            <div style="padding: 10px; border-top: 1px solid #2c3542; background-color: #1a222c; flex-shrink: 0;">
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" class="form-input" id="chatInput" placeholder="Ask a question about the app..." style="flex-grow: 1; margin-bottom: 0;" onkeydown="if(event.key==='Enter') simulateAIChat();">
+                    <button class="btn" id="chatSendBtn" style="width: auto; padding: 10px 15px; margin-top: 0; font-size: 14px;" onclick="simulateAIChat()">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- End New Chat Interface -->
         </div>
     </div>
 
@@ -599,16 +603,12 @@
             </div>
             <div class="card">
                 <h3 class="card-title">Submit Proof</h3>
-                <!-- === EDITED DEPOSIT SYSTEM HTML START === -->
+                <!-- CUSTOM: Edited Deposit Proof Label -->
                 <div class="form-group">
-                    <label class="form-label">Payment Proof (Screenshot)</label>
-                    <input type="file" class="form-input" id="depositProofImage" accept="image/*" onchange="previewDepositImage(event)">
-                    <div class="image-preview-container" id="depositPreviewContainer">
-                        <img src="" alt="Image Preview" class="image-preview" id="depositImagePreview">
-                        <span class="image-preview-text" id="depositPreviewText">Image Preview</span>
-                    </div>
+                    <label class="form-label">Payment Screenshot</label>
+                    <input type="file" class="form-input" id="depositProofImage" accept="image/*">
                 </div>
-                 <!-- === EDITED DEPOSIT SYSTEM HTML END === -->
+                 <!-- END CUSTOM -->
                 <div class="form-group">
                     <label class="form-label">Amount (Rs)</label>
                     <input type="number" class="form-input" id="depositAmount" placeholder="Enter amount sent">
@@ -708,7 +708,8 @@
                 <div class="form-group"><label class="form-label">Daily Profit (Rs)</label><input type="number" class="form-input" id="adminPlanDailyProfit" placeholder="e.g., 300"></div>
                 <div class="form-group"><label class="form-label">Daily Ads/Tasks</label><input type="number" class="form-input" id="adminPlanDailyLimit" placeholder="e.g., 6"></div>
                 <div class="form-group"><label class="form-label">Earning Per Task (Rs)</label><input type="number" class="form-input" id="adminPlanEarningPerTask" placeholder="e.g., 50"></div>
-                <div class="form-group"><label class="form-label">Duration (Days)</label><input type="number" class="form-input" id="adminPlanDuration" value="65" placeholder="e.g., 65"></div>
+                <!-- CUSTOM: Plan Duration value set to 5 -->
+                <div class="form-group"><label class="form-label">Duration (Days)</label><input type="number" class="form-input" id="adminPlanDuration" value="5" placeholder="e.g., 5"></div>
                 <button class="btn" onclick="savePlanDetails()">Save/Update Plan</button>
                 
                 <h4 class="card-title" style="margin-top: 20px;">Existing Plans</h4>
@@ -745,7 +746,7 @@
                     <circle class="timer-circle-bg" cx="75" cy="75" r="70"></circle>
                     <circle class="timer-circle-progress" cx="75" cy="75" r="70" id="adPageTimerProgress"></circle>
                 </svg>
-                <div class="timer-text" id="adPageTimerCount">10</div>
+                <div class="timer-text" id="adPageTimerCount">5</div>
             </div>
              <p style="color: #aaa; text-align: center;">Do not close this page.</p>
         </div>
@@ -808,7 +809,7 @@
                 <div class="action-btn" onclick="showPage('withdrawPage')"><div class="btn-icon"><i class="fa-solid fa-arrow-down"></i></div><span class="btn-text">Withdraw</span></div>
             </div>
 
-            <!-- REDESIGNED TASK DASHBOARD -->
+            <!-- REDESIGNED TASK DASHBOARD (Miniaturized) -->
             <div class="task-dashboard-v2">
                 <!-- Row 1: Series of Task Stats -->
                 <div class="task-stats-series">
@@ -964,8 +965,6 @@
     // --- ADMIN CONFIGURATION ---
     const ADMIN_EMAIL = "mrk443901@gmail.com"; 
 
-    // REMOVED: Static PLAN_CONFIG
-
     // --- FIREBASE CONFIGURATION ---
     const firebaseConfig = {
         apiKey: "AIzaSyBAQIolFYwc0_QfaR3LC1VOwjZD0zFbYWc",
@@ -980,7 +979,6 @@
     }
     const auth = firebase.auth();
     const db = firebase.database();
-    // Firebase storage is no longer needed for deposits but might be used elsewhere.
     const storage = firebase.storage(); 
 
     let currentUser = null;
@@ -1228,7 +1226,7 @@
         const dailyProfit = parseInt(document.getElementById('adminPlanDailyProfit').value);
         const dailyLimit = parseInt(document.getElementById('adminPlanDailyLimit').value);
         const earningPerTask = parseInt(document.getElementById('adminPlanEarningPerTask').value);
-        const durationDays = parseInt(document.getElementById('adminPlanDuration').value);
+        const durationDays = parseInt(document.getElementById('adminPlanDuration').value); // Reads the value
 
         if (!planId || isNaN(amount) || isNaN(dailyProfit) || isNaN(dailyLimit) || isNaN(earningPerTask) || isNaN(durationDays)) {
             showAlert('Fill all plan details with valid numbers.', 'error');
@@ -1246,7 +1244,7 @@
             dailyProfit: dailyProfit,
             dailyLimit: dailyLimit,
             earningPerTask: earningPerTask,
-            durationDays: durationDays
+            durationDays: durationDays // Saves the durationDays
         }).then(() => {
             showLoading(false); 
             showAlert(`Plan ${planId} Updated/Saved!`, 'success');
@@ -1257,7 +1255,7 @@
             document.getElementById('adminPlanDailyProfit').value = '';
             document.getElementById('adminPlanDailyLimit').value = '';
             document.getElementById('adminPlanEarningPerTask').value = '';
-            document.getElementById('adminPlanDuration').value = '65';
+            document.getElementById('adminPlanDuration').value = '5'; // Resets to 5
             
         }).catch(err => {
             showLoading(false); showAlert(err.message, 'error');
@@ -1344,6 +1342,12 @@
         if (pageId === 'plansPage') {
             loadPlansForUser();
         }
+        
+        // CUSTOM: Initialize chat on support page load
+        if (pageId === 'supportPage') {
+            document.getElementById('chatInput').focus();
+            document.getElementById('chatBox').scrollTop = document.getElementById('chatBox').scrollHeight;
+        }
 
         pageHistory.push(currentPage);
         currentPage = pageId;
@@ -1368,7 +1372,7 @@
                 'invitePage': 'Invite & Earn', 'adminPanelPage': 'Admin Control',
                 'tasksPage': 'Daily Tasks', 'plansPage': 'VIP Plans',
                 'appPage': 'Download App', 'profilePage': 'My Profile', 
-                'supportPage': 'Contact Admin',
+                'supportPage': 'Support Chat', // CUSTOM: Title change
                 'depositHistoryPage': 'Deposit History', 'withdrawHistoryPage': 'Withdrawal History',
                 'adTimerPage': 'Viewing Ad'
             };
@@ -1396,7 +1400,7 @@
                     'invitePage': 'Invite & Earn', 'adminPanelPage': 'Admin Control',
                     'tasksPage': 'Daily Tasks', 'plansPage': 'VIP Plans',
                     'appPage': 'Download App', 'profilePage': 'My Profile', 
-                    'supportPage': 'Contact Admin',
+                    'supportPage': 'Support Chat', // CUSTOM: Title change
                     'depositHistoryPage': 'Deposit History', 'withdrawHistoryPage': 'Withdrawal History',
                     'adTimerPage': 'Viewing Ad'
                 };
@@ -1417,28 +1421,6 @@
 
     // --- TRANSACTIONS ---
     
-    // === EDITED DEPOSIT SYSTEM SCRIPT START ===
-    function previewDepositImage(event) {
-        const preview = document.getElementById('depositImagePreview');
-        const text = document.getElementById('depositPreviewText');
-        const file = event.target.files[0];
-        const reader = new FileReader();
-
-        reader.onloadend = function() {
-            preview.src = reader.result;
-            preview.style.display = 'block';
-            text.style.display = 'none';
-        }
-
-        if (file) {
-            reader.readAsDataURL(file);
-        } else {
-            preview.src = "";
-            preview.style.display = 'none';
-            text.style.display = 'block';
-        }
-    }
-
     async function submitDeposit() {
         const proofFile = document.getElementById('depositProofImage').files[0];
         const amount = parseFloat(document.getElementById('depositAmount').value);
@@ -1483,9 +1465,6 @@
                 // Reset form
                 document.getElementById('depositProofImage').value = '';
                 document.getElementById('depositAmount').value = '';
-                document.getElementById('depositImagePreview').src = '';
-                document.getElementById('depositImagePreview').style.display = 'none';
-                document.getElementById('depositPreviewText').style.display = 'block';
 
             } else {
                 showLoading(false);
@@ -1497,7 +1476,6 @@
             showAlert('An error occurred during upload. Check your internet connection.', 'error');
         }
     }
-    // === EDITED DEPOSIT SYSTEM SCRIPT END ===
 
     function submitWithdraw() {
         const account = document.getElementById('withdrawAccount').value;
@@ -1518,7 +1496,7 @@
         document.getElementById('withdrawAmount').value = '';
     }
 
-    // --- PLANS (Updated for Dynamic Loading) ---
+    // --- PLANS (Updated for Dynamic Loading and 5-Day Duration) ---
     function loadPlansForUser() {
         db.ref('admin/settings/plans').once('value', (snapshot) => {
             adminPlans = snapshot.val() || {};
@@ -1537,6 +1515,9 @@
             planIDs.forEach(id => {
                 const plan = adminPlans[id];
                 count++;
+                // CUSTOM: Display duration as 5 Days based on user request.
+                const durationDisplay = `${plan.durationDays} Days`; 
+                
                 planHTML += `
                     <div class="plan-card-new">
                         <div class="plan-number">${count}</div>
@@ -1555,7 +1536,7 @@
                                 <span class="benefit-value">${plan.earningPerTask}</span>
                             </div>
                         </div>
-                        <div class="duration">Duration ${plan.durationDays} Days</div>
+                        <div class="duration">Duration ${durationDisplay}</div>
                         <button class="btn buy-btn-new" onclick="buyPlan('${id}')">BUY NOW</button>
                     </div>`;
             });
@@ -1604,7 +1585,7 @@
         showPage('tasksPage');
     }
 
-    // --- TASKS ---
+    // --- TASKS (Updated Ad Duration to 5s) ---
     function loadTasks() {
         const tasksList = document.getElementById('tasksList');
         const noPlan = document.getElementById('noPlanWarning');
@@ -1643,7 +1624,7 @@
                 <div class="task-item">
                     <div>
                         <div style="font-weight: bold; font-size: 14px;">Sponsored Ad Task ${userData.tasksCompletedToday + i + 1}</div>
-                        <div style="font-size: 11px; color: #aaa;">Duration: 10s</div>
+                        <div style="font-size: 11px; color: #aaa;">Duration: 5s</div>
                     </div>
                     <div style="text-align: right;">
                         <div class="task-reward">+Rs ${reward}</div>
@@ -1655,7 +1636,7 @@
         tasksList.innerHTML = html;
     }
     
-    // --- NEW AD SYSTEM LOGIC ---
+    // --- NEW AD SYSTEM LOGIC (Updated Ad Duration to 5s) ---
     let currentTaskReward = 0;
     let adPageTimerInterval = null;
 
@@ -1671,13 +1652,13 @@
 
         const circle = document.getElementById('adPageTimerProgress');
         const countText = document.getElementById('adPageTimerCount');
-        let timeLeft = 10;
+        let timeLeft = 5; // CHANGED from 10
         countText.textContent = timeLeft;
 
         circle.style.transition = 'none';
         circle.style.strokeDashoffset = '0';
         circle.getBoundingClientRect(); 
-        circle.style.transition = 'stroke-dashoffset 10s linear';
+        circle.style.transition = 'stroke-dashoffset 5s linear'; // CHANGED from 10s
         circle.style.strokeDashoffset = '440';
 
         adPageTimerInterval = setInterval(() => {
@@ -1705,6 +1686,48 @@
         setTimeout(() => {
             showPage('tasksPage');
         }, 1500);
+    }
+    
+    // --- CUSTOM: AI Chat Support System Logic (Simulated - No explicit 'AI' reference in response) ---
+    function simulateAIChat() {
+        const input = document.getElementById('chatInput');
+        const chatBox = document.getElementById('chatBox');
+        const userMessage = input.value.trim();
+        if (!userMessage) return;
+
+        // 1. Append User Message
+        chatBox.innerHTML += `<div class="chat-message user-message">${userMessage}</div>`;
+        input.value = '';
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // 2. Simulate Assistant Typing
+        setTimeout(() => {
+            let aiResponse = getAIResponse(userMessage);
+            chatBox.innerHTML += `<div class="chat-message ai-message">${aiResponse}</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }, 1000);
+    }
+
+    function getAIResponse(message) {
+        const lowerMsg = message.toLowerCase();
+        
+        if (lowerMsg.includes('plan') || lowerMsg.includes('vip')) {
+            return "Our current VIP plans offer different daily profits and ad limits. You can view all options on the 'Plans' page. To buy a plan, ensure you have sufficient wallet balance and proceed with the purchase.";
+        } else if (lowerMsg.includes('deposit') || lowerMsg.includes('fund')) {
+            return "To deposit funds, go to the 'Deposit' page. You'll find the admin's bank details there. After sending money, upload a screenshot of the payment proof and enter the exact amount. It usually takes less than an hour for approval.";
+        } else if (lowerMsg.includes('withdraw') || lowerMsg.includes('cashout')) {
+            return "Withdrawals are simple! Navigate to the 'Withdraw' page, select your method (Easypaisa/JazzCash), enter your account details and the amount. The minimum withdrawal is Rs 100. Processing is typically quick.";
+        } else if (lowerMsg.includes('task') || lowerMsg.includes('ads')) {
+            return "Your daily tasks are determined by your active VIP plan. Once you have an active plan, you can complete tasks on the 'Task' page and earn the specified amount per task.";
+        } else if (lowerMsg.includes('invite') || lowerMsg.includes('referral') || lowerMsg.includes('commission')) {
+            return "You can earn commission by inviting friends! Find your unique invitation code and link on the 'Invite' page. Your commission details are also available there.";
+        } else if (lowerMsg.includes('hello') || lowerMsg.includes('hi')) {
+            return "Hello there! Ask me any question related to our app's functioning, and I'll do my best to provide a quick answer.";
+        } else if (lowerMsg.includes('admin') || lowerMsg.includes('contact')) {
+            return "I am an automated assistant. For complex or urgent issues, you can use the WhatsApp floating icon for direct chat.";
+        }
+        
+        return "I apologize, I'm only trained to answer questions about the app's features (plans, deposits, tasks, withdrawals, invites). Could you rephrase your question?";
     }
 
     // --- UTILS & UI UPDATES ---
@@ -1800,8 +1823,9 @@
 
     let isDragging = false, dragStartTime = 0;
     function handleClickWhatsapp() { 
+        // Only trigger the redirect if it's a click, not a drag. The time difference check helps.
         if (Date.now() - dragStartTime < 200 && !isDragging) {
-            window.open('', '_blank');
+            window.open('https://whatsapp.com/channel/0029VbC2AO3DuMRZcNZe0y1c', '_blank'); // UPDATED CHANNEL URL
         }
     }
     function initDraggableWhatsapp() {
@@ -1825,5 +1849,3 @@
 
 </body>
 </html>
-
-  
