@@ -100,13 +100,16 @@
         .page-container::-webkit-scrollbar { display: none; }
         
         .page-content { padding: 20px; color: white; max-width: 1000px; margin: 0 auto; width: 100%; }
-        .page-container#supportPage .page-content { /* CUSTOM: Override padding for full-height chat */
+        
+        /* CUSTOM: Full-height chat setup */
+        .page-container#supportPage .page-content { 
             padding: 0;
             padding-bottom: 0 !important;
             display: flex;
             flex-direction: column;
             height: 100%;
         }
+        /* END CUSTOM */
 
         .banner-container { padding: 20px; background: linear-gradient(180deg, #750d37 0%, #031b38 30%); display: flex; justify-content: center; }
         .banner { 
@@ -181,7 +184,19 @@
         .payment-methods { display: flex; gap: 10px; margin-bottom: 20px; }
         .payment-method { flex: 1; text-align: center; padding: 15px; border: 2px solid #2c3542; border-radius: 10px; cursor: pointer; transition: all 0.3s; }
         .payment-method.active { border-color: #e91e63; background-color: rgba(233, 30, 99, 0.1); }
-        .payment-icon { font-size: 30px; margin-bottom: 10px; color: #4caf50; }
+        
+        /* UPDATED: Styles for the new image icons */
+        .payment-icon-img {
+            width: 40px; 
+            height: 40px;
+            object-fit: contain;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        /* Keeping .payment-icon only if it's used elsewhere, but not needed for the withdrawal page now */
+        .payment-icon { font-size: 30px; margin-bottom: 10px; color: #4caf50; display: none; }
+        /* END UPDATED */
+
 
         /* --- NEW PLAN STYLES (ADAPTED FOR DARK THEME & SMALLER SIZE) --- */
         .plans-container {
@@ -569,7 +584,8 @@
 
     <!-- Support Page (CUSTOM: Support Chat Interface) -->
     <div class="page-container page-inactive" id="supportPage">
-        <div class="page-content" style="padding: 0; display: flex; flex-direction: column; height: 100%;">
+        <!-- The 'page-content' style ensures full height chat display -->
+        <div class="page-content"> 
             <!-- New Chat Interface -->
             <div id="chatBox" style="flex-grow: 1; padding: 15px; overflow-y: auto; background-color: #0d1520; display: flex; flex-direction: column; gap: 10px;">
                 <!-- Assistant Welcome Message (Non-AI wording) -->
@@ -632,15 +648,23 @@
         </div>
     </div>
 
-    <!-- Withdraw Page -->
+    <!-- Withdraw Page (UPDATED ICONS TO IMAGES) -->
     <div class="page-container page-inactive" id="withdrawPage">
         <div class="page-content">
             <h2 class="page-title">Withdraw Funds</h2>
             <div class="card">
                 <h3 class="card-title">Method</h3>
                 <div class="payment-methods">
-                    <div class="payment-method" onclick="selectWithdrawMethod('easypaisa')"><i class="fa-solid fa-mobile-alt payment-icon"></i><div>Easypaisa</div></div>
-                    <div class="payment-method active" onclick="selectWithdrawMethod('jazcash')"><i class="fa-solid fa-building payment-icon"></i><div>JazzCash</div></div>
+                    <!-- Easypaisa Image -->
+                    <div class="payment-method" onclick="selectWithdrawMethod('easypaisa')">
+                        <img src="https://iili.io/fDzT36G.jpg" alt="Easypaisa" class="payment-icon-img">
+                        <div>Easypaisa</div>
+                    </div>
+                    <!-- JazzCash Image -->
+                    <div class="payment-method active" onclick="selectWithdrawMethod('jazcash')">
+                        <img src="https://iili.io/fDzTdnn.jpg" alt="JazzCash" class="payment-icon-img">
+                        <div>JazzCash</div>
+                    </div>
                 </div>
             </div>
             <div class="card">
@@ -1811,7 +1835,13 @@
     
     function selectWithdrawMethod(m) {
         document.querySelectorAll('#withdrawPage .payment-method').forEach(i => i.classList.remove('active'));
-        event.target.closest('.payment-method').classList.add('active');
+        // Find the correct div to add 'active' class to
+        const methodDivs = document.querySelectorAll('#withdrawPage .payment-method');
+        methodDivs.forEach(div => {
+            if (div.innerText.toLowerCase().includes(m)) {
+                div.classList.add('active');
+            }
+        });
     }
 
     function sendEmailToAdmin() {
