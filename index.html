@@ -699,6 +699,22 @@
                 <div class="form-group"><label class="form-label">Account Title</label><input type="text" class="form-input" id="adminAccTitle"></div>
                 <button class="btn" onclick="saveBankDetails()">Update Bank Details</button>
             </div>
+            
+            <!-- NEW: Plan Management Section -->
+            <div class="card">
+                <h3 class="card-title">Add/Update Plan</h3>
+                <div class="form-group"><label class="form-label">Plan ID (Unique Identifier)</label><input type="text" class="form-input" id="adminPlanID" placeholder="e.g., PLAN_750"></div>
+                <div class="form-group"><label class="form-label">Investment Amount (Rs)</label><input type="number" class="form-input" id="adminPlanAmount" placeholder="e.g., 750"></div>
+                <div class="form-group"><label class="form-label">Daily Profit (Rs)</label><input type="number" class="form-input" id="adminPlanDailyProfit" placeholder="e.g., 300"></div>
+                <div class="form-group"><label class="form-label">Daily Ads/Tasks</label><input type="number" class="form-input" id="adminPlanDailyLimit" placeholder="e.g., 6"></div>
+                <div class="form-group"><label class="form-label">Earning Per Task (Rs)</label><input type="number" class="form-input" id="adminPlanEarningPerTask" placeholder="e.g., 50"></div>
+                <div class="form-group"><label class="form-label">Duration (Days)</label><input type="number" class="form-input" id="adminPlanDuration" value="65" placeholder="e.g., 65"></div>
+                <button class="btn" onclick="savePlanDetails()">Save/Update Plan</button>
+                
+                <h4 class="card-title" style="margin-top: 20px;">Existing Plans</h4>
+                <div id="adminExistingPlans">No plans loaded.</div>
+            </div>
+            <!-- END NEW SECTION -->
         </div>
     </div>
 
@@ -740,114 +756,9 @@
         <div class="page-content">
             <h2 class="page-title">Zone Earn Plans</h2>
             
-            <div class="plans-container">
-                <!-- Plan 0: 300 PKR -->
-                <div class="plan-card-new">
-                    <div class="plan-number">0</div>
-                    <div class="investment-amount">300 <span class="unit">PKR</span></div>
-                    <div class="benefits-container">
-                        <div class="benefit-item">
-                            <span class="benefit-label">Daily Profit</span>
-                            <span class="benefit-value">75</span>
-                        </div>
-                        <div class="benefit-item">
-                            <span class="benefit-label">Daily Ads</span>
-                            <span class="benefit-value">3</span>
-                        </div>
-                    </div>
-                    <div class="duration">Duration 65 Days</div>
-                    <button class="btn buy-btn-new" onclick="buyPlan(300)">BUY NOW</button>
-                </div>
-
-                <!-- Plan 1: 750 PKR -->
-                <div class="plan-card-new">
-                    <div class="plan-number">1</div>
-                    <div class="investment-amount">750 <span class="unit">PKR</span></div>
-                    <div class="benefits-container">
-                        <div class="benefit-item">
-                            <span class="benefit-label">Daily Profit</span>
-                            <span class="benefit-value">300</span>
-                        </div>
-                        <div class="benefit-item">
-                            <span class="benefit-label">Daily Ads</span>
-                            <span class="benefit-value">6</span>
-                        </div>
-                    </div>
-                    <div class="duration">Duration 65 Days</div>
-                    <button class="btn buy-btn-new" onclick="buyPlan(750)">BUY NOW</button>
-                </div>
-                
-                <!-- Plan 2: 1000 PKR -->
-                <div class="plan-card-new">
-                    <div class="plan-number">2</div>
-                    <div class="investment-amount">1000 <span class="unit">PKR</span></div>
-                    <div class="benefits-container">
-                        <div class="benefit-item">
-                            <span class="benefit-label">Daily Profit</span>
-                            <span class="benefit-value">400</span>
-                        </div>
-                        <div class="benefit-item">
-                            <span class="benefit-label">Daily Ads</span>
-                            <span class="benefit-value">8</span>
-                        </div>
-                    </div>
-                    <div class="duration">Duration 65 Days</div>
-                    <button class="btn buy-btn-new" onclick="buyPlan(1000)">BUY NOW</button>
-                </div>
-                
-                <!-- Plan 3: 1500 PKR -->
-                <div class="plan-card-new">
-                    <div class="plan-number">3</div>
-                    <div class="investment-amount">1500 <span class="unit">PKR</span></div>
-                    <div class="benefits-container">
-                        <div class="benefit-item">
-                            <span class="benefit-label">Daily Profit</span>
-                            <span class="benefit-value">500</span>
-                        </div>
-                        <div class="benefit-item">
-                            <span class="benefit-label">Daily Ads</span>
-                            <span class="benefit-value">10</span>
-                        </div>
-                    </div>
-                    <div class="duration">Duration 65 Days</div>
-                    <button class="btn buy-btn-new" onclick="buyPlan(1500)">BUY NOW</button>
-                </div>
-                
-                <!-- Plan 4: 3000 PKR -->
-                <div class="plan-card-new">
-                    <div class="plan-number">4</div>
-                    <div class="investment-amount">3000 <span class="unit">PKR</span></div>
-                    <div class="benefits-container">
-                        <div class="benefit-item">
-                            <span class="benefit-label">Daily Profit</span>
-                            <span class="benefit-value">750</span>
-                        </div>
-                        <div class="benefit-item">
-                            <span class="benefit-label">Daily Ads</span>
-                            <span class="benefit-value">15</span>
-                        </div>
-                    </div>
-                    <div class="duration">Duration 65 Days</div>
-                    <button class="btn buy-btn-new" onclick="buyPlan(3000)">BUY NOW</button>
-                </div>
-                
-                <!-- Plan 5: 5000 PKR -->
-                <div class="plan-card-new">
-                    <div class="plan-number">5</div>
-                    <div class="investment-amount">5000 <span class="unit">PKR</span></div>
-                    <div class="benefits-container">
-                        <div class="benefit-item">
-                            <span class="benefit-label">Daily Profit</span>
-                            <span class="benefit-value">1000</span>
-                        </div>
-                        <div class="benefit-item">
-                            <span class="benefit-label">Daily Ads</span>
-                            <span class="benefit-value">20</span>
-                        </div>
-                    </div>
-                    <div class="duration">Duration 65 Days</div>
-                    <button class="btn buy-btn-new" onclick="buyPlan(5000)">BUY NOW</button>
-                </div>
+            <div class="plans-container" id="dynamicPlansContainer">
+                <!-- Dynamic plans will be inserted here by JavaScript -->
+                <p style="color: #aaa; text-align: center; padding: 20px;" id="noPlansMessage">Loading plans...</p>
             </div>
         </div>
     </div>
@@ -1053,15 +964,7 @@
     // --- ADMIN CONFIGURATION ---
     const ADMIN_EMAIL = "mrk443901@gmail.com"; 
 
-    // --- NEW PLAN CONFIGURATION ---
-    const PLAN_CONFIG = {
-        300:   { dailyLimit: 3,  earningPerTask: 25, dailyProfit: 75 },
-        750:   { dailyLimit: 6,  earningPerTask: 50, dailyProfit: 300 },
-        1000:  { dailyLimit: 8,  earningPerTask: 50, dailyProfit: 400 },
-        1500:  { dailyLimit: 10, earningPerTask: 50, dailyProfit: 500 },
-        3000:  { dailyLimit: 15, earningPerTask: 50, dailyProfit: 750 },
-        5000:  { dailyLimit: 20, earningPerTask: 50, dailyProfit: 1000 }
-    };
+    // REMOVED: Static PLAN_CONFIG
 
     // --- FIREBASE CONFIGURATION ---
     const firebaseConfig = {
@@ -1096,6 +999,8 @@
         invites: { total: 0, active: 0, earnings: 0 }
     };
     
+    let adminPlans = {}; // Stores dynamically loaded plans
+
     // Countdown Interval Reference
     let countdownInterval;
 
@@ -1110,8 +1015,10 @@
                 if (user.email === ADMIN_EMAIL) {
                     document.getElementById('adminAccessBtn').style.display = 'block';
                     loadAdminData();
+                    loadAdminPlans(); // Load plans for admin view
                 } else {
                     document.getElementById('adminAccessBtn').style.display = 'none';
+                    loadPlansForUser(); // Non-admin users load plans immediately
                 }
 
                 loadBankDetailsForUser();
@@ -1269,6 +1176,93 @@
             showLoading(false); showAlert(err.message, 'error');
         });
     }
+    
+    // NEW: Function to load and display plans for the admin
+    function loadAdminPlans() {
+        db.ref('admin/settings/plans').on('value', (snapshot) => {
+            adminPlans = snapshot.val() || {};
+            const plansDiv = document.getElementById('adminExistingPlans');
+            plansDiv.innerHTML = '';
+            if (Object.keys(adminPlans).length === 0) {
+                plansDiv.textContent = 'No plans added yet.';
+                return;
+            }
+            
+            let html = '<table class="history-table"><thead><tr><th>ID</th><th>Amt</th><th>Pft</th><th>Ads</th><th>Action</th></tr></thead><tbody>';
+            for (const id in adminPlans) {
+                const plan = adminPlans[id];
+                html += `
+                    <tr>
+                        <td>${id}</td>
+                        <td>Rs ${plan.amount}</td>
+                        <td>Rs ${plan.dailyProfit}</td>
+                        <td>${plan.dailyLimit}</td>
+                        <td><button class="btn btn-secondary" style="width:auto; padding:5px; font-size:10px;" onclick="loadPlanToEdit('${id}')">Edit</button></td>
+                    </tr>
+                `;
+            }
+            html += '</tbody></table>';
+            plansDiv.innerHTML = html;
+            loadPlansForUser(); // Update user view when admin data changes
+        });
+    }
+
+    // NEW: Admin function to load a plan into the edit form
+    function loadPlanToEdit(planId) {
+        const plan = adminPlans[planId];
+        if (plan) {
+            document.getElementById('adminPlanID').value = planId;
+            document.getElementById('adminPlanAmount').value = plan.amount;
+            document.getElementById('adminPlanDailyProfit').value = plan.dailyProfit;
+            document.getElementById('adminPlanDailyLimit').value = plan.dailyLimit;
+            document.getElementById('adminPlanEarningPerTask').value = plan.earningPerTask;
+            document.getElementById('adminPlanDuration').value = plan.durationDays;
+        }
+    }
+
+    // NEW: Admin function to save plan details
+    function savePlanDetails() {
+        if (currentUser.email !== ADMIN_EMAIL) return;
+        const planId = document.getElementById('adminPlanID').value.toUpperCase().replace(/\s/g, '');
+        const amount = parseInt(document.getElementById('adminPlanAmount').value);
+        const dailyProfit = parseInt(document.getElementById('adminPlanDailyProfit').value);
+        const dailyLimit = parseInt(document.getElementById('adminPlanDailyLimit').value);
+        const earningPerTask = parseInt(document.getElementById('adminPlanEarningPerTask').value);
+        const durationDays = parseInt(document.getElementById('adminPlanDuration').value);
+
+        if (!planId || isNaN(amount) || isNaN(dailyProfit) || isNaN(dailyLimit) || isNaN(earningPerTask) || isNaN(durationDays)) {
+            showAlert('Fill all plan details with valid numbers.', 'error');
+            return;
+        }
+        
+        if (dailyProfit !== (dailyLimit * earningPerTask)) {
+            showAlert('Daily Profit must equal (Daily Ads * Earning Per Task).', 'error');
+            return;
+        }
+
+        showLoading(true, "Saving Plan...");
+        db.ref(`admin/settings/plans/${planId}`).set({
+            amount: amount,
+            dailyProfit: dailyProfit,
+            dailyLimit: dailyLimit,
+            earningPerTask: earningPerTask,
+            durationDays: durationDays
+        }).then(() => {
+            showLoading(false); 
+            showAlert(`Plan ${planId} Updated/Saved!`, 'success');
+            
+            // Clear the form after saving
+            document.getElementById('adminPlanID').value = '';
+            document.getElementById('adminPlanAmount').value = '';
+            document.getElementById('adminPlanDailyProfit').value = '';
+            document.getElementById('adminPlanDailyLimit').value = '';
+            document.getElementById('adminPlanEarningPerTask').value = '';
+            document.getElementById('adminPlanDuration').value = '65';
+            
+        }).catch(err => {
+            showLoading(false); showAlert(err.message, 'error');
+        });
+    }
 
     function loadBankDetailsForUser() {
         db.ref('admin/settings/bank').on('value', (snap) => {
@@ -1346,6 +1340,11 @@
         if (pageId === 'adminPanelPage' && (!currentUser || currentUser.email !== ADMIN_EMAIL)) return showAlert('Access Denied', 'error');
         if (currentPage === pageId) return;
 
+        // NEW: Load plans when navigating to the plans page
+        if (pageId === 'plansPage') {
+            loadPlansForUser();
+        }
+
         pageHistory.push(currentPage);
         currentPage = pageId;
 
@@ -1361,6 +1360,7 @@
         if (pageId === 'homePage') {
             backBtn.style.display = 'none';
             document.getElementById('pageTitle').textContent = 'Earning App';
+            pageHistory = []; // Reset history when returning to home
         } else {
             backBtn.style.display = 'block';
             const titles = {
@@ -1518,35 +1518,89 @@
         document.getElementById('withdrawAmount').value = '';
     }
 
-    // --- PLANS (Updated) ---
-    function buyPlan(amount) {
-        if (userData.walletBalance < amount) {
+    // --- PLANS (Updated for Dynamic Loading) ---
+    function loadPlansForUser() {
+        db.ref('admin/settings/plans').once('value', (snapshot) => {
+            adminPlans = snapshot.val() || {};
+            const container = document.getElementById('dynamicPlansContainer');
+            container.innerHTML = '';
+            
+            const planIDs = Object.keys(adminPlans).sort((a, b) => adminPlans[a].amount - adminPlans[b].amount); // Sort by amount
+            
+            if (planIDs.length === 0) {
+                container.innerHTML = `<p style="color: #aaa; text-align: center; padding: 20px;">No investment plans available yet. Please check back later.</p>`;
+                return;
+            }
+
+            let planHTML = '';
+            let count = 0;
+            planIDs.forEach(id => {
+                const plan = adminPlans[id];
+                count++;
+                planHTML += `
+                    <div class="plan-card-new">
+                        <div class="plan-number">${count}</div>
+                        <div class="investment-amount">${plan.amount} <span class="unit">PKR</span></div>
+                        <div class="benefits-container">
+                            <div class="benefit-item">
+                                <span class="benefit-label">Daily Profit</span>
+                                <span class="benefit-value">${plan.dailyProfit}</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span class="benefit-label">Daily Ads</span>
+                                <span class="benefit-value">${plan.dailyLimit}</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span class="benefit-label">Earning per Task</span>
+                                <span class="benefit-value">${plan.earningPerTask}</span>
+                            </div>
+                        </div>
+                        <div class="duration">Duration ${plan.durationDays} Days</div>
+                        <button class="btn buy-btn-new" onclick="buyPlan('${id}')">BUY NOW</button>
+                    </div>`;
+            });
+            container.innerHTML = planHTML;
+        });
+    }
+
+    function buyPlan(planId) {
+        const plan = adminPlans[planId];
+        if (!plan) {
+            showAlert('Plan details not found. Please reload the page.', 'error');
+            return;
+        }
+        
+        if (userData.walletBalance < plan.amount) {
             showAlert('Insufficient balance. Please deposit funds.', 'error');
             setTimeout(() => showPage('depositPage'), 1500);
             return;
         }
-        
-        const config = PLAN_CONFIG[amount];
-        if (!config) {
-            showAlert('Invalid plan selected.', 'error');
-            return;
-        }
 
-        userData.walletBalance -= amount;
+        // Check if user already has an active plan (simple overwrite for this context)
+        if (userData.activePlan && userData.activePlan.planId !== planId) {
+            if (!confirm(`You already have an active plan (Rs ${userData.activePlan.amount}). Buying a new plan will replace the old one. Continue?`)) {
+                return;
+            }
+        }
+        
+        userData.walletBalance -= plan.amount;
         
         userData.activePlan = {
-            amount: amount,
+            planId: planId, // Save the ID for reference
+            amount: plan.amount,
             purchasedDate: new Date().toLocaleDateString(),
-            dailyEarning: config.dailyProfit,
-            dailyLimit: config.dailyLimit,
-            earningPerTask: config.earningPerTask
+            dailyEarning: plan.dailyProfit,
+            dailyLimit: plan.dailyLimit,
+            earningPerTask: plan.earningPerTask,
+            durationDays: plan.durationDays
         };
         
+        // Reset tasks when a new plan is bought
         userData.tasksCompletedToday = 0;
         userData.lastTaskDate = new Date().toDateString();
 
         saveUserData();
-        showAlert(`Plan for Rs ${amount} activated successfully!`, 'success');
+        showAlert(`Plan ${planId} (Rs ${plan.amount}) activated successfully!`, 'success');
         showPage('tasksPage');
     }
 
@@ -1771,3 +1825,5 @@
 
 </body>
 </html>
+
+  
