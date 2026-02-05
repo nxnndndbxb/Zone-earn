@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -452,10 +453,10 @@
 
         /* Account Modal Specifics */
         .modal-avatar-container { display: flex; justify-content: center; margin-bottom: 20px; }
-        .modal-avatar { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #e91e63; object-fit: cover; box-shadow: 0 0 15px rgba(233, 30, 99, 0.4); }
+        .modal-avatar { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #e91e63; object-fit: cover; box-shadow: 0 0 15px rgba(233, 30, 99, 0.4); cursor: pointer; }
         .modal-edit-hint { text-align: center; color: #aaa; font-size: 12px; margin-bottom: 20px; }
 
-        /* --- ENHANCED CHAT STYLES --- */
+        /* --- ENHANCED CHAT STYLES (Beautiful look and smart size) --- */
         .chat-container {
             display: flex;
             flex-direction: column;
@@ -739,7 +740,7 @@
         </div>
     </div>
 
-    <!-- Support Page (ENHANCED: Beautiful Support Chat Interface) -->
+    <!-- Support Page (Beautiful look and smart size Chat Interface) -->
     <div class="page-container page-inactive" id="supportPage">
         <div class="page-content"> 
             <!-- Enhanced Chat Interface -->
@@ -989,7 +990,7 @@
             <div class="card profile-card">
                 <div class="profile-header">
                     <div class="profile-left">
-                        <!-- UPDATED PROFILE PICTURE URL -->
+                        <!-- Profile picture ID added for update from JS -->
                         <div class="avatar-circle">
                             <img id="userProfilePic" src="https://iili.io/fDMR75b.jpg" alt="Profile">
                         </div>
@@ -1092,7 +1093,7 @@
 
 <!-- ================= NEW MODALS FOR PROFILE BUTTONS ================= -->
 
-<!-- Account Info Modal -->
+<!-- Account Info Modal (EDITED FOR PROFILE PIC UPLOAD) -->
 <div id="accountInfoModal" class="custom-modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -1101,10 +1102,12 @@
         </div>
         
         <div class="modal-avatar-container">
-            <!-- UPDATED PROFILE PICTURE URL -->
-            <img src="https://iili.io/fDMR75b.jpg" id="modalUserImg" class="modal-avatar" alt="User Pic">
+            <!-- Avatar is clickable to trigger hidden file input -->
+            <img src="https://iili.io/fDMR75b.jpg" id="modalUserImg" class="modal-avatar" alt="User Pic" onclick="document.getElementById('profilePicInput').click();">
+            <!-- Hidden File Input for Profile Picture Upload -->
+            <input type="file" id="profilePicInput" style="display: none;" accept="image/*">
         </div>
-        <div class="modal-edit-hint">Update your contact details</div>
+        <div class="modal-edit-hint">Click the avatar to change picture or update details below</div>
 
         <div class="form-group">
             <label class="form-label">Email (Username)</label>
@@ -1189,6 +1192,9 @@
     const auth = firebase.auth();
     const db = firebase.database();
     const storage = firebase.storage(); 
+    
+    // API KEY FOR IMG HOST (USED FOR DEPOSIT PROOF AND PROFILE PIC)
+    const IMGBB_API_KEY = '31c324eeef3df98e593e1897b02cc37b';
 
     let currentUser = null;
     let userData = {
@@ -1203,7 +1209,9 @@
         withdrawals: [],
         tasksCompletedToday: 0,
         lastTaskDate: '',
-        invites: { total: 0, active: 0, earnings: 0 }
+        invites: { total: 0, active: 0, earnings: 0 },
+        // Default profile picture URL
+        profilePic: 'https://iili.io/fDMR75b.jpg'
     };
     
     let adminPlans = {}; // Stores dynamically loaded plans
@@ -1213,6 +1221,17 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         checkUrlInviteCode();
+        
+        // Add listener for profile picture file input
+        const profilePicInput = document.getElementById('profilePicInput');
+        if (profilePicInput) {
+            profilePicInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    uploadProfileImage(file);
+                }
+            });
+        }
         
         auth.onAuthStateChanged((user) => {
             if (user) {
@@ -1240,7 +1259,6 @@
                         
                         if (typeof userData.tasksCompletedToday === 'undefined') userData.tasksCompletedToday = 0;
                         if (typeof userData.lastTaskDate === 'undefined') userData.lastTaskDate = '';
-                        // UPDATED: Profile picture URL
                         if (!userData.profilePic) userData.profilePic = 'https://iili.io/fDMR75b.jpg';
 
                         updateUI();
@@ -1273,13 +1291,56 @@
         initDraggableWhatsapp();
     });
 
+    // --- PROFILE IMAGE UPLOAD & UPDATE ---
+    async function uploadProfileImage(file) {
+        showLoading(true, 'Uploading Profile Picture...');
+
+        const apiKey = IMGBB_API_KEY;
+        const apiUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+        
+        const formData = new FormData();
+        formData.append('image', file);
+        
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                body: formData,
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                const imageUrl = result.data.url;
+                
+                // 1. Update userData and save
+                userData.profilePic = imageUrl;
+                saveUserData(); 
+                
+                // 2. Update UI immediately
+                document.getElementById('userProfilePic').src = imageUrl;
+                document.getElementById('modalUserImg').src = imageUrl;
+                
+                showLoading(false);
+                showAlert('Profile Picture Updated!', 'success');
+                
+            } else {
+                showLoading(false);
+                showAlert(result.error?.message || 'Image upload failed. Please try again.', 'error');
+            }
+        } catch (error) {
+            showLoading(false);
+            console.error('Image upload network error:', error);
+            showAlert('An error occurred during upload. Check your internet connection.', 'error');
+        }
+    }
+
     // --- MODAL FUNCTIONS (UPDATED) ---
     function openModal(modalId) {
         if (modalId === 'accountInfoModal') {
             document.getElementById('editEmail').value = userData.email;
             document.getElementById('editPhone').value = userData.phone || '';
             document.getElementById('editJoinDate').value = userData.joinedDate || 'N/A';
-            // UPDATED: Profile picture URL
+            // Set image source
             document.getElementById('modalUserImg').src = userData.profilePic || 'https://iili.io/fDMR75b.jpg';
         } else if (modalId === 'commissionModal') {
             document.getElementById('commTotalEarned').textContent = `Rs ${userData.invites.earnings.toFixed(2)}`;
@@ -1506,7 +1567,6 @@
                     myInviteCode: 'USER' + Math.floor(10000 + Math.random() * 90000),
                     walletBalance: 0, totalDeposit: 0, totalWithdraw: 0, activePlan: null,
                     tasksCompletedToday: 0, lastTaskDate: '',
-                    // UPDATED: Profile picture URL
                     profilePic: 'https://iili.io/fDMR75b.jpg'
                 };
                 return db.ref('users/' + cred.user.uid).set(newUserData);
@@ -1645,7 +1705,7 @@
         
         showLoading(true, 'Uploading proof...');
 
-        const apiKey = '31c324eeef3df98e593e1897b02cc37b';
+        const apiKey = IMGBB_API_KEY;
         const apiUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
         
         const formData = new FormData();
@@ -1990,7 +2050,7 @@
         document.getElementById('totalWithdraw').textContent = `Rs ${totalApprovedWithdraw.toFixed(2)}`;
         
         document.getElementById('displayEmail').textContent = userData.email.split('@')[0];
-        // UPDATED: Profile picture URL
+        // Set profile picture URL
         document.getElementById('userProfilePic').src = userData.profilePic || 'https://iili.io/fDMR75b.jpg';
 
         const dailyLimit = userData.activePlan ? userData.activePlan.dailyLimit : 0;
