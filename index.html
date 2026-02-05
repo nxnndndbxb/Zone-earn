@@ -1610,6 +1610,19 @@
         if (pageId === 'adminPanelPage' && (!currentUser || currentUser.email !== ADMIN_EMAIL)) return showAlert('Access Denied', 'error');
         if (currentPage === pageId) return;
 
+        // --- MODIFIED: Visibility Control for Support Page ---
+        const bottomNav = document.querySelector('.bottom-nav');
+        const whatsappFloat = document.getElementById('whatsappFloat');
+
+        if (pageId === 'supportPage') {
+            bottomNav.style.display = 'none';
+            whatsappFloat.style.display = 'none';
+        } else {
+            bottomNav.style.display = 'flex'; // Restore bottom nav
+            whatsappFloat.style.display = 'flex'; // Restore WhatsApp button
+        }
+        // --- END Visibility Control ---
+
         // NEW: Load plans when navigating to the plans page
         if (pageId === 'plansPage') {
             loadPlansForUser();
@@ -1663,6 +1676,20 @@
             currentPage = previousPage;
             document.getElementById(currentPage).classList.remove('page-inactive');
             document.getElementById(currentPage).classList.add('page-active');
+            
+            // --- MODIFIED: Visibility Control for Support Page on goBack ---
+            const bottomNav = document.querySelector('.bottom-nav');
+            const whatsappFloat = document.getElementById('whatsappFloat');
+
+            if (currentPage === 'supportPage') {
+                bottomNav.style.display = 'none';
+                whatsappFloat.style.display = 'none';
+            } else {
+                // Restore visibility for all other pages
+                bottomNav.style.display = 'flex'; 
+                whatsappFloat.style.display = 'flex'; 
+            }
+            // --- END Visibility Control ---
             
             if (currentPage === 'homePage') {
                 document.getElementById('backBtn').style.display = 'none';
