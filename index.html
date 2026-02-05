@@ -101,13 +101,14 @@
         
         .page-content { padding: 20px; color: white; max-width: 1000px; margin: 0 auto; width: 100%; }
         
-        /* CUSTOM: Full-height chat setup */
+        /* CUSTOM: Enhanced full-height chat setup */
         .page-container#supportPage .page-content { 
             padding: 0;
             padding-bottom: 0 !important;
             display: flex;
             flex-direction: column;
             height: 100%;
+            max-width: 100%;
         }
         /* END CUSTOM */
 
@@ -454,28 +455,184 @@
         .modal-avatar { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #e91e63; object-fit: cover; box-shadow: 0 0 15px rgba(233, 30, 99, 0.4); }
         .modal-edit-hint { text-align: center; color: #aaa; font-size: 12px; margin-bottom: 20px; }
 
-        /* --- ADDED CHAT STYLES --- */
+        /* --- ENHANCED CHAT STYLES --- */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: linear-gradient(180deg, #0d1520 0%, #031b38 100%);
+            border-radius: 0;
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            background: linear-gradient(90deg, #c21558 0%, #750d37 100%);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        
+        .chat-header-icon {
+            background: rgba(255, 255, 255, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .chat-header-text {
+            flex-grow: 1;
+        }
+        
+        .chat-header-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .chat-header-subtitle {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        #chatBox {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            scrollbar-width: thin;
+            scrollbar-color: #e91e63 #0d1520;
+        }
+        
+        #chatBox::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        #chatBox::-webkit-scrollbar-track {
+            background: #0d1520;
+        }
+        
+        #chatBox::-webkit-scrollbar-thumb {
+            background: #e91e63;
+            border-radius: 3px;
+        }
+        
         .chat-message {
-            max-width: 80%;
-            padding: 10px 15px;
-            border-radius: 15px;
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 18px;
             font-size: 14px;
             line-height: 1.5;
             word-wrap: break-word;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
         .user-message {
-            background-color: #e91e63;
+            background: linear-gradient(135deg, #e91e63, #c2185b);
             color: white;
             align-self: flex-end;
-            margin-left: auto; /* Push to right */
-            border-bottom-right-radius: 2px;
+            border-bottom-right-radius: 5px;
+            margin-left: auto;
         }
+        
         .ai-message {
-            background-color: #2c3542;
+            background: #2c3542;
             color: white;
             align-self: flex-start;
-            margin-right: auto; /* Push to left */
-            border-bottom-left-radius: 2px;
+            border-bottom-left-radius: 5px;
+            margin-right: auto;
+            border-left: 3px solid #e91e63;
+        }
+        
+        .chat-message-time {
+            font-size: 10px;
+            opacity: 0.7;
+            margin-top: 5px;
+            text-align: right;
+        }
+        
+        .chat-input-container {
+            background: #1a222c;
+            padding: 15px;
+            border-top: 1px solid #2c3542;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        #chatInput {
+            flex-grow: 1;
+            margin: 0;
+            border-radius: 25px;
+            padding: 12px 20px;
+            background: #0d1520;
+            border: 1px solid #2c3542;
+            font-size: 14px;
+        }
+        
+        #chatSendBtn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #e91e63, #c2185b);
+            box-shadow: 0 3px 10px rgba(233, 30, 99, 0.3);
+        }
+        
+        .chat-welcome-message {
+            background: linear-gradient(135deg, #2196f3, #0d47a1);
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .chat-typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 10px 15px;
+            background: #2c3542;
+            border-radius: 18px;
+            align-self: flex-start;
+            width: 60px;
+            margin-bottom: 10px;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #aaa;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+        
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
         }
 
     </style>
@@ -582,28 +739,54 @@
         </div>
     </div>
 
-    <!-- Support Page (CUSTOM: Support Chat Interface) -->
+    <!-- Support Page (ENHANCED: Beautiful Support Chat Interface) -->
     <div class="page-container page-inactive" id="supportPage">
-        <!-- The 'page-content' style ensures full height chat display -->
         <div class="page-content"> 
-            <!-- New Chat Interface -->
-            <div id="chatBox" style="flex-grow: 1; padding: 15px; overflow-y: auto; background-color: #0d1520; display: flex; flex-direction: column; gap: 10px;">
-                <!-- Assistant Welcome Message (Non-AI wording) -->
-                <div class="chat-message ai-message">
-                    Hello! I'm your support assistant. I can answer questions about plans, deposits, withdrawals, and tasks. How can I help you today?
+            <!-- Enhanced Chat Interface -->
+            <div class="chat-container">
+                <!-- Chat Header -->
+                <div class="chat-header">
+                    <div class="chat-header-icon">
+                        <i class="fa-solid fa-headset"></i>
+                    </div>
+                    <div class="chat-header-text">
+                        <div class="chat-header-title">Support Assistant</div>
+                        <div class="chat-header-subtitle">Online • Ready to help</div>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- Input Area -->
-            <div style="padding: 10px; border-top: 1px solid #2c3542; background-color: #1a222c; flex-shrink: 0;">
-                <div style="display: flex; gap: 10px;">
-                    <input type="text" class="form-input" id="chatInput" placeholder="Ask a question about the app..." style="flex-grow: 1; margin-bottom: 0;" onkeydown="if(event.key==='Enter') simulateAIChat();">
-                    <button class="btn" id="chatSendBtn" style="width: auto; padding: 10px 15px; margin-top: 0; font-size: 14px;" onclick="simulateAIChat()">
+                
+                <!-- Chat Messages Container -->
+                <div id="chatBox">
+                    <!-- Welcome Message -->
+                    <div class="chat-welcome-message">
+                        <i class="fa-solid fa-robot" style="font-size: 24px; margin-bottom: 10px;"></i>
+                        <div style="font-weight: bold; margin-bottom: 5px;">Hello! I'm your support assistant</div>
+                        <div style="font-size: 12px;">I can help with plans, deposits, withdrawals, tasks, and more. How can I assist you today?</div>
+                    </div>
+                    
+                    <!-- Assistant Welcome Message -->
+                    <div class="chat-message ai-message">
+                        Welcome to our support chat! I'm here to help you with any questions about the app. What would you like to know?
+                        <div class="chat-message-time">Just now</div>
+                    </div>
+                </div>
+                
+                <!-- Typing Indicator (Hidden by default) -->
+                <div id="typingIndicator" class="chat-typing-indicator" style="display: none;">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+                
+                <!-- Input Area -->
+                <div class="chat-input-container">
+                    <input type="text" class="form-input" id="chatInput" placeholder="Type your message here..." onkeydown="if(event.key==='Enter') simulateAIChat();">
+                    <button class="btn" id="chatSendBtn" onclick="simulateAIChat()">
                         <i class="fa-solid fa-paper-plane"></i>
                     </button>
                 </div>
             </div>
-            <!-- End New Chat Interface -->
+            <!-- End Enhanced Chat Interface -->
         </div>
     </div>
 
@@ -806,8 +989,9 @@
             <div class="card profile-card">
                 <div class="profile-header">
                     <div class="profile-left">
+                        <!-- UPDATED PROFILE PICTURE URL -->
                         <div class="avatar-circle">
-                            <img id="userProfilePic" src="https://iili.io/fDGcuYF.jpg" alt="Profile">
+                            <img id="userProfilePic" src="https://iili.io/fDMR75b.jpg" alt="Profile">
                         </div>
                         <div style="margin-left: 10px;">
                             <div class="user-name" id="displayEmail">User</div>
@@ -917,7 +1101,8 @@
         </div>
         
         <div class="modal-avatar-container">
-            <img src="https://iili.io/f75iDuI.jpg" id="modalUserImg" class="modal-avatar" alt="User Pic">
+            <!-- UPDATED PROFILE PICTURE URL -->
+            <img src="https://iili.io/fDMR75b.jpg" id="modalUserImg" class="modal-avatar" alt="User Pic">
         </div>
         <div class="modal-edit-hint">Update your contact details</div>
 
@@ -1055,7 +1240,8 @@
                         
                         if (typeof userData.tasksCompletedToday === 'undefined') userData.tasksCompletedToday = 0;
                         if (typeof userData.lastTaskDate === 'undefined') userData.lastTaskDate = '';
-                        if (!userData.profilePic) userData.profilePic = 'https://iili.io/f75iDuI.jpg';
+                        // UPDATED: Profile picture URL
+                        if (!userData.profilePic) userData.profilePic = 'https://iili.io/fDMR75b.jpg';
 
                         updateUI();
                         loadTasks();
@@ -1093,7 +1279,8 @@
             document.getElementById('editEmail').value = userData.email;
             document.getElementById('editPhone').value = userData.phone || '';
             document.getElementById('editJoinDate').value = userData.joinedDate || 'N/A';
-            document.getElementById('modalUserImg').src = userData.profilePic;
+            // UPDATED: Profile picture URL
+            document.getElementById('modalUserImg').src = userData.profilePic || 'https://iili.io/fDMR75b.jpg';
         } else if (modalId === 'commissionModal') {
             document.getElementById('commTotalEarned').textContent = `Rs ${userData.invites.earnings.toFixed(2)}`;
             document.getElementById('commTotalInvites').textContent = userData.invites.total;
@@ -1319,7 +1506,8 @@
                     myInviteCode: 'USER' + Math.floor(10000 + Math.random() * 90000),
                     walletBalance: 0, totalDeposit: 0, totalWithdraw: 0, activePlan: null,
                     tasksCompletedToday: 0, lastTaskDate: '',
-                    profilePic: 'https://iili.io/f75iDuI.jpg'
+                    // UPDATED: Profile picture URL
+                    profilePic: 'https://iili.io/fDMR75b.jpg'
                 };
                 return db.ref('users/' + cred.user.uid).set(newUserData);
             })
@@ -1367,10 +1555,12 @@
             loadPlansForUser();
         }
         
-        // CUSTOM: Initialize chat on support page load
+        // ENHANCED: Initialize chat on support page load
         if (pageId === 'supportPage') {
             document.getElementById('chatInput').focus();
-            document.getElementById('chatBox').scrollTop = document.getElementById('chatBox').scrollHeight;
+            setTimeout(() => {
+                document.getElementById('chatBox').scrollTop = document.getElementById('chatBox').scrollHeight;
+            }, 100);
         }
 
         pageHistory.push(currentPage);
@@ -1396,7 +1586,7 @@
                 'invitePage': 'Invite & Earn', 'adminPanelPage': 'Admin Control',
                 'tasksPage': 'Daily Tasks', 'plansPage': 'VIP Plans',
                 'appPage': 'Download App', 'profilePage': 'My Profile', 
-                'supportPage': 'Support Chat', // CUSTOM: Title change
+                'supportPage': 'Support Chat',
                 'depositHistoryPage': 'Deposit History', 'withdrawHistoryPage': 'Withdrawal History',
                 'adTimerPage': 'Viewing Ad'
             };
@@ -1424,7 +1614,7 @@
                     'invitePage': 'Invite & Earn', 'adminPanelPage': 'Admin Control',
                     'tasksPage': 'Daily Tasks', 'plansPage': 'VIP Plans',
                     'appPage': 'Download App', 'profilePage': 'My Profile', 
-                    'supportPage': 'Support Chat', // CUSTOM: Title change
+                    'supportPage': 'Support Chat',
                     'depositHistoryPage': 'Deposit History', 'withdrawHistoryPage': 'Withdrawal History',
                     'adTimerPage': 'Viewing Ad'
                 };
@@ -1712,7 +1902,7 @@
         }, 1500);
     }
     
-    // --- CUSTOM: AI Chat Support System Logic (Simulated - No explicit 'AI' reference in response) ---
+    // --- ENHANCED: AI Chat Support System Logic (Simulated) ---
     function simulateAIChat() {
         const input = document.getElementById('chatInput');
         const chatBox = document.getElementById('chatBox');
@@ -1720,38 +1910,68 @@
         if (!userMessage) return;
 
         // 1. Append User Message
-        chatBox.innerHTML += `<div class="chat-message user-message">${userMessage}</div>`;
+        const userMessageDiv = document.createElement('div');
+        userMessageDiv.className = 'chat-message user-message';
+        userMessageDiv.innerHTML = `${userMessage}<div class="chat-message-time">${getCurrentTime()}</div>`;
+        chatBox.appendChild(userMessageDiv);
         input.value = '';
         chatBox.scrollTop = chatBox.scrollHeight;
 
-        // 2. Simulate Assistant Typing
+        // 2. Show Typing Indicator
+        const typingIndicator = document.getElementById('typingIndicator');
+        typingIndicator.style.display = 'flex';
+        chatBox.appendChild(typingIndicator);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // 3. Simulate Assistant Response with Delay
         setTimeout(() => {
-            let aiResponse = getAIResponse(userMessage);
-            chatBox.innerHTML += `<div class="chat-message ai-message">${aiResponse}</div>`;
+            typingIndicator.style.display = 'none';
+            
+            const aiResponse = getAIResponse(userMessage);
+            const aiMessageDiv = document.createElement('div');
+            aiMessageDiv.className = 'chat-message ai-message';
+            aiMessageDiv.innerHTML = `${aiResponse}<div class="chat-message-time">${getCurrentTime()}</div>`;
+            chatBox.appendChild(aiMessageDiv);
+            
             chatBox.scrollTop = chatBox.scrollHeight;
-        }, 1000);
+        }, 1500 + Math.random() * 1000);
     }
 
     function getAIResponse(message) {
         const lowerMsg = message.toLowerCase();
         
-        if (lowerMsg.includes('plan') || lowerMsg.includes('vip')) {
-            return "Our current VIP plans offer different daily profits and ad limits. You can view all options on the 'Plans' page. To buy a plan, ensure you have sufficient wallet balance and proceed with the purchase.";
-        } else if (lowerMsg.includes('deposit') || lowerMsg.includes('fund')) {
-            return "To deposit funds, go to the 'Deposit' page. You'll find the admin's bank details there. After sending money, upload a screenshot of the payment proof and enter the exact amount. It usually takes less than an hour for approval.";
-        } else if (lowerMsg.includes('withdraw') || lowerMsg.includes('cashout')) {
-            return "Withdrawals are simple! Navigate to the 'Withdraw' page, select your method (Easypaisa/JazzCash), enter your account details and the amount. The minimum withdrawal is Rs 100. Processing is typically quick.";
-        } else if (lowerMsg.includes('task') || lowerMsg.includes('ads')) {
-            return "Your daily tasks are determined by your active VIP plan. Once you have an active plan, you can complete tasks on the 'Task' page and earn the specified amount per task.";
-        } else if (lowerMsg.includes('invite') || lowerMsg.includes('referral') || lowerMsg.includes('commission')) {
-            return "You can earn commission by inviting friends! Find your unique invitation code and link on the 'Invite' page. Your commission details are also available there.";
-        } else if (lowerMsg.includes('hello') || lowerMsg.includes('hi')) {
-            return "Hello there! Ask me any question related to our app's functioning, and I'll do my best to provide a quick answer.";
-        } else if (lowerMsg.includes('admin') || lowerMsg.includes('contact')) {
-            return "I am an automated assistant. For complex or urgent issues, you can use the WhatsApp floating icon for direct chat.";
+        if (lowerMsg.includes('plan') || lowerMsg.includes('vip') || lowerMsg.includes('investment')) {
+            return "Our VIP plans offer different investment amounts with daily profits. Each plan has a specific number of daily tasks. You can view all available plans on the 'Plans' page. To purchase a plan, ensure you have sufficient wallet balance.";
+        } else if (lowerMsg.includes('deposit') || lowerMsg.includes('fund') || lowerMsg.includes('add money')) {
+            return "To deposit funds, go to the 'Deposit' page where you'll find the bank details. After making the payment, upload a screenshot as proof and enter the amount. Deposits are usually approved within 1 hour.";
+        } else if (lowerMsg.includes('withdraw') || lowerMsg.includes('cashout') || lowerMsg.includes('withdrawal')) {
+            return "You can withdraw your earnings via Easypaisa or JazzCash. Go to the 'Withdraw' page, select your method, enter account details and amount (minimum Rs 100). Withdrawals are processed quickly.";
+        } else if (lowerMsg.includes('task') || lowerMsg.includes('ads') || lowerMsg.includes('daily task')) {
+            return "Your daily tasks depend on your active VIP plan. Each task requires watching a short ad. Complete all daily tasks to maximize your earnings. You can find tasks on the 'Task' page.";
+        } else if (lowerMsg.includes('invite') || lowerMsg.includes('referral') || lowerMsg.includes('commission') || lowerMsg.includes('friend')) {
+            return "Earn extra by inviting friends! Share your unique invitation code or link from the 'Invite' page. You'll earn commission when your referrals become active users.";
+        } else if (lowerMsg.includes('balance') || lowerMsg.includes('wallet') || lowerMsg.includes('money')) {
+            return `Your current wallet balance is Rs ${userData.walletBalance.toFixed(2)}. You can check your balance on the profile page.`;
+        } else if (lowerMsg.includes('hello') || lowerMsg.includes('hi') || lowerMsg.includes('hey')) {
+            return "Hello! Welcome to our support chat. I'm here to help you with any questions about the app. How can I assist you today?";
+        } else if (lowerMsg.includes('admin') || lowerMsg.includes('contact') || lowerMsg.includes('support')) {
+            return "For urgent matters, you can contact admin via the WhatsApp floating button. I'm here to answer general questions about the app's features.";
+        } else if (lowerMsg.includes('time') || lowerMsg.includes('when') || lowerMsg.includes('how long')) {
+            return "Tasks reset daily at midnight. Deposit approvals take about 1 hour. Withdrawals are usually processed within a few hours during business days.";
+        } else if (lowerMsg.includes('problem') || lowerMsg.includes('issue') || lowerMsg.includes('error')) {
+            return "I'm sorry you're experiencing issues. Please describe the problem in detail, or contact admin via WhatsApp for immediate assistance.";
+        } else if (lowerMsg.includes('thank') || lowerMsg.includes('thanks')) {
+            return "You're welcome! Feel free to ask if you have any more questions. Happy earning!";
+        } else if (lowerMsg.includes('app') || lowerMsg.includes('download') || lowerMsg.includes('mobile')) {
+            return "Our mobile app is currently under development. You can continue using the web version which has all the features. Check the 'APP' page for updates.";
         }
         
-        return "I apologize, I'm only trained to answer questions about the app's features (plans, deposits, tasks, withdrawals, invites). Could you rephrase your question?";
+        return "I'm here to help with questions about plans, deposits, withdrawals, tasks, and invites. Could you please rephrase your question or ask about one of these topics?";
+    }
+
+    function getCurrentTime() {
+        const now = new Date();
+        return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
     }
 
     // --- UTILS & UI UPDATES ---
@@ -1770,7 +1990,8 @@
         document.getElementById('totalWithdraw').textContent = `Rs ${totalApprovedWithdraw.toFixed(2)}`;
         
         document.getElementById('displayEmail').textContent = userData.email.split('@')[0];
-        document.getElementById('userProfilePic').src = userData.profilePic;
+        // UPDATED: Profile picture URL
+        document.getElementById('userProfilePic').src = userData.profilePic || 'https://iili.io/fDMR75b.jpg';
 
         const dailyLimit = userData.activePlan ? userData.activePlan.dailyLimit : 0;
         const completed = userData.tasksCompletedToday || 0;
