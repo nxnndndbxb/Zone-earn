@@ -992,7 +992,7 @@
                     <div class="profile-left">
                         <!-- Profile picture ID added for update from JS -->
                         <div class="avatar-circle">
-                            <img id="userProfilePic" src="https://iili.io/fDMR75b.jpg" alt="Profile">
+                            <img id="userProfilePic" src="https://iili.io/fbgA0kQ.png" alt="Profile">
                         </div>
                         <div style="margin-left: 10px;">
                             <div class="user-name" id="displayEmail">User</div>
@@ -1103,7 +1103,7 @@
         
         <div class="modal-avatar-container">
             <!-- Avatar is clickable to trigger hidden file input -->
-            <img src="https://iili.io/fDMR75b.jpg" id="modalUserImg" class="modal-avatar" alt="User Pic" onclick="document.getElementById('profilePicInput').click();">
+            <img src="https://iili.io/fbgA0kQ.png" id="modalUserImg" class="modal-avatar" alt="User Pic" onclick="document.getElementById('profilePicInput').click();">
             <!-- Hidden File Input for Profile Picture Upload -->
             <input type="file" id="profilePicInput" style="display: none;" accept="image/*">
         </div>
@@ -1179,8 +1179,8 @@
 
     // --- FIREBASE CONFIGURATION ---
     const firebaseConfig = {
-        apiKey: "AIzaSyBAQIolFYwc0_QfaR3LC1VOwjZD0zFbYWc",
-        databaseURL: "https://zone-b2e27-default-rtdb.asia-southeast1.firebasedatabase.app/",
+        apiKey: "AIzaSyBU31XIyrT548VWQkDz8ICz1KtZkNHLdA0", // CHANGED
+        databaseURL: "https://zone-earn1-default-rtdb.asia-southeast1.firebasedatabase.app/", // CHANGED
         authDomain: "zone-b2e27.firebaseapp.com",
         projectId: "zone-b2e27",
         storageBucket: "zone-b2e27.appspot.com"
@@ -1195,6 +1195,9 @@
     
     // API KEY FOR IMG HOST (USED FOR DEPOSIT PROOF AND PROFILE PIC)
     const IMGBB_API_KEY = '31c324eeef3df98e593e1897b02cc37b';
+    
+    // NEW DEFAULT PROFILE PIC
+    const DEFAULT_PROFILE_PIC = 'https://iili.io/fbgA0kQ.png'; // CHANGED
 
     let currentUser = null;
     let userData = {
@@ -1211,7 +1214,7 @@
         lastTaskDate: '',
         invites: { total: 0, active: 0, earnings: 0 },
         // Default profile picture URL
-        profilePic: 'https://iili.io/fDMR75b.jpg'
+        profilePic: DEFAULT_PROFILE_PIC // CHANGED
     };
     
     let adminPlans = {}; // Stores dynamically loaded plans
@@ -1259,7 +1262,7 @@
                         
                         if (typeof userData.tasksCompletedToday === 'undefined') userData.tasksCompletedToday = 0;
                         if (typeof userData.lastTaskDate === 'undefined') userData.lastTaskDate = '';
-                        if (!userData.profilePic) userData.profilePic = 'https://iili.io/fDMR75b.jpg';
+                        if (!userData.profilePic) userData.profilePic = DEFAULT_PROFILE_PIC; // CHANGED
 
                         updateUI();
                         loadTasks();
@@ -1341,7 +1344,7 @@
             document.getElementById('editPhone').value = userData.phone || '';
             document.getElementById('editJoinDate').value = userData.joinedDate || 'N/A';
             // Set image source
-            document.getElementById('modalUserImg').src = userData.profilePic || 'https://iili.io/fDMR75b.jpg';
+            document.getElementById('modalUserImg').src = userData.profilePic || DEFAULT_PROFILE_PIC; // CHANGED
         } else if (modalId === 'commissionModal') {
             document.getElementById('commTotalEarned').textContent = `Rs ${userData.invites.earnings.toFixed(2)}`;
             document.getElementById('commTotalInvites').textContent = userData.invites.total;
@@ -1567,7 +1570,7 @@
                     myInviteCode: 'USER' + Math.floor(10000 + Math.random() * 90000),
                     walletBalance: 0, totalDeposit: 0, totalWithdraw: 0, activePlan: null,
                     tasksCompletedToday: 0, lastTaskDate: '',
-                    profilePic: 'https://iili.io/fDMR75b.jpg'
+                    profilePic: DEFAULT_PROFILE_PIC // CHANGED
                 };
                 return db.ref('users/' + cred.user.uid).set(newUserData);
             })
@@ -2078,7 +2081,7 @@
         
         document.getElementById('displayEmail').textContent = userData.email.split('@')[0];
         // Set profile picture URL
-        document.getElementById('userProfilePic').src = userData.profilePic || 'https://iili.io/fDMR75b.jpg';
+        document.getElementById('userProfilePic').src = userData.profilePic || DEFAULT_PROFILE_PIC; // CHANGED
 
         const dailyLimit = userData.activePlan ? userData.activePlan.dailyLimit : 0;
         const completed = userData.tasksCompletedToday || 0;
